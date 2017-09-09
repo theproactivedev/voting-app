@@ -2,18 +2,24 @@
   "name": "fcc-voting-app",
   "version": "1.0.0",
   "description": "It's a voting app built with HTML, CSS, React, ExpressJS and MongoDB.",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node server.js"
   },
   "author": "Eirin Gonzales",
   "license": "ISC",
   "dependencies": {
+    "body-parser": "^1.17.2",
     "express": "^4.15.4",
+    "express-session": "^1.15.5",
+    "mongodb": "^2.2.31",
     "mongoose": "^4.11.10",
-    "nodemon": "^1.12.0"
+    "nodemon": "^1.12.0",
+    "passport": "^0.4.0",
+    "passport-github": "^1.1.0",
+    "react-bootstrap": "^0.31.3",
+    "react-router-bootstrap": "^0.24.3",
+    "react-router-dom": "^4.2.2"
   },
-	"scripts": {
-    "start": "node server.js"
-  }
+  "devDependencies": {}
 }
