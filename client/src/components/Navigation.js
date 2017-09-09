@@ -1,29 +1,38 @@
 import React, {Component} from 'react';
+import {Navbar} from 'react-bootstrap';
+import {Nav} from 'react-bootstrap';
+import {NavItem} from 'react-bootstrap';
+import {LinkContainer} from 'react-router-bootstrap';
+
 
 class Navigation extends Component {
     render() {
-        return(
-            <nav className="navbar navbar-inverse navbar-fixed-top">
-    	      <div className="container">
-    	        <div className="navbar-header">
-    	          <button type="button" className="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-    	            <span className="sr-only">Toggle navigation</span>
-    	            <span className="icon-bar"></span>
-    	            <span className="icon-bar"></span>
-    	            <span className="icon-bar"></span>
-    	          </button>
-    	          <a className="navbar-brand" href="/">FCC Voting App</a>
-    	        </div>
-    	        <div id="navbar" className="collapse navbar-collapse">
-    	          <ul className="nav navbar-nav  navbar-right">
-    	            <li><a href="/public/login.html">Log In with Github</a></li>
-    	            <li><a href="/public/createPoll.html">Create Poll</a></li>
-    	          </ul>
-    	        </div>
-    	      </div>
-    	    </nav>
-
-        );
+        const navbarInstance = (
+					<Navbar inverse collapseOnSelect>
+						<Navbar.Header>
+							<Navbar.Brand>
+								<a href="/">FCC Voting App</a>
+							</Navbar.Brand>
+							<Navbar.Toggle />
+						</Navbar.Header>
+						<Navbar.Collapse>
+							<Nav pullRight>
+								<LinkContainer to="/">
+									<NavItem eventKey={1} href="/public/login.html">Login with Github</NavItem>
+								</LinkContainer>
+								<LinkContainer to="/public/newPoll">								
+									<NavItem eventKey={2} href="/public/newPoll.html">Create Poll</NavItem>
+								</LinkContainer>
+							</Nav>
+						</Navbar.Collapse>
+					</Navbar>
+				);
+			
+				return(
+					<div>
+						{navbarInstance}
+					</div>
+				);
     }
 }
 
