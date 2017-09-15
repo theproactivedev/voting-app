@@ -33,22 +33,38 @@ class PollForm extends Component {
 			this.postData(question, options);
 		}
 		console.log(this.state.question + ": " + this.state.options);
-
-		this.setState({ question: "", options: "" });
 	}
 
 	postData(query, choices) {
 		console.log("processing");
+		var content = {question: query, options: choices};
 		fetch("/public/newPoll/processing-poll",
 		{
 			headers: {
 				'Content-Type': 'application/json',
 			},
 			method: "POST",
-			body: JSON.stringify({question: query, options: choices})
-		});
+			body: JSON.stringify(content)
+		})
+		.then(res=> {
+			if (res.ok) {
+				return res.json();
+			} else {
+				return Promise.reject({
+					status: res.status,
+					statusTxt: res.statusText,
+					link: res.url
+				});
+			}
+		})
+		.catch(function(err) {
+      console.log("Status: " + err.status + " " + err.statusTxt);
+      console.log("Link: " + err.link);
+    });
 		console.log("done");
 //		.then(function(res){ return res.json(); });
+this.setState({ question: "", options: "" });
+
 	}
 
 	render() {

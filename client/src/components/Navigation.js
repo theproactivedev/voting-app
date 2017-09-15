@@ -11,17 +11,17 @@ class Navigation extends Component {
 					<Navbar inverse collapseOnSelect>
 						<Navbar.Header>
               <LinkContainer to="/">
-                <Navbar.Brand eventKey={1} href="/public/index.html">FCC Voting App</Navbar.Brand>
+                <Navbar.Brand>FCC Voting App</Navbar.Brand>
               </LinkContainer>
 							<Navbar.Toggle />
 						</Navbar.Header>
 						<Navbar.Collapse>
 							<Nav pullRight>
 								<LinkContainer to="/">
-									<NavItem eventKey={2} href="/public/login.html">Login with Github</NavItem>
+									<NavItem eventKey={1} href="/public/login.html">Login with Github</NavItem>
 								</LinkContainer>
 								<LinkContainer to="/public/newPoll">
-									<NavItem eventKey={3} href="/public/newPoll.html">Create Poll</NavItem>
+									<NavItem eventKey={2} href="/public/newPoll.html">Create Poll</NavItem>
 								</LinkContainer>
 							</Nav>
 						</Navbar.Collapse>
