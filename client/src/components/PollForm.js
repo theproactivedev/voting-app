@@ -1,28 +1,28 @@
 import React, { Component } from 'react';
 
 class PollForm extends Component {
-	
+
 	constructor(props) {
 		super(props);
 		this.state = {
 			question: "",
 			options: ""
 		};
-		
+
 		this.handleQuestionChange = this.handleQuestionChange.bind(this);
 		this.handleOptionsChange = this.handleOptionsChange.bind(this);
 		this.handleSubmit = this.handleSubmit.bind(this);
 		this.postData = this.postData.bind(this);
 	}
-	
+
 	handleQuestionChange(e) {
 		this.setState({ question: e.target.value });
 	}
-	
+
 	handleOptionsChange(e) {
 		this.setState({ options: e.target.value });
 	}
-	
+
 	handleSubmit(e) {
 		e.preventDefault();
 		let question = this.state.question.trim();
@@ -36,13 +36,13 @@ class PollForm extends Component {
 
 		this.setState({ question: "", options: "" });
 	}
-	
+
 	postData(query, choices) {
 		console.log("processing");
-		fetch("http://localhost:3000/public/newPoll/processing-poll",
+		fetch("/public/newPoll/processing-poll",
 		{
 			headers: {
-				'Content-Type': 'application/json'
+				'Content-Type': 'application/json',
 			},
 			method: "POST",
 			body: JSON.stringify({question: query, options: choices})
@@ -50,11 +50,11 @@ class PollForm extends Component {
 		console.log("done");
 //		.then(function(res){ return res.json(); });
 	}
-	
+
 	render() {
 		return(
 			<div>
-			
+
 				<div className="container">
 					<h2>Create Poll</h2>
 

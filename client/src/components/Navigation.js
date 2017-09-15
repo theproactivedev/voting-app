@@ -10,24 +10,24 @@ class Navigation extends Component {
         const navbarInstance = (
 					<Navbar inverse collapseOnSelect>
 						<Navbar.Header>
-							<Navbar.Brand>
-								<a href="/">FCC Voting App</a>
-							</Navbar.Brand>
+              <LinkContainer to="/">
+                <Navbar.Brand eventKey={1} href="/public/index.html">FCC Voting App</Navbar.Brand>
+              </LinkContainer>
 							<Navbar.Toggle />
 						</Navbar.Header>
 						<Navbar.Collapse>
 							<Nav pullRight>
 								<LinkContainer to="/">
-									<NavItem eventKey={1} href="/public/login.html">Login with Github</NavItem>
+									<NavItem eventKey={2} href="/public/login.html">Login with Github</NavItem>
 								</LinkContainer>
-								<LinkContainer to="/public/newPoll">								
-									<NavItem eventKey={2} href="/public/newPoll.html">Create Poll</NavItem>
+								<LinkContainer to="/public/newPoll">
+									<NavItem eventKey={3} href="/public/newPoll.html">Create Poll</NavItem>
 								</LinkContainer>
 							</Nav>
 						</Navbar.Collapse>
 					</Navbar>
 				);
-			
+
 				return(
 					<div>
 						{navbarInstance}
