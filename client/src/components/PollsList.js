@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 
+
 class PollsList extends Component {
   constructor() {
     super();
@@ -18,7 +19,7 @@ class PollsList extends Component {
 		var that = this;
 
     fetch("/polls")
-    .then(function(res) {
+    .then(res => {
       if (res.ok) {
         return res.json();
       } else {
@@ -28,7 +29,7 @@ class PollsList extends Component {
           link: res.url
         });
       }
-		})
+    })
     .then(function(items) {
 			if (items === undefined) {
 				items = [];

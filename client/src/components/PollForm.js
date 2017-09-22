@@ -23,6 +23,10 @@ class PollForm extends Component {
 		this.setState({ options: e.target.value });
 	}
 
+	handleResponse(response) {
+
+	}
+
 	handleSubmit(e) {
 		e.preventDefault();
 		let question = this.state.question.trim();
@@ -38,7 +42,7 @@ class PollForm extends Component {
 	postData(query, choices) {
 		console.log("processing");
 		var content = {question: query, options: choices};
-		fetch("/public/newPoll/processing-poll",
+		fetch("/public/newPoll/",
 		{
 			headers: {
 				'Content-Type': 'application/json',
@@ -46,7 +50,7 @@ class PollForm extends Component {
 			method: "POST",
 			body: JSON.stringify(content)
 		})
-		.then(res=> {
+		.then(res => {
 			if (res.ok) {
 				return res.json();
 			} else {
@@ -63,7 +67,7 @@ class PollForm extends Component {
     });
 		console.log("done");
 //		.then(function(res){ return res.json(); });
-this.setState({ question: "", options: "" });
+		this.setState({ question: "", options: "" });
 
 	}
 
@@ -75,7 +79,8 @@ this.setState({ question: "", options: "" });
 					<h2>Create Poll</h2>
 
 					<div className="row">
-						<form method="post" className="col-sm-12 col-md-8 col-lg-6" onSubmit={this.handleSubmit}>
+						<div className="col-sm-12 col-md-8 col-lg-6">
+						<form method="post" onSubmit={this.handleSubmit}>
 								<div className="form-group">
 										<label htmlFor="question">Question: </label>
 										<input type="text" id="question" name="question" className="form-control" onChange={this.handleQuestionChange} />
@@ -89,6 +94,7 @@ this.setState({ question: "", options: "" });
 										<input type="submit" value="Create Poll" id="createPoll" className="btn btn-primary" />
 								</div>
 						</form>
+						</div>
 					</div>
 				</div>
 			</div>

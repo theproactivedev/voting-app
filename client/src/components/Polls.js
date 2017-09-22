@@ -8,7 +8,7 @@ class Polls extends Component {
 	render() {
 		return(
 			<Switch>
-				<Route exact path="/" component={PollsList} />
+				<Route exact path="/polls" component={PollsList} />
 				<Route path="/polls/:item" component={PollItem} />
 			</Switch>
 		);

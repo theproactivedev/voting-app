@@ -18,10 +18,13 @@ class Navigation extends Component {
 						<Navbar.Collapse>
 							<Nav pullRight>
 								<LinkContainer to="/">
-									<NavItem eventKey={1} href="/public/login.html">Login with Github</NavItem>
+									<NavItem eventKey={1} href="/polls">Login with Github</NavItem>
+								</LinkContainer>
+                <LinkContainer to="/polls">
+									<NavItem eventKey={2} href="/polls">Polls</NavItem>
 								</LinkContainer>
 								<LinkContainer to="/public/newPoll">
-									<NavItem eventKey={2} href="/public/newPoll.html">Create Poll</NavItem>
+									<NavItem eventKey={3} href="/public/newPoll">Create Poll</NavItem>
 								</LinkContainer>
 							</Nav>
 						</Navbar.Collapse>
