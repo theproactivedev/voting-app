@@ -48,6 +48,10 @@ app.route("/")
   res.sendFile(path.join(__dirname+'/client/public/index.html'));
 });
 
+// polls.remove({}, function(err) {
+//   if (err) console.log(err);
+// });
+
 app.get("/polls", function(req, res) {
 	polls.find({}, function(err, data) {
 
@@ -65,7 +69,7 @@ app.get("/polls", function(req, res) {
 	});
 });
 
-app.route("/public/newPoll/processing-poll")
+app.route("/public/newPoll/")
 .post(function(req, res) {
   if (typeof req.body === undefined) {
     console.log("undefined");
@@ -74,14 +78,15 @@ app.route("/public/newPoll/processing-poll")
   }
 
 	var choices = req.body.options.split(",");
-	var list = choices.map(function(choice) {
-		return choice.trim();
+	var list = choices.map(function(oneChoice) {
+		return {choice: oneChoice.trim(), vote: 0};
 	});
 
 
 	var poll = new polls({
 		question: req.body.question,
-		options: list
+		options: list,
+    totalVotes: 0
 	});
 
 	poll.save(function(err) {
@@ -93,10 +98,38 @@ app.route("/public/newPoll/processing-poll")
 
 });
 
+app.get("/polls/:item", function(req, res) {
+  console.log("Req Params: " + req.params.item);
+
+  polls.findOne({
+    question: req.params.item + "?"
+  }, function(err, data) {
+    if (err) {
+      console.log(err);
+    }
+
+    if (data) {
+      res.json(data);
+    } else {
+      res.send("Hello");
+    }
+  });
+});
+
+app.route("/polls/:item/vote").post(function(req, res) {
+  console.log("Choice: " + req.body.choice);
+
+  polls.findOneAndUpdate(
+    { "question": req.params.item + "?",
+      "options.choice" : req.body.choice },
+    { $inc : { "totalVotes" : 1, "options.$.vote" : 1 } }
+  );
+});
+
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname+'/client/public/index.html'));
 });
 
-app.listen(process.env.PORT || 3000, function() {
+app.listen(process.env.PORT || 3001, function() {
 	console.log("Working");
 });
