@@ -53,7 +53,11 @@ class PollsList extends Component {
 			listItems = this.state.polls.map(function(poll, index) {
 				return (
 					<li key={index}>
-            <Link to={`/polls/${poll.question}`}>{poll.question}</Link>
+            <div className="panel panel-info">
+              <div className="panel-body">
+                <Link to={`/polls/${poll.question}`}>{poll.question}</Link>
+              </div>
+            </div>
           </li>
 				);
 			});
@@ -61,7 +65,8 @@ class PollsList extends Component {
 
     return(
       <div className="container">
-				<h1>Voting Polls</h1>
+				<div className="row">
+        <h1>Voting Polls</h1>
         <div>
           {this.state.polls.length === 0 &&
             <p>No questions. Sign in and create your own poll.</p>
@@ -72,6 +77,7 @@ class PollsList extends Component {
 						listItems.length > 0 &&
 						<ul>{listItems}</ul>
 					}
+        </div>
         </div>
       </div>
     );
