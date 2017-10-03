@@ -13,6 +13,7 @@ class PollForm extends Component {
 		this.handleOptionsChange = this.handleOptionsChange.bind(this);
 		this.handleSubmit = this.handleSubmit.bind(this);
 		this.postData = this.postData.bind(this);
+		this.handleResponse = this.handleResponse.bind(this);
 	}
 
 	handleQuestionChange(e) {
@@ -23,8 +24,16 @@ class PollForm extends Component {
 		this.setState({ options: e.target.value });
 	}
 
-	handleResponse(response) {
-
+	handleResponse(res) {
+		if (res.ok) {
+			return res.json();
+		} else {
+			return Promise.reject({
+				status: res.status,
+				statusTxt: res.statusText,
+				link: res.url
+			});
+		}
 	}
 
 	handleSubmit(e) {
@@ -42,7 +51,7 @@ class PollForm extends Component {
 	postData(query, choices) {
 		console.log("processing");
 		var content = {question: query, options: choices};
-		fetch("/public/newPoll/",
+		fetch("/newPoll/",
 		{
 			headers: {
 				'Content-Type': 'application/json',
@@ -50,17 +59,7 @@ class PollForm extends Component {
 			method: "POST",
 			body: JSON.stringify(content)
 		})
-		.then(res => {
-			if (res.ok) {
-				return res.json();
-			} else {
-				return Promise.reject({
-					status: res.status,
-					statusTxt: res.statusText,
-					link: res.url
-				});
-			}
-		})
+		.then(this.handleResponse)
 		.catch(function(err) {
       console.log("Status: " + err.status + " " + err.statusTxt);
       console.log("Link: " + err.link);

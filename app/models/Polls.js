@@ -3,16 +3,16 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
-var optionsSchema = new Schema({
+var OptionsSchema = new Schema({
   choice: String,
   vote: Number
 });
 
-var pollSchema = new Schema({
+var PollSchema = new Schema({
     question : String,
-    options : [optionsSchema],
+    options : [OptionsSchema],
     totalVotes : Number
 });
 
 // database name, name of schema
-module.exports = mongoose.model('polls', pollSchema);
+module.exports = mongoose.model('Polls', PollSchema);

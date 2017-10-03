@@ -17,3 +17,7 @@ ul li {
   /*font-size: 1rem;*/
   font-size: 16px;
 }
+
+div.btn-success p {
+  margin: 5px;
+}
