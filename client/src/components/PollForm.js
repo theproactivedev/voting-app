@@ -6,7 +6,9 @@ class PollForm extends Component {
 		super(props);
 		this.state = {
 			question: "",
-			options: ""
+			options: "",
+			author: "",
+			identification: ""
 		};
 
 		this.handleQuestionChange = this.handleQuestionChange.bind(this);
@@ -14,6 +16,19 @@ class PollForm extends Component {
 		this.handleSubmit = this.handleSubmit.bind(this);
 		this.postData = this.postData.bind(this);
 		this.handleResponse = this.handleResponse.bind(this);
+		this.isSomeoneLoggedIn = this.isSomeoneLoggedIn.bind(this);
+	}
+
+	isSomeoneLoggedIn(response) {
+		const token = response.headers.get('x-auth-token');
+		response.json().then(user => {
+			if (token) {
+				this.setState({
+					author: user.twitterProvider.name,
+					identification: user.twitterProvider.identification
+				});
+			}
+		});
 	}
 
 	handleQuestionChange(e) {
@@ -50,7 +65,10 @@ class PollForm extends Component {
 
 	postData(query, choices) {
 		console.log("processing");
-		var content = {question: query, options: choices};
+		var content = {
+			question: query, options: choices,
+			author: this.state.identification
+		};
 		fetch("/newPoll/",
 		{
 			headers: {
@@ -66,8 +84,12 @@ class PollForm extends Component {
     });
 		console.log("done");
 //		.then(function(res){ return res.json(); });
-		this.setState({ question: "", options: "" });
+		this.setState({ question: "", options: "", author: "", identification: "" });
 
+	}
+
+	componentWillMount() {
+		this.isSomeoneLoggedIn();
 	}
 
 	render() {

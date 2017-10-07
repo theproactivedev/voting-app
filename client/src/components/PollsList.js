@@ -3,8 +3,8 @@ import { Link } from 'react-router-dom';
 
 
 class PollsList extends Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {
       polls: []
     };
@@ -17,7 +17,8 @@ class PollsList extends Component {
 
   fetchData() {
 		var that = this;
-
+    // console.log(typeof this.props.data + " " + this.props.data);
+    // var url = this.props.data + "";
     fetch("/polls")
     .then(res => {
       if (res.ok) {

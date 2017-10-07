@@ -11,7 +11,7 @@ class MainContent extends Component {
 			<Switch>
 				<Route exact path="/" component={Home} />
 				<Route path="/polls" component={Polls} />
-				<Route path="/public/newPoll" component={PollForm} />
+				<Route path="/newPoll" component={PollForm} />
 			</Switch>
 		);
 	}

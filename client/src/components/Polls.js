@@ -6,10 +6,11 @@ import PollItem from './PollItem';
 
 class Polls extends Component {
 	render() {
+
 		return(
 			<Switch>
-				<Route exact path="/polls" component={PollsList} />
-				<Route path="/polls/:item" component={PollItem} />
+			<Route exact path="/polls" component={PollsList} />
+			<Route path="/polls/:item" component={PollItem} />
 			</Switch>
 		);
 	}

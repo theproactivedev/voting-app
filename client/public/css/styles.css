@@ -21,3 +21,14 @@ ul li {
 div.btn-success p {
   margin: 5px;
 }
+
+.twitter-btn {
+  background-color: transparent;
+  color: #2fa5f9;
+  border: none;
+  padding: 0;
+}
+
+.twitter-btn:active {
+  color: grey;
+}
