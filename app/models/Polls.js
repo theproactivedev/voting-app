@@ -11,7 +11,8 @@ var OptionsSchema = new Schema({
 var PollSchema = new Schema({
     question : String,
     options : [OptionsSchema],
-    totalVotes : Number
+    totalVotes : Number,
+    authorID: String
 });
 
 // database name, name of schema

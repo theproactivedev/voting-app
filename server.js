@@ -1,90 +1,50 @@
 const express = require("express");
 const session = require('express-session');
 const mongoose = require("mongoose");
-const mongodb = require("mongodb");
+// const mongodb = require("mongodb");
 const bodyParser = require("body-parser");
 const passport = require('passport');
 const path = require('path');
-const cookieParser = require('cookie-parser');
-const methodOverride = require('method-override');
+// const cookieParser = require('cookie-parser');
+// const methodOverride = require('method-override');
 const cors = require('cors');
-const TwitterStrategy = require('passport-twitter').Strategy;
+// const TwitterStrategy = require('passport-twitter').Strategy;
+var jwt = require('jsonwebtoken');
+var expressJwt = require('express-jwt');
+var router = express.Router();
+var request = require('request');
 
-var routes = require('./app/routes/app.js');
-var app = express();
-
-// require('dotenv').config();
-// require('dotenv').load();
-// console.log(process.env.APP_URL);
-app.use(cors({ credentials: true}));
-
-// require('./app/config/passport.js')(passport);
-var configAuth = require('./app/config/auth');
-
-passport.use(new TwitterStrategy({
-  consumerKey: configAuth.twitterAuth.consumerKey,
-  consumerSecret: configAuth.twitterAuth.consumerSecret,
-  callbackURL: configAuth.twitterAuth.callbackURL
-},
-function(token, tokenSecret, profile, done) {
-  process.nextTick(function() {
-    var searchQuery = {
-      name: profile.displayName
-    };
-
-    var updates = {
-      displayName: profile.displayName,
-      id: profile.id
-    };
-
-    var options = {
-      upsert: true
-    };
-
-    Users.findOneAndUpdate(searchQuery, updates, options, function(err, user) {
-      if(err) {
-        return done(err);
-      } else {
-        return done(null, user);
-      }
-    });
-
-  }); // process.nextTick
-} // function wrapper
-)); // passport use
-
-passport.serializeUser(function (user, done) {
-  console.log("Serialize");
-  done(null, user.id);
-});
-
-passport.deserializeUser(function (id, done) {
-  console.log("Deserialize");
-  Users.findById(id, function (err, user) {
-    done(err, user);
-  });
-});
-
-
-
-
-app.use(express.static(path.join(__dirname, 'client/public')));
-app.use(cookieParser());
-app.use(methodOverride());
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(bodyParser.json());
-app.use(session({
-  secret: 'votingApp',
-  resave: true,
-  saveUninitialized: true,
-  key: 'sid'
-}));
-app.use(passport.initialize());
-app.use(passport.session());
-
+require('dotenv').config();
 var db = "mongodb://admin_eirin:v0t!n6%40ppp0ll$@ds039504.mlab.com:39504/polls";
 mongoose.connect(db);
 //mongoose.connect(process.env.MONGO_URI || "mongodb://localhost:27017/polls");
+
+var routes = require('./app/routes/app.js');
+var Users = require("./app/models/Users.js");
+var configAuth = require("./app/config/auth.js");
+require('./app/config/passport.js')(passport);
+var app = express();
+
+var corsOption = {
+  origin: true,
+  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+  credentials: true,
+  exposedHeaders: ['x-auth-token']
+};
+app.use(cors(corsOption));
+app.use(express.static(path.join(__dirname, 'client/public')));
+// app.use(cookieParser());
+// app.use(methodOverride());
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
+// app.use(session({
+//   secret: 'votingApp',
+//   resave: true,
+//   saveUninitialized: true,
+//   key: 'sid'
+// }));
+// app.use(passport.initialize());
+// app.use(passport.session());
 
 // MongoClient.connect(dbLink, {
 //     uri_decode_auth: true }, function(err, db) {
@@ -96,23 +56,122 @@ mongoose.connect(db);
 //
 // });
 
+var createToken = function(auth) {
+  return jwt.sign({
+    id: auth.id
+  }, 'my-secret',
+  {
+    expiresIn: 60 * 120
+  });
+};
+
+var generateToken = function (req, res, next) {
+  req.token = createToken(req.auth);
+  return next();
+};
+
+var sendToken = function (req, res) {
+  res.setHeader('x-auth-token', req.token);
+  return res.status(200).send(JSON.stringify(req.user));
+};
+
+router.route('/auth/twitter/reverse')
+  .post(function(req, res) {
+    request.post({
+      url: 'https://api.twitter.com/oauth/request_token',
+      oauth: {
+        oauth_callback: "http%3A%2F%2Flocalhost%3A3000%2Ftwitter-callback",
+        consumer_key: configAuth.twitterAuth.consumerKey,
+        consumer_secret: configAuth.twitterAuth.consumerSecret
+      }
+    }, function (err, r, body) {
+      if (err) {
+        return res.send(500, { message: e.message });
+      }
+
+
+      var jsonStr = '{ "' + body.replace(/&/g, '", "').replace(/=/g, '": "') + '"}';
+      res.send(JSON.parse(jsonStr));
+    });
+  });
+
+router.route('/auth/twitter')
+  .post((req, res, next) => {
+    request.post({
+      url: `https://api.twitter.com/oauth/access_token?oauth_verifier`,
+      oauth: {
+        consumer_key: configAuth.twitterAuth.consumerKey,
+        consumer_secret: configAuth.twitterAuth.consumerSecret,
+        token: req.query.oauth_token
+      },
+      form: { oauth_verifier: req.query.oauth_verifier }
+    }, function (err, r, body) {
+      if (err) {
+        return res.send(500, { message: e.message });
+      }
+
+      console.log(body);
+      const bodyString = '{ "' + body.replace(/&/g, '", "').replace(/=/g, '": "') + '"}';
+      const parsedBody = JSON.parse(bodyString);
+
+      req.body['oauth_token'] = parsedBody.oauth_token;
+      req.body['oauth_token_secret'] = parsedBody.oauth_token_secret;
+      req.body['user_id'] = parsedBody.user_id;
+
+      next();
+    });
+  }, passport.authenticate('twitter-token', {session: false}), function(req, res, next) {
+      if (!req.user) {
+        return res.send(401, 'User Not Authenticated');
+      }
+
+      // prepare token for API
+      req.auth = {
+        id: req.user.id
+      };
+
+      return next();
+    }, generateToken, sendToken);
+
+//token handling middleware
+var authenticate = expressJwt({
+  secret: 'my-secret',
+  requestProperty: 'auth',
+  getToken: function(req) {
+    if (req.headers['x-auth-token']) {
+      return req.headers['x-auth-token'];
+    }
+    return null;
+  }
+});
+
+var getCurrentUser = function(req, res, next) {
+  Users.findById(req.auth.id, function(err, user) {
+    if (err) {
+      next(err);
+    } else {
+      req.user = user;
+      next();
+    }
+  });
+};
+
+var getOne = function (req, res) {
+  var user = req.user.toObject();
+
+  delete user['twitterProvider'];
+  delete user['__v'];
+
+  res.json(user);
+};
+
+router.route('/auth/me')
+  .get(authenticate, getCurrentUser, getOne);
+
+app.use('/api/v1', router);
+
 routes(app, passport);
 
-app.get('/auth/twitter',
-  passport.authenticate('twitter'));
-
-app.get('/auth/twitter/callback',
-  passport.authenticate('twitter', { failureRedirect: '/' }),
-  function(req, res) {
-    res.redirect('/polls');
-});
-
-app.get('/logout', function(req, res){
-  console.log('logging out');
-  req.logout();
-  res.redirect('/');
-});
-
-app.listen(process.env.PORT || 3001, function() {
+app.listen(3001, function() {
 	console.log("Working");
 });

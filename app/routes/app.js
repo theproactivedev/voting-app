@@ -3,18 +3,6 @@ var Users = require("../models/Users");
 
 module.exports = function(app, passport) {
 
-  app.route("/isSomeoneLoggedIn")
-  .get(function(req, res) {
-    if (req.user != undefined) {
-      res.json(req.user);
-    } else {
-      res.json({
-        displayName: "",
-        id: ""
-      });
-    }
-  });
-
   app.route("/polls").get(function(req, res) {
   	Polls.find({}, function(err, data) {
 
@@ -48,7 +36,8 @@ module.exports = function(app, passport) {
   	var poll = new Polls({
   		question: req.body.question,
   		options: list,
-      totalVotes: 0
+      totalVotes: 0,
+      authorID: req.body.identification
   	});
 
   	poll.save(function(err) {
@@ -95,17 +84,13 @@ module.exports = function(app, passport) {
     }
   });
 
-  // app.get('*', function(req, res) {
-  //   res.sendFile(process.cwd() + "/client/public/index.html");
-  // });
+  app.get('/logout', function(req, res){
+    res.redirect("http://localhost:3000/");
+    console.log("Logging Out");
+  });
 
-  function ensureAuthenticated(req, res, next) {
-    if (req.isAuthenticated()) {
-      return next();
-    }
-    res.redirect('/');
-  }
-
-
-
+  app.get('*', function(req, res) {
+    res.redirect("http://localhost:3000/");
+    console.log("Sorry page not found.");
+  });
 };
