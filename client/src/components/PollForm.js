@@ -16,20 +16,24 @@ class PollForm extends Component {
 		this.handleSubmit = this.handleSubmit.bind(this);
 		this.postData = this.postData.bind(this);
 		this.handleResponse = this.handleResponse.bind(this);
-		this.isSomeoneLoggedIn = this.isSomeoneLoggedIn.bind(this);
+		this.isUserLoggedIn = this.isUserLoggedIn.bind(this);
+
 	}
 
-	isSomeoneLoggedIn(response) {
-		const token = response.headers.get('x-auth-token');
-		response.json().then(user => {
-			if (token) {
-				this.setState({
-					author: user.twitterProvider.name,
-					identification: user.twitterProvider.identification
-				});
-			}
-		});
+	isUserLoggedIn() {
+		if (localStorage['abcd'] !== undefined) {
+			var user = JSON.parse(localStorage['abcd']);
+			this.setState({
+				author: user.name,
+				identification: user.identity
+			});
+		}
 	}
+
+	componentWillMount() {
+		this.isUserLoggedIn();
+	}
+
 
 	handleQuestionChange(e) {
 		this.setState({ question: e.target.value });
@@ -79,17 +83,13 @@ class PollForm extends Component {
 		})
 		.then(this.handleResponse)
 		.catch(function(err) {
-      console.log("Status: " + err.status + " " + err.statusTxt);
-      console.log("Link: " + err.link);
+      console.log("Status on Poll form: " + err.status + " " + err.statusTxt);
+      console.log("Link on Poll form: " + err.link);
     });
 		console.log("done");
 //		.then(function(res){ return res.json(); });
 		this.setState({ question: "", options: "", author: "", identification: "" });
 
-	}
-
-	componentWillMount() {
-		this.isSomeoneLoggedIn();
 	}
 
 	render() {

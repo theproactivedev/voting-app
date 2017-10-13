@@ -18,6 +18,7 @@ class PollItem extends Component {
     this.handleResponse = this.handleResponse.bind(this);
     this.loadChart = this.loadChart.bind(this);
     this.getColor = this.getColor.bind(this);
+    this.checkColors = this.checkColors.bind(this);
   }
 
   getColor() {
@@ -27,6 +28,15 @@ class PollItem extends Component {
       color += letters[Math.floor(Math.random() * 16)];
     }
     return color;
+  }
+
+  checkColors(colors, colour) {
+    for (var i = 0; i < colors.length; i++) {
+      if (colors[i] === colour) {
+        return true;
+      }
+    }
+    return false;
   }
 
   loadChart() {
@@ -39,8 +49,10 @@ class PollItem extends Component {
     for (var i = 0; i < this.state.choices.length; i++) {
       values.push(item[i].vote);
       answers.push(item[i].choice);
-
-      var color = this.getColor();
+      var color = "";
+      do {
+        color = this.getColor();
+      } while (this.checkColors(bgColors, color) === true);
       bgColors.push(color);
     }
 
@@ -89,7 +101,8 @@ class PollItem extends Component {
   }
 
   submitVote() {
-    var url = "/polls/" + this.props.match.params.item;
+    console.log(this.props.data + " - item");
+    var url = this.props.data + "/" + this.props.match.params.item;
     var vote = {
       choice : this.state.vote
     };
@@ -104,15 +117,15 @@ class PollItem extends Component {
 		})
 		.then(this.handleResponse)
 		.catch(function(err) {
-      console.log("Status: " + err.status + " " + err.statusTxt);
-      console.log("Link: " + err.link);
+      console.log("Status on Poll Item: " + err.status + " " + err.statusTxt);
+      console.log("Link on Poll Item: " + err.link);
     });
 
   }
 
   getPoll() {
     var params = this.props.match.params.item;
-    var url = "/polls/" + params;
+    var url = this.props.data + "/" + params;
     var that = this;
 
     fetch(url)

@@ -4,6 +4,8 @@ var Users = require("../models/Users");
 module.exports = function(app, passport) {
 
   app.route("/polls").get(function(req, res) {
+    console.log(typeof req.user);
+
   	Polls.find({}, function(err, data) {
 
   		if (err) {
@@ -18,6 +20,26 @@ module.exports = function(app, passport) {
   		}
 
   	});
+  });
+
+  app.route("/myPolls/:user").get(function(req, res) {
+
+    Polls.find({
+      authorID: req.params.user
+    }, function(err, data) {
+
+      if (err) {
+        console.log(err);
+      }
+
+      if(data) {
+        res.json(data);
+        console.log("contains something");
+      } else {
+        console.log("undefined");
+      }
+
+    });
   });
 
   app.route("/newPoll").post(function(req, res) {
@@ -37,7 +59,7 @@ module.exports = function(app, passport) {
   		question: req.body.question,
   		options: list,
       totalVotes: 0,
-      authorID: req.body.identification
+      authorID: req.body.author
   	});
 
   	poll.save(function(err) {
@@ -84,13 +106,10 @@ module.exports = function(app, passport) {
     }
   });
 
-  app.get('/logout', function(req, res){
-    res.redirect("http://localhost:3000/");
-    console.log("Logging Out");
-  });
-
   app.get('*', function(req, res) {
     res.redirect("http://localhost:3000/");
+    var fullUrl = req.protocol + '://' + req.get('host') + req.originalUrl;
+    console.log("Full URL: " + fullUrl);
     console.log("Sorry page not found.");
   });
 };

@@ -1,25 +1,40 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 
-
 class PollsList extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      polls: []
+      polls: [],
+      author: ""
     };
     this.fetchData = this.fetchData.bind(this);
+    this.isUserLoggedIn = this.isUserLoggedIn.bind(this);
+  }
+
+  componentDidMount() {
+    this.fetchData();
   }
 
   componentWillMount() {
-    this.fetchData();
+    this.isUserLoggedIn();
+  }
+
+  isUserLoggedIn() {
+    if (localStorage['abcd'] !== undefined) {
+      var user = JSON.parse(localStorage['abcd']);
+      this.setState({
+        author: user.identity
+      });
+    }
   }
 
   fetchData() {
 		var that = this;
-    // console.log(typeof this.props.data + " " + this.props.data);
-    // var url = this.props.data + "";
-    fetch("/polls")
+    var url = this.props.data === "/myPolls" ? this.props.data
+    + "/" + this.state.author : this.props.data;
+    console.log("Polls List: " + this.state.author);
+    fetch(url)
     .then(res => {
       if (res.ok) {
         return res.json();
@@ -41,16 +56,16 @@ class PollsList extends Component {
       });
     })
     .catch(function(err) {
-      console.log("Status: " + err.status + " " + err.statusTxt);
-      console.log("Link: " + err.link);
+      console.log("Status on Polls List: " + err.status + " " + err.statusTxt);
+      console.log("Link on Polls List: " + err.link);
     });
   }
 
   render() {
 		var polls = this.state.polls;
 		var listItems = [];
-
 		if (polls.length > 0) {
+      // var pollLink = this.props.data + "/";
 			listItems = this.state.polls.map(function(poll, index) {
 				return (
 					<li key={index}>
@@ -64,10 +79,13 @@ class PollsList extends Component {
 			});
 		}
 
+    var headline = this.props.data === "/polls" ? "Polls" :
+    "My Polls";
+
     return(
       <div className="container">
 				<div className="row">
-        <h1>Voting Polls</h1>
+        <h1>{headline}</h1>
         <div>
           {this.state.polls.length === 0 &&
             <p>No questions. Sign in and create your own poll.</p>

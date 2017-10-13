@@ -11,7 +11,8 @@ class Navigation extends Component {
     super();
     this.state = {
       isAuthenticated: false,
-      user: null,
+      author: "",
+      identification: "?",
       token: ''
     };
 
@@ -24,9 +25,19 @@ class Navigation extends Component {
     const token = response.headers.get('x-auth-token');
     response.json().then(user => {
       if (token) {
+        localStorage.setItem("abcd",
+          JSON.stringify(
+            {
+              "identity" : user.twitterProvider.identification,
+              "name" : user.twitterProvider.name
+            }
+          )
+        );
+        var person = JSON.parse(localStorage['abcd']);
         this.setState({
           isAuthenticated: true,
-          user: user,
+          author: person.name,
+          identification: person.identity,
           token: token
         });
       }
@@ -41,15 +52,29 @@ class Navigation extends Component {
     this.setState({
       isAuthenticated: false,
       token: '',
-      user: null
+      author: "",
+      identification: ""
     });
+    localStorage.removeItem('abcd');
+  }
+
+  componentWillMount() {
+    if (localStorage['abcd'] !== undefined) {
+      var person = JSON.parse(localStorage['abcd']);
+      this.setState({
+        isAuthenticated : true,
+        author: person.name,
+        identification: person.identity,
+      });
+    }
   }
 
   render() {
-    var paths = ["/myPolls", "/newPoll", "/logout"];
+    var userPolls = "/myPolls/" + this.state.identification;
+    var paths = [userPolls, "/newPoll", "/logout"];
     var logout = "";
-    if (this.state.user != null) {
-      logout = this.state.user.twitterProvider.name + " Log Out";
+    if (this.state.user !== null || this.state.user !== undefined) {
+      logout = this.state.author + " Log Out";
     }
     var pathNames = ["My Polls", "New Poll", logout];
     const ifLoggedIn = [];
@@ -59,7 +84,7 @@ class Navigation extends Component {
 
       if (paths[i] === "/logout") {
         const item = (
-          <LinkContainer to={paths[i]} onClick={this.logout}  >
+          <LinkContainer to={paths[i]} onClick={this.logout} >
             <NavItem eventKey={num} href={paths[i]}>{pathNames[i]}</NavItem>
           </LinkContainer>
         );

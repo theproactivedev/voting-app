@@ -9,8 +9,19 @@ class Polls extends Component {
 
 		return(
 			<Switch>
-			<Route exact path="/polls" component={PollsList} />
-			<Route path="/polls/:item" component={PollItem} />
+				<Route exact path="/polls" render={(props) => (
+				  <PollsList {...props} data={'/polls'} />
+				)} />
+				<Route path="/polls/:item" render={(props) => (
+				  <PollItem {...props} data={'/polls'} />
+				)} />
+
+				<Route path="/myPolls/:user" render={(props) => (
+				  <PollsList {...props} data={'/myPolls'} />
+				)} />
+				<Route path="/myPolls/:item" render={(props) => (
+				  <PollItem {...props} data={'/myPolls'} />
+				)} />
 			</Switch>
 		);
 	}

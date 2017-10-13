@@ -5,7 +5,7 @@ const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 const passport = require('passport');
 const path = require('path');
-// const cookieParser = require('cookie-parser');
+const cookieParser = require('cookie-parser');
 // const methodOverride = require('method-override');
 const cors = require('cors');
 // const TwitterStrategy = require('passport-twitter').Strategy;
@@ -21,9 +21,19 @@ mongoose.connect(db);
 
 var routes = require('./app/routes/app.js');
 var Users = require("./app/models/Users.js");
+var Polls = require("./app/models/Polls.js");
+
 var configAuth = require("./app/config/auth.js");
 require('./app/config/passport.js')(passport);
 var app = express();
+
+// Users.remove({}, function(err) {
+//   if (err) console.log(err);
+// });
+//
+// Polls.remove({}, function(err) {
+//   if (err) console.log(err);
+// });
 
 var corsOption = {
   origin: true,
@@ -33,18 +43,17 @@ var corsOption = {
 };
 app.use(cors(corsOption));
 app.use(express.static(path.join(__dirname, 'client/public')));
-// app.use(cookieParser());
+app.use(cookieParser());
 // app.use(methodOverride());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
-// app.use(session({
-//   secret: 'votingApp',
-//   resave: true,
-//   saveUninitialized: true,
-//   key: 'sid'
-// }));
-// app.use(passport.initialize());
-// app.use(passport.session());
+app.use(session({
+  secret: 'votingApp',
+  resave: true,
+  saveUninitialized: true
+}));
+app.use(passport.initialize());
+app.use(passport.session());
 
 // MongoClient.connect(dbLink, {
 //     uri_decode_auth: true }, function(err, db) {
@@ -89,7 +98,6 @@ router.route('/auth/twitter/reverse')
         return res.send(500, { message: e.message });
       }
 
-
       var jsonStr = '{ "' + body.replace(/&/g, '", "').replace(/=/g, '": "') + '"}';
       res.send(JSON.parse(jsonStr));
     });
@@ -130,6 +138,8 @@ router.route('/auth/twitter')
         id: req.user.id
       };
 
+      console.log("Req user id" + req.user.id);
+
       return next();
     }, generateToken, sendToken);
 
@@ -155,22 +165,39 @@ var getCurrentUser = function(req, res, next) {
     }
   });
 };
+//
+// var getOne = function (req, res) {
+//   var user = req.user.toObject();
+//
+//   delete user['twitterProvider'];
+//   delete user['__v'];
+//
+//   res.json(user);
+// };
 
-var getOne = function (req, res) {
-  var user = req.user.toObject();
-
-  delete user['twitterProvider'];
-  delete user['__v'];
-
-  res.json(user);
-};
-
-router.route('/auth/me')
-  .get(authenticate, getCurrentUser, getOne);
+// router.route('/auth/me')
+//   .get(authenticate, getCurrentUser, getOne);
 
 app.use('/api/v1', router);
 
 routes(app, passport);
+
+app.route("/me").get(function(req, res) {
+  // if (req.user) {
+  //   res.json(req.user);
+  // } else {
+  //   res.json({
+  //     "message" : "undefined"
+  //   });
+  // }
+  res.send("Hello");
+});
+
+app.route('/logout').get(function(req, res){
+  req.logout();
+  res.redirect("http://localhost:3000/polls");
+  console.log("Logging Out");
+});
 
 app.listen(3001, function() {
 	console.log("Working");
