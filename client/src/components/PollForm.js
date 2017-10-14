@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import {Redirect} from 'react-router-dom';
 
 class PollForm extends Component {
 
@@ -8,7 +9,8 @@ class PollForm extends Component {
 			question: "",
 			options: "",
 			author: "",
-			identification: ""
+			identification: "",
+			redirect: false
 		};
 
 		this.handleQuestionChange = this.handleQuestionChange.bind(this);
@@ -33,7 +35,6 @@ class PollForm extends Component {
 	componentWillMount() {
 		this.isUserLoggedIn();
 	}
-
 
 	handleQuestionChange(e) {
 		this.setState({ question: e.target.value });
@@ -63,16 +64,16 @@ class PollForm extends Component {
 			return;
 		} else {
 			this.postData(question, options);
+			document.getElementById("newPollForm").reset();
 		}
-		console.log(this.state.question + ": " + this.state.options);
 	}
 
 	postData(query, choices) {
-		console.log("processing");
 		var content = {
 			question: query, options: choices,
 			author: this.state.identification
 		};
+
 		fetch("/newPoll/",
 		{
 			headers: {
@@ -86,13 +87,21 @@ class PollForm extends Component {
       console.log("Status on Poll form: " + err.status + " " + err.statusTxt);
       console.log("Link on Poll form: " + err.link);
     });
-		console.log("done");
-//		.then(function(res){ return res.json(); });
-		this.setState({ question: "", options: "", author: "", identification: "" });
+		this.setState({
+			question: "",
+			options: "",
+			author: "",
+			identification: "",
+			redirect: true
+		});
 
 	}
 
 	render() {
+		if (this.state.redirect) {
+			return <Redirect to={{pathname: '/polls'}} />
+		}
+
 		return(
 			<div>
 
@@ -101,7 +110,7 @@ class PollForm extends Component {
 
 					<div className="row">
 						<div className="col-sm-12 col-md-8 col-lg-6">
-						<form method="post" onSubmit={this.handleSubmit}>
+						<form id="newPollForm" method="post" onSubmit={this.handleSubmit}>
 								<div className="form-group">
 										<label htmlFor="question">Question: </label>
 										<input type="text" id="question" name="question" className="form-control" onChange={this.handleQuestionChange} />

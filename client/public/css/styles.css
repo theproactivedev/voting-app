@@ -5,6 +5,19 @@ div.panel-body {
 label.question {
   /*font-size: 1.875rem;*/
   font-size: 30px;
+  width: 100%;
+}
+
+.fa-trash {
+  color: red;
+}
+
+span.pull-right:hover .fa-trash {
+ color: grey;
+}
+
+span.pull-right {
+  pointer-events: all;
 }
 
 ul {

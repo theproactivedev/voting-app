@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import {Doughnut} from 'react-chartjs-2';
+import PollChart from './PollChart.js';
+import { Redirect } from 'react-router-dom';
 
 class PollItem extends Component {
   constructor(props) {
@@ -8,7 +9,9 @@ class PollItem extends Component {
       query: "",
       choices: [],
       vote: "Select your answer.",
-      hasVoted: true
+      hasVoted: true,
+      author: "",
+      redirect: false
     };
 
     this.getPoll = this.getPoll.bind(this);
@@ -16,57 +19,22 @@ class PollItem extends Component {
     this.handleVoteChange = this.handleVoteChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleResponse = this.handleResponse.bind(this);
-    this.loadChart = this.loadChart.bind(this);
-    this.getColor = this.getColor.bind(this);
-    this.checkColors = this.checkColors.bind(this);
+    this.isUserLoggedIn = this.isUserLoggedIn.bind(this);
+    this.tweetPoll = this.tweetPoll.bind(this);
+    this.deletePoll = this.deletePoll.bind(this);
   }
 
-  getColor() {
-    var letters = '0123456789ABCDEF';
-    var color = '#';
-    for (var i = 0; i < 6; i++) {
-      color += letters[Math.floor(Math.random() * 16)];
-    }
-    return color;
+  componentWillMount() {
+    this.isUserLoggedIn();
   }
 
-  checkColors(colors, colour) {
-    for (var i = 0; i < colors.length; i++) {
-      if (colors[i] === colour) {
-        return true;
-      }
+  isUserLoggedIn() {
+    if (localStorage['abcd'] !== undefined) {
+      var user = JSON.parse(localStorage['abcd']);
+      this.setState({
+        author: user.identity
+      });
     }
-    return false;
-  }
-
-  loadChart() {
-    var values = [];
-    var answers = [];
-    // var bgColors = ['#cc0600', '#a32e00', '#c16400', "blue", "green"];
-    var bgColors = [];
-
-    var item = this.state.choices;
-    for (var i = 0; i < this.state.choices.length; i++) {
-      values.push(item[i].vote);
-      answers.push(item[i].choice);
-      var color = "";
-      do {
-        color = this.getColor();
-      } while (this.checkColors(bgColors, color) === true);
-      bgColors.push(color);
-    }
-
-    var data = {
-      datasets: [{
-        label: "Choices",
-        backgroundColor: bgColors,
-        borderColor: 'white',
-        data: values
-      }],
-      labels: answers
-    };
-
-    return data;
   }
 
   handleResponse(res) {
@@ -96,7 +64,7 @@ class PollItem extends Component {
       this.submitVote();
       this.setState({ hasVoted : true });
       this.getPoll();
-      this.loadChart();
+      // this.loadChart();
     }
   }
 
@@ -143,11 +111,32 @@ class PollItem extends Component {
 
   }
 
+  tweetPoll() {
+    window.open('https://twitter.com/intent/tweet?hashtags= freecodecamp&text='   + encodeURIComponent(this.state.query));
+  }
+
+  deletePoll() {
+    var params = this.props.match.params.item;
+    var url = this.props.data + "/" + params;
+
+    fetch(url, {method: "DELETE"})
+    .then(this.handleResponse)
+    .catch(function(err) {
+      console.log("Status: " + err.status + " " + err.statusTxt);
+      console.log("Link: " + err.link);
+    });
+    this.setState({redirect: true});
+  }
+
   componentDidMount() {
     this.getPoll();
   }
 
   render() {
+    if (this.state.redirect) {
+      return <Redirect to={{pathname: "/polls"}} />
+    }
+
     var options = [];
     options = this.state.choices.map(function(choice, index) {
       return (
@@ -171,7 +160,11 @@ class PollItem extends Component {
           <div className="col-sm-12 col-md-6 col-lg-6">
             <form>
               <div className="form-group">
-                <label className="question">{this.state.query}</label>
+                <label className="question">{this.state.query}
+                {this.state.author !== "" &&
+                  <span className="pull-right" onClick={this.deletePoll}><i className="fa fa-trash" aria-hidden="true"></i></span>
+                }
+                </label>
                 <p>I would like to vote for: </p>
                 <select className="form-control" onChange={this.handleVoteChange}>
                   <option key={0} value="Select your answer.">Select your answer.</option>
@@ -180,22 +173,14 @@ class PollItem extends Component {
               </div>
               <div className="form-group">
                 <input type="submit" value="Submit" className="btn btn-primary" onClick={this.handleSubmit} />
+                {this.state.author !== "" &&
+                    <button type="button" className="btn btn-info pull-right" onClick={this.tweetPoll}>Tweet</button>
+                }
               </div>
             </form>
           </div>
 
-          <div className="col-sm-12 col-md-6 col-lg-6">
-            <Doughnut data={this.loadChart}
-            options={{
-              title: {
-                display: true,
-                text: this.state.query,
-                position: "bottom"
-              },
-              animateRotate : true
-            }}
-            />
-          </div>
+          <PollChart question={this.state.query} options={this.state.choices} />
 
         </div>
       </div>

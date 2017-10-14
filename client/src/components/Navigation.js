@@ -5,6 +5,7 @@ import {NavItem} from 'react-bootstrap';
 import {LinkContainer} from 'react-router-bootstrap';
 import TwitterLogin from 'react-twitter-auth';
 
+
 class Navigation extends Component {
 
   constructor() {
@@ -71,7 +72,7 @@ class Navigation extends Component {
 
   render() {
     var userPolls = "/myPolls/" + this.state.identification;
-    var paths = [userPolls, "/newPoll", "/logout"];
+    var paths = [userPolls, "/newPoll", "/"];
     var logout = "";
     if (this.state.user !== null || this.state.user !== undefined) {
       logout = this.state.author + " Log Out";
@@ -82,7 +83,7 @@ class Navigation extends Component {
     for(var i = 0; i < 3; i++) {
       ++num;
 
-      if (paths[i] === "/logout") {
+      if (paths[i] === "/") {
         const item = (
           <LinkContainer to={paths[i]} onClick={this.logout} >
             <NavItem eventKey={num} href={paths[i]}>{pathNames[i]}</NavItem>
@@ -124,17 +125,15 @@ class Navigation extends Component {
             {!!this.state.isAuthenticated &&
               ifLoggedIn
             }
-
-
 					</Nav>
 				</Navbar.Collapse>
 			</Navbar>
 		);
 
 		return(
-			<div>
-				{navbarInstance}
-			</div>
+      <div>
+        {navbarInstance}
+      </div>
 		);
   }
 }

@@ -4,22 +4,25 @@ var Users = require("../models/Users");
 module.exports = function(app, passport) {
 
   app.route("/polls").get(function(req, res) {
-    console.log(typeof req.user);
+    // if (req.isAuthenticated()) {
 
-  	Polls.find({}, function(err, data) {
+    	Polls.find({}, function(err, data) {
 
-  		if (err) {
-  			console.log(err);
-  		}
+    		if (err) {
+    			console.log(err);
+    		}
 
-  		if(data) {
-  			res.json(data);
-  			console.log("contains something");
-  		} else {
-  			console.log("undefined");
-  		}
+    		if(data) {
+    			res.json(data);
+    		} else {
+    			console.log("undefined");
+    		}
 
-  	});
+    	});
+    // } else {
+    //   console.log("Req not authenticated");
+    //   res.redirect("/");
+    // }
   });
 
   app.route("/myPolls/:user").get(function(req, res) {
@@ -67,13 +70,12 @@ module.exports = function(app, passport) {
   			console.log(err);
   		}
   	});
-  	console.log("Success");
+
+    res.redirect("/polls");
 
   });
 
   app.route("/polls/:item").get(function(req, res) {
-    console.log("Req Params: " + req.params.item);
-
     Polls.findOne({
       question: req.params.item + "?"
     }, function(err, data) {
@@ -93,8 +95,6 @@ module.exports = function(app, passport) {
     if (typeof req.body === undefined) {
       console.log("Req.Body is undefined");
     } else {
-      console.log("Choice: " + req.body.choice);
-
       Polls.findOneAndUpdate(
         { "question": req.params.item + "?",
           "options.choice" : req.body.choice },
@@ -103,6 +103,18 @@ module.exports = function(app, passport) {
           if (err) console.log(err);
         }
       );
+    }
+  });
+
+  app.route("/polls/:item").delete(function(req, res) {
+    if (typeof req.body === undefined) {
+      console.log("Req.Body is undefined");
+    } else {
+
+      Polls.remove({"question" : req.params.item + "?"}, function(err) {
+        console.log(err);
+      });
+      res.redirect("/polls");
     }
   });
 
