@@ -14,18 +14,24 @@ class PollItem extends Component {
       redirect: false
     };
 
+    this.handleResponse = this.handleResponse.bind(this);
+    this.handleError = this.handleError.bind(this);
+    this.isUserLoggedIn = this.isUserLoggedIn.bind(this);
     this.getPoll = this.getPoll.bind(this);
+    this.tweetPoll = this.tweetPoll.bind(this);
+    this.deletePoll = this.deletePoll.bind(this);
+
     this.submitVote = this.submitVote.bind(this);
     this.handleVoteChange = this.handleVoteChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
-    this.handleResponse = this.handleResponse.bind(this);
-    this.isUserLoggedIn = this.isUserLoggedIn.bind(this);
-    this.tweetPoll = this.tweetPoll.bind(this);
-    this.deletePoll = this.deletePoll.bind(this);
   }
 
   componentWillMount() {
     this.isUserLoggedIn();
+  }
+
+  componentDidMount() {
+    this.getPoll();
   }
 
   isUserLoggedIn() {
@@ -49,6 +55,11 @@ class PollItem extends Component {
     }
   }
 
+  handleError(err) {
+    console.log("Status on Poll Item: " + err.status + " " + err.statusTxt);
+    console.log("Link on Poll Item: " + err.link);
+  }
+
   handleVoteChange(e) {
     this.setState({
       vote: e.target.value
@@ -63,8 +74,7 @@ class PollItem extends Component {
     } else {
       this.submitVote();
       this.setState({ hasVoted : true });
-      this.getPoll();
-      // this.loadChart();
+      setTimeout(this.getPoll, 600);
     }
   }
 
@@ -75,6 +85,15 @@ class PollItem extends Component {
       choice : this.state.vote
     };
 
+    if (this.state.vote === "Others") {
+      vote = {
+        choice : document.getElementById("otherAnswer").value
+      };
+      this.setState({
+        vote: 'Select your answer.'
+      });
+    }
+
     fetch(url,
 		{
 			headers: {
@@ -84,11 +103,7 @@ class PollItem extends Component {
 			body: JSON.stringify(vote)
 		})
 		.then(this.handleResponse)
-		.catch(function(err) {
-      console.log("Status on Poll Item: " + err.status + " " + err.statusTxt);
-      console.log("Link on Poll Item: " + err.link);
-    });
-
+		.catch(this.handleError);
   }
 
   getPoll() {
@@ -104,10 +119,7 @@ class PollItem extends Component {
         choices: item.options
       });
     })
-    .catch(function(err) {
-      console.log("Status: " + err.status + " " + err.statusTxt);
-      console.log("Link: " + err.link);
-    });
+    .catch(this.handleError);
 
   }
 
@@ -121,15 +133,8 @@ class PollItem extends Component {
 
     fetch(url, {method: "DELETE"})
     .then(this.handleResponse)
-    .catch(function(err) {
-      console.log("Status: " + err.status + " " + err.statusTxt);
-      console.log("Link: " + err.link);
-    });
+    .catch(this.handleError);
     this.setState({redirect: true});
-  }
-
-  componentDidMount() {
-    this.getPoll();
   }
 
   render() {
@@ -143,6 +148,13 @@ class PollItem extends Component {
         <option key={index+1} value={choice.choice}>{choice.choice}</option>
       );
     });
+
+    if (this.state.author !== "") {
+      const editable = (
+        <option key={options.length+1} value="Others">Others</option>
+      );
+      options.push(editable);
+    }
 
     return(
       <div className="container">
@@ -171,6 +183,12 @@ class PollItem extends Component {
                   {options}
                 </select>
               </div>
+              {this.state.vote === "Others" &&
+                <div className="form-group">
+                  <label htmlFor="otherAnswer">Others: </label>
+                  <input type="text" id="otherAnswer" name="others" />
+                </div>
+              }
               <div className="form-group">
                 <input type="submit" value="Submit" className="btn btn-primary" onClick={this.handleSubmit} />
                 {this.state.author !== "" &&

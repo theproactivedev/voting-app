@@ -8,8 +8,6 @@ class PollForm extends Component {
 		this.state = {
 			question: "",
 			options: "",
-			author: "",
-			identification: "",
 			redirect: false
 		};
 
@@ -18,22 +16,6 @@ class PollForm extends Component {
 		this.handleSubmit = this.handleSubmit.bind(this);
 		this.postData = this.postData.bind(this);
 		this.handleResponse = this.handleResponse.bind(this);
-		this.isUserLoggedIn = this.isUserLoggedIn.bind(this);
-
-	}
-
-	isUserLoggedIn() {
-		if (localStorage['abcd'] !== undefined) {
-			var user = JSON.parse(localStorage['abcd']);
-			this.setState({
-				author: user.name,
-				identification: user.identity
-			});
-		}
-	}
-
-	componentWillMount() {
-		this.isUserLoggedIn();
 	}
 
 	handleQuestionChange(e) {
@@ -71,7 +53,7 @@ class PollForm extends Component {
 	postData(query, choices) {
 		var content = {
 			question: query, options: choices,
-			author: this.state.identification
+			author: this.props.authorId
 		};
 
 		fetch("/newPoll/",
@@ -90,8 +72,6 @@ class PollForm extends Component {
 		this.setState({
 			question: "",
 			options: "",
-			author: "",
-			identification: "",
 			redirect: true
 		});
 

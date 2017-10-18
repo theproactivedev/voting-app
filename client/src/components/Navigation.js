@@ -41,6 +41,7 @@ class Navigation extends Component {
           identification: person.identity,
           token: token
         });
+        this.props.onUserLogin(true, person.name, person.identity);
       }
     });
   }
@@ -57,6 +58,7 @@ class Navigation extends Component {
       identification: ""
     });
     localStorage.removeItem('abcd');
+    this.props.onUserLogout();
   }
 
   componentWillMount() {

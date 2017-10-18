@@ -9,10 +9,15 @@ class MainContent extends Component {
 	render() {
 		return(
 			<Switch>
-				<Route exact path="/" component={Home} />
+				<Route exact path="/" render={(props) => (
+				  <Home {...props} isUserAuthenticated={this.props.isUserAuthenticated}
+					  authorName={this.props.authorName} />
+				)} />
 				<Route path="/polls" component={Polls} />
 				<Route path="/myPolls/:user" component={Polls} />
-				<Route path="/newPoll" component={PollForm} />
+				<Route path="/newPoll" render={(props) => (
+				  <PollForm {...props} authorId={this.props.authorId} />
+				)} />
 			</Switch>
 		);
 	}

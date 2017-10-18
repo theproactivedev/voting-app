@@ -85,6 +85,7 @@ module.exports = function(app, passport) {
 
       if (data) {
         res.json(data);
+        // console.log(JSON.stringify(data));
       } else {
         res.send("Hello");
       }
@@ -98,11 +99,31 @@ module.exports = function(app, passport) {
       Polls.findOneAndUpdate(
         { "question": req.params.item + "?",
           "options.choice" : req.body.choice },
-        { $inc : {totalVotes : 1, "options.$.vote" : 1} } ,
-        function(err) {
-          if (err) console.log(err);
+        { $inc : {totalVotes : 1, "options.$.vote" : 1 } },
+        function(err, data) {
+          if (err) {
+            console.log(err);
+          }
+
+          if (!data) {
+            var obj = {
+              choice: req.body.choice,
+              vote: 1
+            };
+            Polls.findOneAndUpdate(
+              {"question": req.params.item + "?"},
+              {$push : { "options": obj } },
+              {upsert: true, new: true},
+              function(err) {
+                if (err) console.log(err);
+              }
+            );
+          }
         }
       );
+
+
+      console.log(req.body.choice);
     }
   });
 
