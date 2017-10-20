@@ -202,6 +202,6 @@ app.route('/logout').get(function(req, res){
   console.log("Logging Out");
 });
 
-app.listen(3001, function() {
+app.listen(process.env.PORT, function() {
 	console.log("Working");
 });
