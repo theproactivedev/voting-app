@@ -139,10 +139,7 @@ module.exports = function(app, passport) {
     }
   });
 
-  app.get('*', function(req, res) {
-    res.redirect("http://localhost:3000/");
-    var fullUrl = req.protocol + '://' + req.get('host') + req.originalUrl;
-    console.log("Full URL: " + fullUrl);
-    console.log("Sorry page not found.");
+  app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname + '/client/public/index.html'));
   });
 };
