@@ -43,7 +43,7 @@ var corsOption = {
   exposedHeaders: ['x-auth-token']
 };
 app.use(cors(corsOption));
-app.use(express.static(path.join(__dirname, 'client/public')));
+app.use(express.static(path.join(__dirname, 'client/build')));
 app.use(cookieParser());
 // app.use(methodOverride());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -55,7 +55,7 @@ app.use(session({
 }));
 app.use(passport.initialize());
 app.use(passport.session());
-app.use('/public', express.static(process.cwd() + '/public'));
+// app.use('/public', express.static(process.cwd() + '/public'));
 
 
 // MongoClient.connect(dbLink, {
