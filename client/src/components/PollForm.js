@@ -8,7 +8,8 @@ class PollForm extends Component {
 		this.state = {
 			question: "",
 			options: "",
-			redirect: false
+			redirect: false,
+			hasCreatedPoll: true
 		};
 
 		this.handleQuestionChange = this.handleQuestionChange.bind(this);
@@ -43,7 +44,7 @@ class PollForm extends Component {
 		let question = this.state.question.trim();
 		let options = this.state.options.trim();
 		if (!question || !options) {
-			return;
+			this.setState({hasCreatedPoll: false})
 		} else {
 			this.postData(question, options);
 			document.getElementById("newPollForm").reset();
@@ -87,6 +88,15 @@ class PollForm extends Component {
 
 				<div className="container">
 					<h2>Create Poll</h2>
+					{!this.state.hasCreatedPoll &&
+	          <div className="row">
+	            <div className="col-sm-12 col-md-6 col-lg-6">
+	              <div className="alert alert-danger">
+	              <p>Please fill out the needed information.</p>
+	              </div>
+	            </div>
+	          </div>
+	        }
 
 					<div className="row">
 						<div className="col-sm-12 col-md-8 col-lg-6">

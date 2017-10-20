@@ -85,7 +85,7 @@ class PollsList extends Component {
     return(
       <div className="container">
 				<div className="row">
-        <h1>{headline}</h1>
+        <h2>{headline}</h2>
         <div>
           {this.state.polls.length === 0 &&
             <p>No questions. Sign in and create your own poll.</p>

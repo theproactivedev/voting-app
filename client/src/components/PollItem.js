@@ -168,7 +168,7 @@ class PollItem extends Component {
           </div>
         }
 
-        <div className="row">
+        <div className="row poll">
           <div className="col-sm-12 col-md-6 col-lg-6">
             <form>
               <div className="form-group">

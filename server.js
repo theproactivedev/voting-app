@@ -23,6 +23,7 @@ var routes = require('./app/routes/app.js');
 var Users = require("./app/models/Users.js");
 var Polls = require("./app/models/Polls.js");
 
+
 var configAuth = require("./app/config/auth.js");
 require('./app/config/passport.js')(passport);
 var app = express();
@@ -54,6 +55,8 @@ app.use(session({
 }));
 app.use(passport.initialize());
 app.use(passport.session());
+app.use('/public', express.static(process.cwd() + '/public'));
+
 
 // MongoClient.connect(dbLink, {
 //     uri_decode_auth: true }, function(err, db) {
