@@ -43,7 +43,7 @@ var corsOption = {
   exposedHeaders: ['x-auth-token']
 };
 app.use(cors(corsOption));
-// app.use(express.static(path.join(__dirname, 'client/build')));
+app.use(express.static(path.join(__dirname, 'client/public')));
 app.use(cookieParser());
 // app.use(methodOverride());
 app.use(bodyParser.urlencoded({ extended: true }));
