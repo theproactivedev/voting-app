@@ -55,7 +55,7 @@ app.use(session({
 }));
 app.use(passport.initialize());
 app.use(passport.session());
-app.use('/public', express.static(process.cwd() + '/public'));
+app.use(express.static(process.cwd() + '/public'));
 
 
 // MongoClient.connect(dbLink, {
