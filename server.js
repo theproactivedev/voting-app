@@ -92,7 +92,7 @@ router.route('/auth/twitter/reverse')
     request.post({
       url: 'https://api.twitter.com/oauth/request_token',
       oauth: {
-        oauth_callback: "http%3A%2F%2Flocalhost%3A3000%2Ftwitter-callback",
+        oauth_callback: "https://powerful-mountain-93239.herokuapp.com/twitter-callback",
         consumer_key: configAuth.twitterAuth.consumerKey,
         consumer_secret: configAuth.twitterAuth.consumerSecret
       }
