@@ -12,12 +12,12 @@ class PollsList extends Component {
     this.isUserLoggedIn = this.isUserLoggedIn.bind(this);
   }
 
-  componentDidMount() {
-    this.fetchData();
-  }
+  // componentDidMount() {
+  // }
 
   componentWillMount() {
     this.isUserLoggedIn();
+    setTimeout(this.fetchData, 500);
   }
 
   isUserLoggedIn() {
@@ -33,7 +33,7 @@ class PollsList extends Component {
 		var that = this;
     var url = this.props.data === "/myPolls" ? this.props.data
     + "/" + this.state.author : this.props.data;
-    console.log("Polls List: " + this.state.author);
+    console.log("URL: " + url);
     fetch(url)
     .then(res => {
       if (res.ok) {

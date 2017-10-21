@@ -16,7 +16,7 @@ var request = require('request');
 
 require('dotenv').config();
 var db = "mongodb://admin_eirin:v0t!n6%40ppp0ll$@ds039504.mlab.com:39504/polls";
-mongoose.connect(db);
+mongoose.connect(db, {useMongoClient: true});
 //mongoose.connect(process.env.MONGO_URI || "mongodb://localhost:27017/polls");
 
 var routes = require('./app/routes/app.js');
@@ -43,7 +43,7 @@ var corsOption = {
   exposedHeaders: ['x-auth-token']
 };
 app.use(cors(corsOption));
-app.use(express.static(path.join(__dirname, 'client/build')));
+// app.use(express.static(path.join(__dirname, 'client/build')));
 app.use(cookieParser());
 // app.use(methodOverride());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -55,7 +55,7 @@ app.use(session({
 }));
 app.use(passport.initialize());
 app.use(passport.session());
-// app.use('/public', express.static(process.cwd() + '/public'));
+app.use('/public', express.static(process.cwd() + '/public'));
 
 
 // MongoClient.connect(dbLink, {
@@ -194,12 +194,6 @@ app.route("/me").get(function(req, res) {
   //   });
   // }
   res.send("Hello");
-});
-
-app.route('/logout').get(function(req, res){
-  req.logout();
-  res.redirect("http://localhost:3000/polls");
-  console.log("Logging Out");
 });
 
 app.listen(process.env.PORT, function() {

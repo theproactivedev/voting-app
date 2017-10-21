@@ -1,11 +1,10 @@
 var Polls = require("../models/Polls");
 var Users = require("../models/Users");
+var path = require("path");
 
 module.exports = function(app, passport) {
 
   app.route("/polls").get(function(req, res) {
-    // if (req.isAuthenticated()) {
-
     	Polls.find({}, function(err, data) {
 
     		if (err) {
@@ -14,34 +13,30 @@ module.exports = function(app, passport) {
 
     		if(data) {
     			res.json(data);
+          // console.log("Polls: " + data.length);
+          // console.log(JSON.stringify(data));
     		} else {
     			console.log("undefined");
     		}
 
     	});
-    // } else {
-    //   console.log("Req not authenticated");
-    //   res.redirect("/");
-    // }
   });
 
   app.route("/myPolls/:user").get(function(req, res) {
-
+    console.log("User: " + req.params.user);
     Polls.find({
-      authorID: req.params.user
+      "authorID": req.params.user
     }, function(err, data) {
 
       if (err) {
         console.log(err);
-      }
-
-      if(data) {
-        res.json(data);
-        console.log("contains something");
       } else {
-        console.log("undefined");
+        if(data) {
+          res.json(data);
+        } else {
+          console.log("undefined");
+        }
       }
-
     });
   });
 
@@ -70,9 +65,6 @@ module.exports = function(app, passport) {
   			console.log(err);
   		}
   	});
-
-    res.redirect("/polls");
-
   });
 
   app.route("/polls/:item").get(function(req, res) {
@@ -85,7 +77,6 @@ module.exports = function(app, passport) {
 
       if (data) {
         res.json(data);
-        // console.log(JSON.stringify(data));
       } else {
         res.send("Hello");
       }
@@ -139,7 +130,7 @@ module.exports = function(app, passport) {
     }
   });
 
-  app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname + '/client/build/index.html'));
-  });
+  // app.get('*', (req, res) => {
+  //   res.sendFile(path.join(__dirname + '/client/build/index.html'));
+  // });
 };

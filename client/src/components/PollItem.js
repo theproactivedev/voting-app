@@ -11,6 +11,7 @@ class PollItem extends Component {
       vote: "Select your answer.",
       hasVoted: true,
       author: "",
+      pollAuthor: "",
       redirect: false
     };
 
@@ -79,7 +80,7 @@ class PollItem extends Component {
   }
 
   submitVote() {
-    console.log(this.props.data + " - item");
+    console.log(this.props.match.params.item);
     var url = this.props.data + "/" + this.props.match.params.item;
     var vote = {
       choice : this.state.vote
@@ -116,7 +117,8 @@ class PollItem extends Component {
     .then(function(item) {
       that.setState({
         query: item.question,
-        choices: item.options
+        choices: item.options,
+        pollAuthor: item.authorID
       });
     })
     .catch(this.handleError);
@@ -173,7 +175,7 @@ class PollItem extends Component {
             <form>
               <div className="form-group">
                 <label className="question">{this.state.query}
-                {this.state.author !== "" &&
+                {this.state.author === this.state.pollAuthor &&
                   <span className="pull-right" onClick={this.deletePoll}><i className="fa fa-trash" aria-hidden="true"></i></span>
                 }
                 </label>
