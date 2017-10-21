@@ -13,8 +13,6 @@ module.exports = function(app, passport) {
 
     		if(data) {
     			res.json(data);
-          // console.log("Polls: " + data.length);
-          // console.log(JSON.stringify(data));
     		} else {
     			console.log("undefined");
     		}
@@ -45,26 +43,26 @@ module.exports = function(app, passport) {
       console.log("undefined");
     } else {
       console.log(req.body.question);
+
+    	var choices = req.body.options.split(",");
+    	var list = choices.map(function(oneChoice) {
+    		return {choice: oneChoice.trim(), vote: 0};
+    	});
+
+    	var poll = new Polls({
+    		question: req.body.question,
+    		options: list,
+        totalVotes: 0,
+        authorID: req.body.author
+    	});
+
+    	poll.save(function(err) {
+    		if (err) {
+    			console.log(err);
+    		}
+    	});
+
     }
-
-  	var choices = req.body.options.split(",");
-  	var list = choices.map(function(oneChoice) {
-  		return {choice: oneChoice.trim(), vote: 0};
-  	});
-
-
-  	var poll = new Polls({
-  		question: req.body.question,
-  		options: list,
-      totalVotes: 0,
-      authorID: req.body.author
-  	});
-
-  	poll.save(function(err) {
-  		if (err) {
-  			console.log(err);
-  		}
-  	});
   });
 
   app.route("/polls/:item").get(function(req, res) {
@@ -112,9 +110,6 @@ module.exports = function(app, passport) {
           }
         }
       );
-
-
-      console.log(req.body.choice);
     }
   });
 
@@ -130,7 +125,7 @@ module.exports = function(app, passport) {
     }
   });
 
-  // app.get('*', (req, res) => {
-  //   res.sendFile(path.join(__dirname + '/client/build/index.html'));
-  // });
+  app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname + '/client/public/index.html'));
+  });
 };

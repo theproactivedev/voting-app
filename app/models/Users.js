@@ -23,7 +23,6 @@ UserSchema.statics.upsertTwitterUser = function(token, tokenSecret, profile, cb)
   return this.findOne({
     'twitterProvider.id': profile.id
   }, function(err, user) {
-    // no user was found, lets create a new one
     if (!user) {
       var newUser = new that({
         twitterProvider: {

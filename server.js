@@ -1,14 +1,11 @@
 const express = require("express");
 const session = require('express-session');
 const mongoose = require("mongoose");
-// const mongodb = require("mongodb");
 const bodyParser = require("body-parser");
 const passport = require('passport');
 const path = require('path');
 const cookieParser = require('cookie-parser');
-// const methodOverride = require('method-override');
 const cors = require('cors');
-// const TwitterStrategy = require('passport-twitter').Strategy;
 var jwt = require('jsonwebtoken');
 var expressJwt = require('express-jwt');
 var router = express.Router();
@@ -22,7 +19,6 @@ mongoose.connect(db, {useMongoClient: true});
 var routes = require('./app/routes/app.js');
 var Users = require("./app/models/Users.js");
 var Polls = require("./app/models/Polls.js");
-
 
 var configAuth = require("./app/config/auth.js");
 require('./app/config/passport.js')(passport);
@@ -43,7 +39,7 @@ var corsOption = {
   exposedHeaders: ['x-auth-token']
 };
 app.use(cors(corsOption));
-// app.use(express.static(path.join(__dirname, 'client/build')));
+app.use(express.static(path.join(__dirname, 'client/public')));
 app.use(cookieParser());
 // app.use(methodOverride());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -55,8 +51,6 @@ app.use(session({
 }));
 app.use(passport.initialize());
 app.use(passport.session());
-app.use(express.static(process.cwd() + '/public'));
-
 
 // MongoClient.connect(dbLink, {
 //     uri_decode_auth: true }, function(err, db) {
@@ -184,17 +178,6 @@ var getCurrentUser = function(req, res, next) {
 app.use('/api/v1', router);
 
 routes(app, passport);
-
-app.route("/me").get(function(req, res) {
-  // if (req.user) {
-  //   res.json(req.user);
-  // } else {
-  //   res.json({
-  //     "message" : "undefined"
-  //   });
-  // }
-  res.send("Hello");
-});
 
 app.listen(process.env.PORT, function() {
 	console.log("Working");
