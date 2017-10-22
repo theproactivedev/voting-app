@@ -12,9 +12,7 @@ var router = express.Router();
 var request = require('request');
 
 require('dotenv').config();
-var db = "mongodb://admin_eirin:v0t!n6%40ppp0ll$@ds039504.mlab.com:39504/polls";
-mongoose.connect(db, {useMongoClient: true});
-//mongoose.connect(process.env.MONGO_URI || "mongodb://localhost:27017/polls");
+mongoose.connect(process.env.MONGO_URI, {useMongoClient: true});
 
 var routes = require('./app/routes/app.js');
 var Users = require("./app/models/Users.js");
