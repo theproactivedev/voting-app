@@ -39,7 +39,6 @@ var corsOption = {
 app.use(cors(corsOption));
 app.use(express.static(path.join(__dirname, 'client/public')));
 app.use(cookieParser());
-// app.use(methodOverride());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(session({
@@ -49,16 +48,6 @@ app.use(session({
 }));
 app.use(passport.initialize());
 app.use(passport.session());
-
-// MongoClient.connect(dbLink, {
-//     uri_decode_auth: true }, function(err, db) {
-//   db.createCollection("polls", {
-//     capped: false,
-//     size: 5242880,
-//     max: 5000
-//   });
-//
-// });
 
 var createToken = function(auth) {
   return jwt.sign({
@@ -139,37 +128,39 @@ router.route('/auth/twitter')
     }, generateToken, sendToken);
 
 //token handling middleware
-var authenticate = expressJwt({
-  secret: 'my-secret',
-  requestProperty: 'auth',
-  getToken: function(req) {
-    if (req.headers['x-auth-token']) {
-      return req.headers['x-auth-token'];
-    }
-    return null;
-  }
-});
-
-var getCurrentUser = function(req, res, next) {
-  Users.findById(req.auth.id, function(err, user) {
-    if (err) {
-      next(err);
-    } else {
-      req.user = user;
-      next();
-    }
-  });
-};
+// var authenticate = expressJwt({
+//   secret: 'my-secret',
+//   requestProperty: 'auth',
+//   getToken: function(req) {
+//     if (req.headers['x-auth-token']) {
+//       return req.headers['x-auth-token'];
+//     }
+//     return null;
+//   }
+// });
 //
+// var getCurrentUser = function(req, res, next) {
+//   Users.findById(req.auth.id, function(err, user) {
+//     if (err) {
+//       next(err);
+//       // console.log(err);
+//     } else {
+//       req.user = user;
+//       next();
+//     }
+//   });
+// };
+
 // var getOne = function (req, res) {
 //   var user = req.user.toObject();
 //
-//   delete user['twitterProvider'];
+//   // delete user['twitterProvider'];
 //   delete user['__v'];
 //
 //   res.json(user);
+//   console.log(JSON.stringify(user));
 // };
-
+//
 // router.route('/auth/me')
 //   .get(authenticate, getCurrentUser, getOne);
 
