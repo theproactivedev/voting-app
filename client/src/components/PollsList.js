@@ -12,12 +12,13 @@ class PollsList extends Component {
     this.isUserLoggedIn = this.isUserLoggedIn.bind(this);
   }
 
-  // componentDidMount() {
-  // }
+  componentDidMount() {
+    this.fetchData();
+  }
 
   componentWillMount() {
     this.isUserLoggedIn();
-    setTimeout(this.fetchData, 500);
+    // setTimeout(this.fetchData, 500);
   }
 
   isUserLoggedIn() {

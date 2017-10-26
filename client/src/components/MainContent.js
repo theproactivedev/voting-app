@@ -4,6 +4,8 @@ import {Route} from 'react-router-dom';
 import Polls from './Polls';
 import PollForm from './PollForm';
 import Home from './Home';
+import User from './User';
+
 
 class MainContent extends Component {
 	render() {

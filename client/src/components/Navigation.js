@@ -82,7 +82,7 @@ class Navigation extends Component {
     var pathNames = ["My Polls", "New Poll", logout];
     const ifLoggedIn = [];
     var num = 1;
-    for(var i = 0; i < 3; i++) {
+    for(var i = 0; i < pathNames.length; i++) {
       ++num;
 
       if (paths[i] === "/") {
@@ -118,9 +118,9 @@ class Navigation extends Component {
 
             {!this.state.isAuthenticated &&
               <NavItem eventKey={2}>
-                <TwitterLogin className="twitter-btn" showIcon={false} loginUrl="https://powerful-mountain-93239.herokuapp.com/api/v1/auth/twitter"
+                <TwitterLogin className="twitter-btn" showIcon={false} loginUrl="http://localhost:3000/api/v1/auth/twitter"
                 onFailure={this.onFailed} onSuccess={this.onSuccess}
-                requestTokenUrl="https://powerful-mountain-93239.herokuapp.com/api/v1/auth/twitter/reverse" />
+                requestTokenUrl="http://localhost:3000/api/v1/auth/twitter/reverse" />
               </NavItem>
             }
 
