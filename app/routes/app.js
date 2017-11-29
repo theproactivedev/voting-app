@@ -1,49 +1,151 @@
 var Polls = require("../models/Polls");
 var Users = require("../models/Users");
 var path = require("path");
+var express = require("express");
+var router = express.Router();
+var jwt = require('jsonwebtoken');
+var expressJwt = require('express-jwt');
+var request = require('request');
+var configAuth = require("../config/auth.js");
 
 module.exports = function(app, passport) {
 
-  app.route("/polls").get(function(req, res) {
-    	Polls.find({}, function(err, data) {
+  var createToken = function(auth) {
+    return jwt.sign({
+      id: auth.id
+    }, 'my-secret',
+    {
+      expiresIn: 60 * 120
+    });
+  };
 
-    		if (err) {
-    			console.log(err);
-    		}
+  var generateToken = function (req, res, next) {
+    req.token = createToken(req.auth);
+    return next();
+  };
 
-    		if(data) {
-    			res.json(data);
-    		} else {
-    			console.log("undefined");
-    		}
+  var sendToken = function (req, res) {
+    res.setHeader('x-auth-token', req.token);
+    return res.status(200).send(JSON.stringify(req.user));
+  };
 
-    	});
+  var authenticate = expressJwt({
+    secret: 'my-secret',
+    requestProperty: 'auth',
+    getToken: function(req) {
+      if (req.headers['x-auth-token']) {
+        return req.headers['x-auth-token'];
+      } else {
+        console.log("No token");
+      }
+      return null;
+    }
   });
 
-  app.route("/myPolls/:user").get(function(req, res) {
-    console.log("User: " + req.params.user);
-    Polls.find({
-      "authorID": req.params.user
-    }, function(err, data) {
+  var getCurrentUser = function(req, res, next) {
+    Users.findOne({
+      "_id" : req.auth.id
+    }, function(err, user) {
+      if (err) {
+        next(err);
+      } else {
+        req.user = user;
+        next();
+      }
+    });
+  };
 
+  router.route('/auth/twitter/reverse')
+    .post(function(req, res) {
+      request.post({
+        url: 'https://api.twitter.com/oauth/request_token',
+        oauth: {
+          oauth_callback: "http://localhost:3000/twitter-callback",
+          consumer_key: configAuth.twitterAuth.consumerKey,
+          consumer_secret: configAuth.twitterAuth.consumerSecret
+        }
+      }, function (err, r, body) {
+        if (err) {
+          return res.send(500, { message: err.message });
+        }
+
+        var jsonStr = '{ "' + body.replace(/&/g, '", "').replace(/=/g, '": "') + '"}';
+        res.send(JSON.parse(jsonStr));
+      });
+    });
+
+  router.route('/auth/twitter')
+    .post((req, res, next) => {
+      request.post({
+        url: `https://api.twitter.com/oauth/access_token?oauth_verifier`,
+        oauth: {
+          consumer_key: configAuth.twitterAuth.consumerKey,
+          consumer_secret: configAuth.twitterAuth.consumerSecret,
+          token: req.query.oauth_token
+        },
+        form: { oauth_verifier: req.query.oauth_verifier }
+      }, function (err, r, body) {
+        if (err) {
+          return res.send(500, { message: e.message });
+        }
+
+        console.log(body);
+        const bodyString = '{ "' + body.replace(/&/g, '", "').replace(/=/g, '": "') + '"}';
+        const parsedBody = JSON.parse(bodyString);
+
+        req.body['oauth_token'] = parsedBody.oauth_token;
+        req.body['oauth_token_secret'] = parsedBody.oauth_token_secret;
+        req.body['user_id'] = parsedBody.user_id;
+
+        next();
+      });
+    }, passport.authenticate('twitter-token', {session: false}), function(req, res, next) {
+        if (!req.user) {
+          return res.send(401, 'User Not Authenticated');
+        }
+
+        req.auth = {
+          id: req.user.id
+        };
+
+        return next();
+      }, generateToken, sendToken);
+
+  app.route("/polls").get(function(req, res) {
+  	Polls.find({}, function(err, data) {
+  		if (err) {
+  			console.log(err);
+  		}
+
+  		if(data) {
+  			res.json(data);
+  		} else {
+  			console.log("Polls undefined");
+  		}
+  	});
+  });
+
+  app.route("/myPolls").get(authenticate, getCurrentUser,
+    function(req, res) {
+      console.log("Req.auth.id: " + req.auth.id);
+    Polls.find({
+      "authorID" : req.auth.id
+    }, function(err, data) {
       if (err) {
         console.log(err);
-      } else {
-        if(data) {
-          res.json(data);
-        } else {
-          console.log("undefined");
-        }
+      }
+
+      if (data) {
+        res.json(data);
       }
     });
   });
 
-  app.route("/newPoll").post(function(req, res) {
+  app.route("/newPoll").post(authenticate, getCurrentUser,
+    function(req, res) {
     if (typeof req.body === undefined) {
-      console.log("undefined");
+      console.log("New Poll undefined");
     } else {
-      console.log(req.body.question);
-
     	var choices = req.body.options.split(",");
     	var list = choices.map(function(oneChoice) {
     		return {choice: oneChoice.trim(), vote: 0};
@@ -53,7 +155,8 @@ module.exports = function(app, passport) {
     		question: req.body.question,
     		options: list,
         totalVotes: 0,
-        authorID: req.body.author
+        authorID: req.auth.id,
+        twitterID: req.body.twitterId
     	});
 
     	poll.save(function(err) {
@@ -75,8 +178,6 @@ module.exports = function(app, passport) {
 
       if (data) {
         res.json(data);
-      } else {
-        res.send("Hello");
       }
     });
   });
@@ -126,6 +227,9 @@ module.exports = function(app, passport) {
   });
 
   // app.get('*', (req, res) => {
-  //   res.sendFile(path.join(__dirname + '/client/public/index.html'));
+  //   res.sendFile(path.join(__dirname + '/client/build/index.html'));
   // });
+
+  app.use('/api/v1', router);
+
 };

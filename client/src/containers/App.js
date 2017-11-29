@@ -8,7 +8,8 @@ class App extends Component {
 		this.state = {
 			isAuthenticated: false,
 			author: "",
-			identification: ""
+			authorId: "",
+			token: ""
 		};
 
 		this.onLogin = this.onLogin.bind(this);
@@ -21,16 +22,18 @@ class App extends Component {
 			this.setState({
 				author: user.name,
 				isAuthenticated: true,
-				identification: user.identity
+				token: user.token,
+				authorId: user.identity
 			});
 		}
 	}
 
-	onLogin(isUserAuthenticated, authorName, authorId) {
+	onLogin(isUserAuthenticated, authorName, authorID, authorToken) {
 		this.setState({
 			isAuthenticated: isUserAuthenticated,
 			author: authorName,
-			identification: authorId
+			token: authorToken,
+			authorId: authorID
 		});
 	}
 
@@ -38,7 +41,8 @@ class App extends Component {
 		this.setState({
 			isAuthenticated: false,
 			author: "",
-			identification: ""
+			authorId: "",
+			token: ""
 		});
 	}
 
@@ -47,7 +51,8 @@ class App extends Component {
 			<div>
 				<Navigation onUserLogin={this.onLogin} onUserLogout={this.onLogout} />
 				<MainContent isUserAuthenticated={this.state.isAuthenticated}
-				  authorName={this.state.author} authorId={this.state.identification} />
+				  authorName={this.state.author} authorToken={this.state.token}
+					authorId={this.state.authorId} />
 			</div>
 		);
 	}

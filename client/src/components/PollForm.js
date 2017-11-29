@@ -54,13 +54,14 @@ class PollForm extends Component {
 	postData(query, choices) {
 		var content = {
 			question: query, options: choices,
-			author: this.props.authorId
+			twitterId: this.props.authorId
 		};
 
-		fetch("/newPoll/",
+		fetch("/newPoll",
 		{
 			headers: {
 				'Content-Type': 'application/json',
+				'x-auth-token' : this.props.authorToken
 			},
 			method: "POST",
 			body: JSON.stringify(content)

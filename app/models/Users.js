@@ -10,18 +10,15 @@ var UserSchema = new Schema({
       identification: String,
       token: String,
       tokenSecret: String
-    },
-    select: false
+    }
   }
 });
-
-UserSchema.set('toJSON', {getters: true, virtuals: true});
 
 UserSchema.statics.upsertTwitterUser = function(token, tokenSecret, profile, cb) {
   var that = this;
 
   return this.findOne({
-    'twitterProvider.id': profile.id
+    'twitterProvider.identification': profile.id
   }, function(err, user) {
     if (!user) {
       var newUser = new that({

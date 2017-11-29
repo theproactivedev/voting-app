@@ -6,7 +6,8 @@ class PollsList extends Component {
     super(props);
     this.state = {
       polls: [],
-      author: ""
+      author: "",
+      token: ""
     };
     this.fetchData = this.fetchData.bind(this);
     this.isUserLoggedIn = this.isUserLoggedIn.bind(this);
@@ -18,24 +19,28 @@ class PollsList extends Component {
 
   componentWillMount() {
     this.isUserLoggedIn();
-    // setTimeout(this.fetchData, 500);
   }
 
   isUserLoggedIn() {
     if (localStorage['abcd'] !== undefined) {
       var user = JSON.parse(localStorage['abcd']);
       this.setState({
-        author: user.identity
+        author: user.identity,
+        token: user.token
       });
     }
   }
 
   fetchData() {
 		var that = this;
-    var url = this.props.data === "/myPolls" ? this.props.data
-    + "/" + this.state.author : this.props.data;
-    console.log("URL: " + url);
-    fetch(url)
+    
+    fetch(this.props.data, {
+      method: "GET",
+      headers: new Headers({
+        'Content-type' : 'application/json',
+        'x-auth-token' : this.state.token
+      })
+    })
     .then(res => {
       if (res.ok) {
         return res.json();
@@ -48,10 +53,6 @@ class PollsList extends Component {
       }
     })
     .then(function(items) {
-			if (items === undefined) {
-				items = [];
- 			}
-
       that.setState({
         polls: items
       });
@@ -66,7 +67,6 @@ class PollsList extends Component {
 		var polls = this.state.polls;
 		var listItems = [];
 		if (polls.length > 0) {
-      // var pollLink = this.props.data + "/";
 			listItems = this.state.polls.map(function(poll, index) {
 				return (
 					<li key={index}>

@@ -13,7 +13,7 @@ class Navigation extends Component {
     this.state = {
       isAuthenticated: false,
       author: "",
-      identification: "?",
+      identification: "",
       token: ''
     };
 
@@ -30,7 +30,8 @@ class Navigation extends Component {
           JSON.stringify(
             {
               "identity" : user.twitterProvider.identification,
-              "name" : user.twitterProvider.name
+              "name" : user.twitterProvider.name,
+              "token" : token
             }
           )
         );
@@ -39,9 +40,9 @@ class Navigation extends Component {
           isAuthenticated: true,
           author: person.name,
           identification: person.identity,
-          token: token
+          token: person.token
         });
-        this.props.onUserLogin(true, person.name, person.identity);
+        this.props.onUserLogin(true, person.name, person.identity, person.token);
       }
     });
   }
@@ -68,13 +69,13 @@ class Navigation extends Component {
         isAuthenticated : true,
         author: person.name,
         identification: person.identity,
+        token: person.token
       });
     }
   }
 
   render() {
-    var userPolls = "/myPolls/" + this.state.identification;
-    var paths = [userPolls, "/newPoll", "/"];
+    var paths = ["/myPolls", "/newPoll", "/"];
     var logout = "";
     if (this.state.user !== null || this.state.user !== undefined) {
       logout = this.state.author + " Log Out";
@@ -118,9 +119,9 @@ class Navigation extends Component {
 
             {!this.state.isAuthenticated &&
               <NavItem eventKey={2}>
-                <TwitterLogin className="twitter-btn" showIcon={false} loginUrl="https://powerful-mountain-93239.herokuapp.com/api/v1/auth/twitter"
+                <TwitterLogin className="twitter-btn" showIcon={false} loginUrl="http://localhost:3000/api/v1/auth/twitter"
                 onFailure={this.onFailed} onSuccess={this.onSuccess}
-                requestTokenUrl="https://powerful-mountain-93239.herokuapp.com/api/v1/auth/twitter/reverse" />
+                requestTokenUrl="http://localhost:3000/api/v1/auth/twitter/reverse" />
               </NavItem>
             }
 

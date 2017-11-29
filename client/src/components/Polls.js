@@ -16,7 +16,7 @@ class Polls extends Component {
 				  <PollItem {...props} data={'/polls'} />
 				)} />
 
-				<Route exact path="/myPolls/:user" key={"/myPolls/:user"}
+				<Route exact path="/myPolls" key={"/myPolls"}
 				render={(props) => (
 				  <PollsList {...props} data={'/myPolls'} />
 				)} />

@@ -14,9 +14,10 @@ class MainContent extends Component {
 					  authorName={this.props.authorName} />
 				)} />
 				<Route path="/polls" component={Polls} />
-				<Route path="/myPolls/:user" component={Polls} />
+				<Route path="/myPolls" component={Polls} />
 				<Route path="/newPoll" render={(props) => (
-				  <PollForm {...props} authorId={this.props.authorId} />
+				  <PollForm {...props} authorToken={this.props.authorToken}
+					authorId={this.props.authorId} />
 				)} />
 			</Switch>
 		);

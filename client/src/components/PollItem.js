@@ -118,7 +118,7 @@ class PollItem extends Component {
       that.setState({
         query: item.question,
         choices: item.options,
-        pollAuthor: item.authorID
+        pollAuthor: item.twitterID
       });
     })
     .catch(this.handleError);
