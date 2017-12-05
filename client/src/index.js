@@ -1,17 +1,11 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
-import App from './containers/App';
-import registerServiceWorker from './registerServiceWorker';
+import { render } from 'react-dom';
+import Root from './components/Root';
+import { configureStore } from './configureStore';
 
-import { BrowserRouter } from 'react-router-dom';
+let store = configureStore();
 
-ReactDOM.render(
-	(
-		<BrowserRouter>
-			<App />
-		</BrowserRouter>
-	),
-	document.getElementById('root')
+render(
+  <Root store={store} />,
+  document.getElementById('root')
 );
-
-registerServiceWorker();

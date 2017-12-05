@@ -1,6 +1,13 @@
 import React, { Component } from 'react';
-import PollChart from './PollChart.js';
+import PollChart from '../components/PollChart.js';
 import { Redirect } from 'react-router-dom';
+import {
+  getSpecificPoll,
+  deletePoll,
+  voteOnPoll
+} from '../actions.js';
+import DangerError from '../components/DangerError.js';
+import { connect } from 'react-redux';
 
 class PollItem extends Component {
   constructor(props) {
@@ -8,57 +15,40 @@ class PollItem extends Component {
     this.state = {
       query: "",
       choices: [],
+      pollAuthor: "",
       vote: "Select your answer.",
       hasVoted: true,
-      author: "",
-      pollAuthor: "",
-      redirect: false
+      componentLink: ""
     };
 
-    this.handleResponse = this.handleResponse.bind(this);
-    this.handleError = this.handleError.bind(this);
-    this.isUserLoggedIn = this.isUserLoggedIn.bind(this);
-    this.getPoll = this.getPoll.bind(this);
     this.tweetPoll = this.tweetPoll.bind(this);
     this.deletePoll = this.deletePoll.bind(this);
-
+    this.getSpecificPoll = this.getSpecificPoll.bind(this);
     this.submitVote = this.submitVote.bind(this);
     this.handleVoteChange = this.handleVoteChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
+  getSpecificPoll() {
+    const { dispatch } = this.props;
+    dispatch(getSpecificPoll(this.state.componentLink));
+  }
+
   componentWillMount() {
-    this.isUserLoggedIn();
+    const { ownProps, match } = this.props;
+    this.setState({
+      componentLink: ownProps.data + "/" + match.params.item
+    }, this.getSpecificPoll);
   }
 
-  componentDidMount() {
-    this.getPoll();
-  }
-
-  isUserLoggedIn() {
-    if (localStorage['abcd'] !== undefined) {
-      var user = JSON.parse(localStorage['abcd']);
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.currentPoll !== undefined ) {
       this.setState({
-        author: user.identity
+        query : nextProps.currentPoll.question,
+        choices : nextProps.currentPoll.options,
+        pollAuthor : nextProps.currentPoll.pollAuthor
       });
     }
-  }
-
-  handleResponse(res) {
-    if (res.ok) {
-      return res.json();
-    } else {
-      return Promise.reject({
-        status: res.status,
-        statusTxt: res.statusText,
-        link: res.url
-      });
-    }
-  }
-
-  handleError(err) {
-    console.log("Status on Poll Item: " + err.status + " " + err.statusTxt);
-    console.log("Link on Poll Item: " + err.link);
   }
 
   handleVoteChange(e) {
@@ -68,61 +58,26 @@ class PollItem extends Component {
   }
 
   handleSubmit(e) {
-    console.log(this.state.vote + " - State");
     e.preventDefault();
     if (this.state.vote === "Select your answer.") {
       this.setState({ hasVoted : false });
     } else {
       this.submitVote();
       this.setState({ hasVoted : true });
-      setTimeout(this.getPoll, 600);
+      setTimeout(this.getSpecificPoll, 600);
     }
   }
 
   submitVote() {
-    console.log(this.props.match.params.item);
-    var url = this.props.data + "/" + this.props.match.params.item;
-    var vote = {
-      choice : this.state.vote
-    };
+    let vote = this.state.vote;
 
     if (this.state.vote === "Others") {
-      vote = {
-        choice : document.getElementById("otherAnswer").value
-      };
+      vote =  document.getElementById("otherAnswer").value;
       this.setState({
         vote: 'Select your answer.'
       });
     }
-
-    fetch(url,
-		{
-			headers: {
-				'Content-Type': 'application/json',
-			},
-			method: "POST",
-			body: JSON.stringify(vote)
-		})
-		.then(this.handleResponse)
-		.catch(this.handleError);
-  }
-
-  getPoll() {
-    var params = this.props.match.params.item;
-    var url = this.props.data + "/" + params;
-    var that = this;
-
-    fetch(url)
-    .then(this.handleResponse)
-    .then(function(item) {
-      that.setState({
-        query: item.question,
-        choices: item.options,
-        pollAuthor: item.twitterID
-      });
-    })
-    .catch(this.handleError);
-
+    this.props.dispatch(voteOnPoll(this.state.componentLink, {choice: vote }));
   }
 
   tweetPoll() {
@@ -130,28 +85,26 @@ class PollItem extends Component {
   }
 
   deletePoll() {
-    var params = this.props.match.params.item;
-    var url = this.props.data + "/" + params;
-
-    fetch(url, {method: "DELETE"})
-    .then(this.handleResponse)
-    .catch(this.handleError);
+    this.props.dispatch(deletePoll(this.state.componentLink));
     this.setState({redirect: true});
   }
 
   render() {
+
+    const { user } = this.props;
+    let options = [];
+
     if (this.state.redirect) {
       return <Redirect to={{pathname: "/polls"}} />
     }
 
-    var options = [];
     options = this.state.choices.map(function(choice, index) {
       return (
         <option key={index+1} value={choice.choice}>{choice.choice}</option>
       );
     });
 
-    if (this.state.author !== "") {
+    if (user.userName !== "") {
       const editable = (
         <option key={options.length+1} value="Others">Others</option>
       );
@@ -161,13 +114,7 @@ class PollItem extends Component {
     return(
       <div className="container">
         {!this.state.hasVoted &&
-          <div className="row">
-            <div className="col-sm-12 col-md-6 col-lg-6">
-              <div className="alert alert-danger">
-              <p>Please select your answer.</p>
-              </div>
-            </div>
-          </div>
+          <DangerError />
         }
 
         <div className="row poll">
@@ -175,7 +122,7 @@ class PollItem extends Component {
             <form>
               <div className="form-group">
                 <label className="question">{this.state.query}
-                {this.state.author === this.state.pollAuthor &&
+                {user.userId === this.state.pollAuthor &&
                   <span className="pull-right" onClick={this.deletePoll}><i className="fa fa-trash" aria-hidden="true"></i></span>
                 }
                 </label>
@@ -193,7 +140,7 @@ class PollItem extends Component {
               }
               <div className="form-group">
                 <input type="submit" value="Submit" className="btn btn-primary" onClick={this.handleSubmit} />
-                {this.state.author !== "" &&
+                {user.userName !== "" &&
                     <button type="button" className="btn btn-info pull-right" onClick={this.tweetPoll}>Tweet</button>
                 }
               </div>
@@ -208,4 +155,14 @@ class PollItem extends Component {
   }
 }
 
-export default PollItem;
+function mapStateToProps(state, ownProps) {
+  const { isUserAuthenticated, user, currentPoll } = state;
+  return {
+    isUserAuthenticated,
+    user,
+    ownProps,
+    currentPoll
+  };
+}
+
+export default connect(mapStateToProps)(PollItem);
