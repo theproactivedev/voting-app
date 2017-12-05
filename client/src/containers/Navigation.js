@@ -44,9 +44,9 @@ class Navigation extends Component {
   }
 
   render() {
-    let paths = ["/polls", "/myPolls", "/newPoll", "/"];
+    let paths = ["/myPolls", "/newPoll", "/"];
     let logout = this.props.isUserAuthenticated ? "Log Out" : "";
-    let pathNames = ["Polls", "My Polls", "New Poll", logout];
+    let pathNames = ["My Polls", "New Poll", logout];
     let menu = [];
 
     for(var i = 0; i < pathNames.length; i++) {
@@ -77,9 +77,12 @@ class Navigation extends Component {
         </Navbar.Header>
         <Navbar.Collapse>
           <Nav pullRight>
+            <LinkContainer to={'/polls'} >
+              <NavItem eventKey={'/polls'} href={'/polls'}>Polls</NavItem>
+            </LinkContainer>
 
             {!this.props.isUserAuthenticated &&
-              <NavItem eventKey={1}>
+              <NavItem eventKey={'/twitter-authenticate'}>
                 <TwitterLogin className="twitter-btn" showIcon={false} loginUrl="https://powerful-mountain-93239.herokuapp.com/api/v1/auth/twitter"
                 onFailure={this.onFailed} onSuccess={this.onSuccess}
                 requestTokenUrl="https://powerful-mountain-93239.herokuapp.com/api/v1/auth/twitter/reverse" />
