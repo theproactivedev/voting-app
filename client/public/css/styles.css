@@ -4,15 +4,8 @@ body {
   font-family: 'Open Sans', sans-serif;
 }
 
-h1 {
-  font-size: 40px;
-  font-family: 'Alfa Slab One', serif;
-  letter-spacing: 1px;
-}
-
-h2 {
-  font-size: 34px;
-  font-family: 'Roboto Slab', serif;
+.mb-5 {
+  margin-bottom: 3rem;
 }
 
 ul {
@@ -29,12 +22,21 @@ p {
   font-size: 1.125em;
 }
 
-#home {
-  text-align: center;
+.header {
+  background-color: #00d8ff;
+  padding-top: 20px;
+  padding-bottom: 20px;
 }
 
-.poll {
-  padding-top: 20px;
+.header h2 {
+  font-size: 40px;
+}
+
+div.poll {
+  border: 1px solid #46b8da;
+  border-left: 8px solid #46b8da;
+  padding: 40px;
+  margin-top: 40px;
 }
 
 div.panel-body {
@@ -46,6 +48,10 @@ label.question {
   font-family: 'Roboto Slab', serif;
   font-weight: 500;
   width: 100%;
+}
+
+#otherAnswer {
+  margin-bottom: 20px;
 }
 
 .fa-trash {
@@ -75,18 +81,29 @@ div.btn-success p {
   color: grey;
 }
 
+footer {
+  padding-top: 15px;
+  color: #484949;
+  font-size: 0.9em;
+  text-align: center;
+  /* position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 45px; */
+}
+
 footer p {
   text-align: center;
-  position: absolute;
-  bottom: 0;
   width: 100%;
 }
 
 footer a {
-  color: #e82c8d;
-  text-align: center;
+  color: #484949;
+  transition: all 0.3s ease;
 }
 
 footer a:hover {
-  color: #000;
+  color: #00d8ff;
+  text-decoration: none;
+  font-weight: bold;
 }

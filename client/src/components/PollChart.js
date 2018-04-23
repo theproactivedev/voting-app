@@ -59,7 +59,7 @@ class PollChart extends Component {
 
   render () {
     return(
-      <div className="col-sm-12 col-md-6 col-lg-6">
+      <div className="col-sm-12 col-md-8 col-lg-8">
         <Doughnut data={this.loadChart}
         options={{
           title: {

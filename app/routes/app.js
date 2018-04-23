@@ -60,13 +60,13 @@ module.exports = function(app, passport) {
       request.post({
         url: 'https://api.twitter.com/oauth/request_token',
         oauth: {
-          oauth_callback: "https://powerful-mountain-93239.herokuapp.com/twitter-callback",
+          oauth_callback: "http://localhost:3000/twitter-callback",
           consumer_key: configAuth.twitterAuth.consumerKey,
           consumer_secret: configAuth.twitterAuth.consumerSecret
         }
       }, function (err, r, body) {
         if (err) {
-          return res.status(500).send({message: err.message});
+          return res.status(500).send({ message: err.message });
         }
 
         var jsonStr = '{ "' + body.replace(/&/g, '", "').replace(/=/g, '": "') + '"}';
@@ -77,7 +77,7 @@ module.exports = function(app, passport) {
   router.route('/auth/twitter')
     .post((req, res, next) => {
       request.post({
-        url: `https://api.twitter.com/oauth/access_token?oauth_verifier`,
+        url: 'https://api.twitter.com/oauth/access_token?oauth_verifier',
         oauth: {
           consumer_key: configAuth.twitterAuth.consumerKey,
           consumer_secret: configAuth.twitterAuth.consumerSecret,
@@ -86,13 +86,10 @@ module.exports = function(app, passport) {
         form: { oauth_verifier: req.query.oauth_verifier }
       }, function (err, r, body) {
         if (err) {
-          return res.status(500).send({message: err.message});
+          return res.status(500).send({ message: err.message });
         }
-
-        console.log(body);
         const bodyString = '{ "' + body.replace(/&/g, '", "').replace(/=/g, '": "') + '"}';
         const parsedBody = JSON.parse(bodyString);
-
         req.body['oauth_token'] = parsedBody.oauth_token;
         req.body['oauth_token_secret'] = parsedBody.oauth_token_secret;
         req.body['user_id'] = parsedBody.user_id;
@@ -101,15 +98,17 @@ module.exports = function(app, passport) {
       });
     }, passport.authenticate('twitter-token', {session: false}), function(req, res, next) {
         if (!req.user) {
-          return res.status(401).send('User Not Authenticated');
+          return res.status(401).send("User Not Authenticated");
         }
 
+        // prepare token for API
         req.auth = {
           id: req.user.id
         };
 
         return next();
       }, generateToken, sendToken);
+
 
   app.route("/polls").get(function(req, res) {
   	Polls.find({}, function(err, data) {
@@ -226,9 +225,9 @@ module.exports = function(app, passport) {
     }
   });
 
-  app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname + '/client/build/index.html'));
-  });
+  // app.get('*', (req, res) => {
+  //   res.sendFile(path.join(__dirname + '/client/build/index.html'));
+  // });
 
   app.use('/api/v1', router);
 

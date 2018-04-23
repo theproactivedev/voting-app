@@ -83,9 +83,9 @@ class Navigation extends Component {
 
             {!this.props.isUserAuthenticated &&
               <NavItem eventKey={'/twitter-authenticate'}>
-                <TwitterLogin className="twitter-btn" showIcon={false} loginUrl="https://powerful-mountain-93239.herokuapp.com/api/v1/auth/twitter"
+                <TwitterLogin className="twitter-btn" showIcon={false} loginUrl="http://localhost:3000/api/v1/auth/twitter"
                 onFailure={this.onFailed} onSuccess={this.onSuccess}
-                requestTokenUrl="https://powerful-mountain-93239.herokuapp.com/api/v1/auth/twitter/reverse" />
+                requestTokenUrl="http://localhost:3000/api/v1/auth/twitter/reverse" />
               </NavItem>
             }
 

@@ -112,13 +112,14 @@ class PollItem extends Component {
     }
 
     return(
+      <div className="gradient">
       <div className="container">
         {!this.state.hasVoted &&
           <DangerError />
         }
 
         <div className="row poll">
-          <div className="col-sm-12 col-md-6 col-lg-6">
+          <div className="col-sm-12 col-md-4 col-lg-4">
             <form>
               <div className="form-group">
                 <label className="question">{this.state.query}
@@ -133,9 +134,9 @@ class PollItem extends Component {
                 </select>
               </div>
               {this.state.vote === "Others" &&
-                <div className="form-group">
+                <div class="form-group">
                   <label htmlFor="otherAnswer">Others: </label>
-                  <input type="text" id="otherAnswer" name="others" />
+                  <input type="text" className="form-control" id="otherAnswer" name="others" placeholder="Customized Option" />
                 </div>
               }
               <div className="form-group">
@@ -146,10 +147,9 @@ class PollItem extends Component {
               </div>
             </form>
           </div>
-
           <PollChart question={this.state.query} options={this.state.choices} />
-
         </div>
+      </div>
       </div>
     );
   }

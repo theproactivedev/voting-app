@@ -1,0 +1,70 @@
+/* Bootstrap Resets  */
+.navbar {
+  margin-bottom: 0;
+}
+
+/* Home Styles */
+
+h1 {
+  font-size: 40px;
+  font-family: 'Alfa Slab One', serif;
+  letter-spacing: 1px;
+}
+
+h2 {
+  font-family: 'Roboto Slab', serif;
+}
+
+h2, p.lead {
+  text-align: center;
+}
+
+#home {
+  background-image: url("../images/avel-chuklanov-38687.jpg");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  height: 50vh;
+}
+
+#home .overlay {
+  background-color: rgba(0, 0, 0, 0.5);
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  height: 50vh;
+  width: 100%;
+  display: table;
+}
+
+#home .container {
+  color: #fff;
+  text-align: center;
+  vertical-align :middle;
+  display: table-cell;
+}
+
+.tools {
+  background-color: #222;
+  color: #fff;
+  padding-top: 15px;
+  padding-bottom: 25px;
+}
+
+.tools p {
+  line-height: 1.7;
+}
+
+.tools strong {
+  color: #00d8ff;
+}
+
+.image {
+  margin: 0 auto;
+  display: block;
+  text-align: center;
+}
+
+.pollsList {
+
+}

@@ -1,3 +1,6 @@
+// ,
+// "heroku-postbuild": "cd client && npm install --only=dev && npm install && npm run build"
+
 const express = require("express");
 const session = require('express-session');
 const mongoose = require("mongoose");
@@ -32,17 +35,17 @@ var corsOption = {
   exposedHeaders: ['x-auth-token']
 };
 app.use(cors(corsOption));
-app.use(express.static(path.join(__dirname, 'client/build')));
-app.use(cookieParser());
+app.use(express.static(path.join(__dirname, 'client/public')));
+// app.use(cookieParser());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
-app.use(session({
-  secret: 'votingApp',
-  resave: true,
-  saveUninitialized: true
-}));
+// app.use(session({
+//   secret: 'votingApp',
+//   resave: true,
+//   saveUninitialized: true
+// }));
 app.use(passport.initialize());
-app.use(passport.session());
+// app.use(passport.session());
 
 routes(app, passport);
 
