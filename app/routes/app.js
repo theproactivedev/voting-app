@@ -126,7 +126,6 @@ module.exports = function(app, passport) {
 
   app.route("/myPolls").get(authenticate, getCurrentUser,
     function(req, res) {
-      console.log("Req.auth.id: " + req.auth.id);
     Polls.find({
       "authorID" : req.auth.id
     }, function(err, data) {
