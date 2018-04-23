@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 const Form = ({
   hasCreatedPoll, handleSubmit,
   handleOptionsChange, handleQuestionChange
-}) =>{
+}) => {
   return (
     <div>
       <div className="header mb-5">
@@ -55,6 +55,6 @@ Form.propTypes = {
   handleSubmit: PropTypes.func.isRequired,
   handleOptionsChange: PropTypes.func.isRequired,
   handleQuestionChange: PropTypes.func.isRequired
-}
+};
 
 export default Form;

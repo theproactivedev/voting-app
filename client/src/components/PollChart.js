@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import {Doughnut} from 'react-chartjs-2';
+import { Doughnut } from 'react-chartjs-2';
+import PropTypes from 'prop-types';
 
 class PollChart extends Component {
   constructor() {
@@ -74,5 +75,10 @@ class PollChart extends Component {
     );
   }
 }
+
+PollChart.propTypes = {
+  question: PropTypes.string.isRequired,
+  options: PropTypes.array.isRequired
+};
 
 export default PollChart;

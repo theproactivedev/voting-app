@@ -22,11 +22,11 @@ const Home = ({ isUserAuthenticated, userName }) => {
 			<Tools />
 		</div>
 	);
-}
+};
 
 Home.propTypes = {
 	isUserAuthenticated: PropTypes.bool.isRequired,
 	userName: PropTypes.string.isRequired
-}
+};
 
 export default Home;

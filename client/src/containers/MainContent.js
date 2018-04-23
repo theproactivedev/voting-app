@@ -4,6 +4,7 @@ import Polls from '../components/Polls';
 import PollForm from './PollForm';
 import Home from '../components/Home';
 import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 
 class MainContent extends Component {
 	render() {
@@ -31,6 +32,11 @@ function mapStateToProps(state) {
     user
   };
 }
+
+MainContent.propTypes = {
+	isUserAuthenticated: PropTypes.bool.isRequired,
+	user: PropTypes.object.isRequired
+};
 
 export default withRouter(connect(mapStateToProps)(MainContent));
 // export default MainContent;

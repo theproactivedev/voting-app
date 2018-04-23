@@ -10,6 +10,6 @@ const DangerError = () => {
       </div>
     </div>
   );
-}
+};
 
 export default DangerError;

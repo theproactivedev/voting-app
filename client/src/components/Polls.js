@@ -18,6 +18,6 @@ const Polls = () => {
 			)} />
 		</Switch>
 	);
-}
+};
 
 export default Polls;

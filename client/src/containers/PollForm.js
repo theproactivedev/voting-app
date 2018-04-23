@@ -3,7 +3,7 @@ import {Redirect} from 'react-router-dom';
 import Form from '../components/Form.js';
 import { addPoll } from '../actions.js';
 import { connect } from 'react-redux';
-
+import PropTypes from 'prop-types';
 
 class PollForm extends Component {
 
@@ -76,5 +76,10 @@ function mapStateToProps(state) {
     user
   };
 }
+
+PollForm.propTypes = {
+  user: PropTypes.object.isRequired,
+  dispatch: PropTypes.func.isRequired
+};
 
 export default connect(mapStateToProps)(PollForm);

@@ -8,6 +8,7 @@ import {
 } from '../actions.js';
 import DangerError from '../components/DangerError.js';
 import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 
 class PollItem extends Component {
   constructor(props) {
@@ -164,5 +165,13 @@ function mapStateToProps(state, ownProps) {
     currentPoll
   };
 }
+
+PollItem.propTypes = {
+	isUserAuthenticated: PropTypes.bool.isRequired,
+  user: PropTypes.object.isRequired,
+  ownProps: PropTypes.object.isRequired,  
+  currentPoll: PropTypes.object.isRequired,  
+  dispatch: PropTypes.func.isRequired
+};
 
 export default connect(mapStateToProps)(PollItem);

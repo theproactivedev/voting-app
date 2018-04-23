@@ -44,11 +44,20 @@ h2, p.lead {
   display: table-cell;
 }
 
+.project-description {
+  padding-top: 15px;
+  padding-bottom: 35px;
+}
+
+.project-description ul {
+  margin-bottom: 0;
+}
+
 .tools {
   background-color: #222;
   color: #fff;
   padding-top: 15px;
-  padding-bottom: 25px;
+  padding-bottom: 35px;
 }
 
 .tools p {
@@ -63,8 +72,4 @@ h2, p.lead {
   margin: 0 auto;
   display: block;
   text-align: center;
-}
-
-.pollsList {
-
 }

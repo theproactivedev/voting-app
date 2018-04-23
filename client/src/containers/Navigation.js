@@ -9,6 +9,7 @@ import {
   setUserDetails
 } from '../actions.js';
 import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 // import Menu from '../components/Menu.js';
 
 class Navigation extends Component {
@@ -106,5 +107,11 @@ function mapStateToProps(state) {
     user
   };
 }
+
+Navigation.propTypes = {
+	isUserAuthenticated: PropTypes.bool.isRequired,
+  user: PropTypes.object.isRequired,
+  dispatch: PropTypes.func.isRequired
+};
 
 export default connect(mapStateToProps)(Navigation);
