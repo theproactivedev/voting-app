@@ -84,9 +84,9 @@ class Navigation extends Component {
 
             {!this.props.isUserAuthenticated &&
               <NavItem eventKey={'/twitter-authenticate'}>
-                <TwitterLogin className="twitter-btn" showIcon={false} loginUrl="http://localhost:3000/api/v1/auth/twitter"
+                <TwitterLogin className="twitter-btn" showIcon={false} loginUrl="https://eg-fcc-votingapp.herokuapp.com/api/v1/auth/twitter"
                 onFailure={this.onFailed} onSuccess={this.onSuccess}
-                requestTokenUrl="http://localhost:3000/api/v1/auth/twitter/reverse" />
+                requestTokenUrl="https://eg-fcc-votingapp.herokuapp.com/api/v1/auth/twitter/reverse" />
               </NavItem>
             }
 
