@@ -13,7 +13,8 @@ var PollSchema = new Schema({
     options : [OptionsSchema],
     totalVotes : Number,
     authorID: String,
-    twitterID: String
+    twitterID: String,
+    postDate: { type: Date, default: Date.now }
 });
 
 // database name, name of schema

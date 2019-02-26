@@ -1,36 +1,38 @@
 import React, { Component } from 'react';
-import { Navbar } from 'react-bootstrap';
-import { Nav } from 'react-bootstrap';
-import { NavItem } from 'react-bootstrap';
-import TwitterLogin from 'react-twitter-auth';
 import { LinkContainer } from 'react-router-bootstrap';
+import { Navbar, Nav, NavDropdown, Container } from 'react-bootstrap';
+import TwitterLogin from 'react-twitter-auth';
 import {
   removeUser,
-  setUserDetails
+  setUserDetails,
+  toggleLoginModal
 } from '../actions.js';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-// import Menu from '../components/Menu.js';
+import UserFormModal from '../containers/UserFormModal';
 
 class Navigation extends Component {
 
   constructor(props) {
-    super(props);
+    super(props)
 
     this.onSuccess = this.onSuccess.bind(this);
     this.onFailed = this.onFailed.bind(this);
     this.logout = this.logout.bind(this);
+    this.toggleLoginModal = this.toggleLoginModal.bind(this); 
   }
 
   onSuccess(response) {
     const token = response.headers.get('x-auth-token');
     response.json().then(user => {
       if (token) {
-        this.props.dispatch(setUserDetails({
-          "userId" : user.twitterProvider.identification,
-          "userName" : user.twitterProvider.name,
-          "userToken" : token
-        }));
+        if (user.twitterProvider) {
+          this.props.dispatch(setUserDetails({
+            "userId" : user.twitterProvider.identification,
+            "userName" : user.twitterProvider.name,
+            "userToken" : token
+          }));
+        }
       }
     });
   }
@@ -42,69 +44,94 @@ class Navigation extends Component {
   logout() {
     this.props.dispatch(removeUser());
     localStorage.removeItem('abcd');
+    fetch("/logout").catch(error => console.log(error));
+  }
+
+  toggleLoginModal(path) {
+    this.props.dispatch(toggleLoginModal(path));
   }
 
   render() {
-    let paths = ["/myPolls", "/newPoll", "/"];
-    let logout = this.props.isUserAuthenticated ? "Log Out" : "";
-    let pathNames = ["My Polls", "New Poll", logout];
+    let paths = ["/myPolls", "/newPoll"];
+    let pathNames = ["My Polls", "New Poll"];
     let menu = [];
 
     for(var i = 0; i < pathNames.length; i++) {
-      if (paths[i] === "/") {
-        const item = (
-          <LinkContainer to={paths[i]} onClick={this.logout} >
-            <NavItem eventKey={paths[i]} href={paths[i]}>{pathNames[i]}</NavItem>
-          </LinkContainer>
-        );
-        menu.push(item);
-      } else {
-        const item = (
+      const item = (
+        <Nav.Item as="li" key={paths[i]}>
           <LinkContainer to={paths[i]} >
-            <NavItem eventKey={paths[i]} href={paths[i]}>{pathNames[i]}</NavItem>
+            <Nav.Link>{pathNames[i]}</Nav.Link>
           </LinkContainer>
-        );
-        menu.push(item);
-      }
+        </Nav.Item>
+      );
+      menu.push(item);
     }
 
 		return(
-      <Navbar inverse collapseOnSelect>
-        <Navbar.Header>
-          <LinkContainer to="/">
-            <Navbar.Brand>FCC Voting App</Navbar.Brand>
-          </LinkContainer>
-          <Navbar.Toggle />
-        </Navbar.Header>
-        <Navbar.Collapse>
-          <Nav pullRight>
-            <LinkContainer to={'/polls'} >
-              <NavItem eventKey={'/polls'} href={'/polls'}>Polls</NavItem>
+      <div>
+        <Navbar bg="dark" variant="dark" expand="lg" collapseOnSelect>
+          <Container>
+            <LinkContainer to="/">
+              <Navbar.Brand>FCC Voting App</Navbar.Brand>
             </LinkContainer>
+            <Navbar.Toggle aria-controls="basic-navbar-nav" />
+            <Navbar.Collapse id="basic-navbar-nav">
+              <Nav className="justify-content-end w-100" as="ul">
+                <Nav.Item as="li">
+                  <LinkContainer eventKey={'/polls'} to={'/polls'} >
+                    <Nav.Link href="/polls">Polls</Nav.Link>
+                  </LinkContainer>
+                </Nav.Item>
 
-            {!this.props.isUserAuthenticated &&
-              <NavItem eventKey={'/twitter-authenticate'}>
-                <TwitterLogin className="twitter-btn" showIcon={false} loginUrl="https://eg-fcc-votingapp.herokuapp.com/api/v1/auth/twitter"
-                onFailure={this.onFailed} onSuccess={this.onSuccess}
-                requestTokenUrl="https://eg-fcc-votingapp.herokuapp.com/api/v1/auth/twitter/reverse" />
-              </NavItem>
-            }
+                {this.props.isUserAuthenticated && this.props.user.userName !== "" &&
+                  menu
+                }
 
-            {!!this.props.isUserAuthenticated &&
-              menu
-            }
-          </Nav>
-        </Navbar.Collapse>
-      </Navbar>
-		);
+                {this.props.isUserAuthenticated && this.props.user.userName !== "" &&
+                  <Nav.Item as="li" key="user" >
+                    <NavDropdown title={this.props.user.userName} id="user-dropdown" as="li">
+                      <LinkContainer eventKey={'/logout'} to={'/logout'} onClick={this.logout} >
+                        <NavDropdown.Item>Log out</NavDropdown.Item>
+                      </LinkContainer>
+                    </NavDropdown>
+                  </Nav.Item>
+                }
+
+                {!this.props.isUserAuthenticated &&
+                  <Nav.Item as="li" key={'/signup'}>
+                    <Nav.Link onClick={() => this.toggleLoginModal("/signup")} >Sign Up</Nav.Link>
+                  </Nav.Item>
+                }
+
+                {!this.props.isUserAuthenticated &&
+                  <Nav.Item as="li" key="login" >
+                    <NavDropdown title="Log In" id="login-dropdown">
+                      {/* <LinkContainer eventKey={'/login'} to={'/login'} > */}
+                        <Nav.Link className="text-dark" onClick={() => this.toggleLoginModal("/login")}>Sign in with Email</Nav.Link>
+                      {/* </LinkContainer> */}
+                      <Nav.Link eventKey={'/twitter-authenticate'}>
+                        <TwitterLogin className="twitter-btn p-0 border-0" showIcon={false} loginUrl="https://eg-fcc-votingapp.herokuapp.com/api/v1/auth/twitter"
+                        onFailure={this.onFailed} onSuccess={this.onSuccess}
+                        requestTokenUrl="https://eg-fcc-votingapp.herokuapp.com/api/v1/auth/twitter/reverse" />
+                      </Nav.Link>
+                    </NavDropdown>
+                  </Nav.Item>
+                }
+              </Nav>
+            </Navbar.Collapse>
+          </Container>
+        </Navbar>
+        <UserFormModal modalObj={{ open: this.props.showLoginModal, path: this.props.loginModalPath }} />
+      </div>
+      );
   }
 }
 
 function mapStateToProps(state) {
-  const { isUserAuthenticated, user } = state;
+  const { isUserAuthenticated, user, showLoginModal, loginModalPath } = state;
   return {
     isUserAuthenticated,
-    user
+    user, showLoginModal, loginModalPath
   };
 }
 

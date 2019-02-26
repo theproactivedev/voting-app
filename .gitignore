@@ -1,3 +1,8 @@
 node_modules
 client/node_modules
 .env
+<<<<<<< HEAD
+=======
+app/config/private.key
+app/config/public.key
+>>>>>>> Encrypted token in a cookie

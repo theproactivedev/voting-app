@@ -1,7 +1,17 @@
+:root {
+  --blue-shade: #0056b3;
+}
+
 body {
   -webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
   font-family: 'Open Sans', sans-serif;
+  position: relative;
+  min-height: 100vh;
+}
+
+#root > div:first-of-type {
+  padding-bottom: 60px;
 }
 
 .mb-5 {
@@ -22,25 +32,58 @@ p {
   font-size: 1.125em;
 }
 
+h1 {
+  font-size: 50px;
+  font-family: 'Alfa Slab One', serif;
+  letter-spacing: 1px;
+  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.8);
+}
+
+h2 {
+  font-family: 'Roboto Slab', serif;
+}
+
 .header {
   background-color: #00d8ff;
   padding-top: 20px;
   padding-bottom: 20px;
 }
 
-.header h2 {
-  font-size: 40px;
+.navbar-brand:hover {
+  color: rgb(165, 164, 164);
+}
+
+.modal {
+  padding-left: 0;
+}
+
+.modal-dialog {
+  width: 100%;
+  margin: 0;
+  max-width: 100%;
+}
+
+.modal-content {
+  height: 100vh;
+  border-radius: 0;
+  border: 0;
 }
 
 div.poll {
-  border: 1px solid #46b8da;
-  border-left: 8px solid #46b8da;
-  padding: 40px;
   margin-top: 40px;
 }
 
-div.panel-body {
-  padding: 10px 15px;
+.postDate {
+  font-size: 14px;
+  letter-spacing: 0.5px;
+}
+
+.votes {
+  background-color: var(--blue-shade,'#0056b3');
+  padding: 2px 15px;
+  border-radius: 25px;
+  font-size: 14px;
+  color: #fff;
 }
 
 label.question {
@@ -73,8 +116,7 @@ div.btn-success p {
 .twitter-btn {
   background-color: transparent;
   color: #2fa5f9;
-  border: none;
-  padding: 0;
+  cursor: pointer;
 }
 
 .twitter-btn:active {
@@ -82,19 +124,16 @@ div.btn-success p {
 }
 
 footer {
-  padding-top: 15px;
   color: #484949;
   font-size: 0.9em;
-  text-align: center;
-  /* position: absolute;
+  position: absolute;
   bottom: 0;
+  height: 60px;
   width: 100%;
-  height: 45px; */
 }
 
 footer p {
-  text-align: center;
-  width: 100%;
+  line-height: 60px;
 }
 
 footer a {
@@ -106,4 +145,12 @@ footer a:hover {
   color: #00d8ff;
   text-decoration: none;
   font-weight: bold;
+}
+
+@media screen and (min-width:768px) {
+  div.poll {
+    border: 1px solid #46b8da;
+    border-left: 8px solid #46b8da;
+    padding: 40px;
+  }
 }

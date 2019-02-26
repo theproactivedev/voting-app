@@ -3,7 +3,7 @@ import { ListGroupItem, ListGroup } from 'react-bootstrap';
 
 const ProjectDescription = () => {
   return (
-    <div className="container project-description">
+    <div className="container project-description py-5">
       <h2>Project Description</h2>
 
       <p className="lead">Here are the specific user stories I should implement for this project.</p>

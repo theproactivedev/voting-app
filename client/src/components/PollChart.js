@@ -61,14 +61,16 @@ class PollChart extends Component {
   render () {
     return(
       <div className="col-sm-12 col-md-8 col-lg-8">
-        <Doughnut data={this.loadChart}
+        <Doughnut data={this.loadChart} width={365} height={345}
         options={{
           title: {
             display: true,
             text: this.props.question,
             position: "bottom"
           },
-          animateRotate : true
+          animateRotate : true,
+          responsive: true,
+          maintainAspectRatio: false,
         }}
         />
       </div>

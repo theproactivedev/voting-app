@@ -13,13 +13,13 @@ class Tools extends Component {
     let images = pictures.map(picture => {
       return (
         <div className="col-xs-6">
-          <Image className="image" src={picture} responsive circle />
+          <Image className="image" src={picture} responsive="true" circle="true" />
         </div>
       );
     });
 
     return (
-      <div className="tools">
+      <div className="tools py-5">
 				<div className="container">
           <h2>Tools Used</h2>
 					<p className="lead">This is built using Create React App and the following tools:</p>

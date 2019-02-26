@@ -4,17 +4,6 @@
 }
 
 /* Home Styles */
-
-h1 {
-  font-size: 40px;
-  font-family: 'Alfa Slab One', serif;
-  letter-spacing: 1px;
-}
-
-h2 {
-  font-family: 'Roboto Slab', serif;
-}
-
 h2, p.lead {
   text-align: center;
 }

@@ -4,16 +4,20 @@ import {
   FETCH_RESULTS_REJECTED,
   SET_USER_DETAILS,
   REMOVE_USER,
-  SET_SPECIFIC_POLL
+  SET_SPECIFIC_POLL,
+  SET_USER_LOCAL_DETAILS,
+  TOGGLE_LOGIN_MODAL,
+  SET_USER_TOKEN
 } from './actions.js';
 
-const initialState = {
+export const initialState = {
   isFetching: false,
   isUserAuthenticated: false,
   user : {
     userName: "",
     userId: "",
     userToken: "",
+    userEmail: "",
   },
   polls: [],
   currentPoll: {
@@ -21,6 +25,8 @@ const initialState = {
     options: [],
     pollAuthor: ""
   },
+  showLoginModal: false,
+  loginModalPath: "",
   error: ""
 };
 
@@ -36,6 +42,25 @@ export const votingApp = (state=initialState, action) => {
           userToken: action.user.userToken
         }
       };
+    case SET_USER_LOCAL_DETAILS :
+      return {
+        ...state,
+        isUserAuthenticated: true,
+        user: {
+          ...state.user,
+          userName: action.user.user.local.email,
+          userEmail: action.user.user.local.email,
+          userId: action.user.user._id
+        }
+      }
+    case SET_USER_TOKEN :
+      return {
+        ...state,
+        user: {
+          ...state.user,
+          userToken: action.token
+        }
+      }
     case REMOVE_USER :
       return {
         ...state,
@@ -43,7 +68,8 @@ export const votingApp = (state=initialState, action) => {
         user: {
           userName: "",
           userId: "",
-          userToken: ""
+          userToken: "",
+          userEmail: ""
         }
       };
     case FETCH_RESULTS_PENDING :
@@ -62,6 +88,10 @@ export const votingApp = (state=initialState, action) => {
         ...state,
         isFetching: false,
         error: action.error
+      };
+    case TOGGLE_LOGIN_MODAL : 
+      return {
+        ...state, showLoginModal: !state.showLoginModal, loginModalPath: action.userFormPath
       };
     case SET_SPECIFIC_POLL :
       return {

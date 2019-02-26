@@ -2,6 +2,7 @@
 
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
+var bcrypt   = require('bcrypt-nodejs');
 
 var UserSchema = new Schema({
   twitterProvider: {
@@ -11,6 +12,12 @@ var UserSchema = new Schema({
       token: String,
       tokenSecret: String
     }
+  },
+  local: {
+    email: String,
+    hash: String,
+    salt: String,
+    password: String,
   }
 });
 
@@ -40,6 +47,16 @@ UserSchema.statics.upsertTwitterUser = function(token, tokenSecret, profile, cb)
       return cb(err, user);
     }
   });
+};
+
+// generating a hash
+UserSchema.methods.generateHash = function(password) {
+  return bcrypt.hashSync(password, bcrypt.genSaltSync(8), null);
+};
+
+// checking if password is valid
+UserSchema.methods.isValidPassword = function(password) {
+  return bcrypt.compareSync(password, this.local.password);
 };
 
 module.exports = mongoose.model('Users', UserSchema);

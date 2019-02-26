@@ -1,3 +1,9 @@
+<<<<<<< HEAD
+=======
+** "heroku-postbuild": "cd client && npm install --only=dev && npm install && npm run build" **
+
+
+>>>>>>> Encrypted token in a cookie
 This project was bootstrapped with [Create React App](https://github.com/facebookincubator/create-react-app).
 
 Below you will find some information on how to perform common tasks.<br>

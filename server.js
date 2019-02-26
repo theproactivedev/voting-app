@@ -9,24 +9,18 @@ const passport = require('passport');
 const path = require('path');
 const cookieParser = require('cookie-parser');
 const cors = require('cors');
+const flash = require('connect-flash');
+const morgan = require('morgan');
+var app = express();
+const helmet = require("helmet");
+
 
 require('dotenv').config();
+mongoose.Promise = global.Promise;
 mongoose.connect(process.env.MONGO_URI, {useMongoClient: true});
 
 var routes = require('./app/routes/app.js');
-// var Users = require("./app/models/Users.js");
-// var Polls = require("./app/models/Polls.js");
-
 require('./app/config/passport.js')(passport);
-var app = express();
-
-// Users.remove({}, function(err) {
-//   if (err) console.log(err);
-// });
-//
-// Polls.remove({}, function(err) {
-//   if (err) console.log(err);
-// });
 
 var corsOption = {
   origin: true,
@@ -36,16 +30,28 @@ var corsOption = {
 };
 app.use(cors(corsOption));
 app.use(express.static(path.join(__dirname, 'client/public')));
-// app.use(cookieParser());
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(morgan('dev'));
+app.use(cookieParser());
+app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 // app.use(session({
-//   secret: 'votingApp',
+//   name: "login-server-session-cookie-id",
+//   genid: function(req) {
+//     return genuuid() // use UUIDs for session IDs
+//   },
+//   secret: process.env.THE_KEY_TO_VOTE,
 //   resave: true,
-//   saveUninitialized: true
+//   saveUninitialized: true,
+//   cookie: {
+//     secure: false,
+//     maxAge: 600000000,
+//     httpOnly: false
+// }
 // }));
 app.use(passport.initialize());
 // app.use(passport.session());
+app.use(helmet());
+app.use(flash());
 
 routes(app, passport);
 

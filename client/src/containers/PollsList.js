@@ -1,14 +1,19 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
+import { ListGroup } from 'react-bootstrap';
 import {
-  getPolls
+  getPolls, getPublicPolls
 } from '../actions.js';
 import { connect } from 'react-redux';
 
 class PollsList extends Component {
   componentDidMount() {
     const { ownProps, user } = this.props;
-    this.props.dispatch(getPolls(ownProps.data, user.userToken));
+    if (this.props.data === "/polls") {
+      this.props.dispatch(getPublicPolls());
+    } else if (this.props.data === "/myPolls") {
+      this.props.dispatch(getPolls(ownProps.data, user.userToken));
+    }
   }
 
   render() {
@@ -16,14 +21,18 @@ class PollsList extends Component {
     let polls = [];
 		if (this.props.polls !== undefined) {
 			polls = this.props.polls.map(function(poll, index) {
+        let postDate = new Date(poll.postDate);
+		    let postDateStr = `${postDate.getUTCFullYear()}/${postDate.getMonth() + 1}/${postDate.getDate()}`;
 				return (
-					<li key={index}>
-            <div className="panel panel-info">
-              <div className="panel-body text-center">
-                <Link to={`/polls/${poll.question}`}>{poll.question}</Link>
-              </div>
-            </div>
-          </li>
+          
+					<ListGroup.Item action variant="light" key={index}>
+            {poll.postDate.length > 0 &&
+            <div className="postDate pb-1">{postDateStr}</div>
+            }
+            <Link to={`/polls/${poll.question}`} className="d-block w-100">{poll.question}
+            <span title="Total Votes" className="votes float-right">{poll.totalVotes}</span>            
+            </Link>
+          </ListGroup.Item>
 				);
 			});
 		}
@@ -32,28 +41,23 @@ class PollsList extends Component {
       <div>
         <div className="header mb-5">
           <div className="container">
-            <h2>{headline}</h2>
+            <h1 className="text-white text-center py-4">{headline}</h1>
           </div>
         </div>
         <div className="container">
-          <div className="row">
-            <div className="col-xs-12 col-lg-offset-2 col-lg-8">
-            <div className="mb-5">
-            <p>Select the question to see more details about it.</p>
-            <p>You can vote and you can share it on Twitter. And you can also create your own answer if you&#39;re signed in.</p>
-            </div>
-            <div>
-              {polls.length === 0 &&
-                <p>No questions. Sign in and create your own poll.</p>
-              }
-            </div>
-            <div>
+          <div className="mb-3">
+            <p>Vote your answer and share it on Twitter. And you can also create your own answer if you&#39;re signed in. So make sure to sign in!</p>
+          </div>
+          <div>
+            {polls.length === 0 &&
+              <p>No questions. Sign in and create your own poll.</p>
+            }
+          </div>
+          <div>
             {
-  						polls.length > 0 &&
-  						<ul>{polls}</ul>
-  					}
-            </div>
-            </div>
+              polls.length > 0 &&
+              <ListGroup>{polls}</ListGroup>
+            }
           </div>
         </div>
       </div>
