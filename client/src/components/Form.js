@@ -8,8 +8,8 @@ const Form = ({
   return (
     <div>
       <div className="header mb-5">
-        <div>
-        <h2>Create Poll</h2>
+        <div className="container">
+          <h1 className="text-white text-center py-4">Create Poll</h1>
         </div>
       </div>
       <div className="container">
@@ -27,20 +27,20 @@ const Form = ({
 
           <div className="row">
             <div className="col-sm-12 col-md-8 col-lg-6">
-            <form id="newPollForm" method="post" onSubmit={(e) => {handleSubmit(e)} }>
+              <form id="newPollForm" method="post" onSubmit={(e) => {handleSubmit(e)} }>
                 <div className="form-group">
-                    <label htmlFor="question">Question: </label>
-                    <input type="text" id="question" name="question" className="form-control" onChange={(e) => {handleQuestionChange(e)}} />
+                  <label htmlFor="question">Question: </label>
+                  <input type="text" id="question" name="question" className="form-control" onChange={(e) => {handleQuestionChange(e)}} required />
                 </div>
                 <div className="form-group">
-                    <label htmlFor="options">Options: </label>
-                    <p>Separate options by comma.</p>
-                    <input type="text" id="options" name="options" className="form-control" onChange={(e) => {handleOptionsChange(e)}} />
+                  <label htmlFor="options">Options: </label>
+                  <p>Separate options by comma.</p>
+                  <input type="text" id="options" name="options" className="form-control" onChange={(e) => {handleOptionsChange(e)}} required />
                 </div>
                 <div className="form-group">
-                    <input type="submit" value="Create Poll" id="createPoll" className="btn btn-primary" />
+                  <input type="submit" value="Create Poll" id="createPoll" className="btn btn-primary" />
                 </div>
-            </form>
+              </form>
             </div>
           </div>
           </div>

@@ -1,35 +1,64 @@
 export const FETCH_RESULTS_PENDING = 'FETCH_RESULTS_PENDING';
 export const FETCH_RESULTS_RECEIVED = 'FETCH_RESULTS_RECEIVED';
 export const FETCH_RESULTS_REJECTED = 'FETCH_RESULTS_REJECTED';
-export const SET_USER_DETAILS = 'SET_USER_DETAILS';
+export const SET_USER_TWITTER_DETAILS = 'SET_USER_TWITTER_DETAILS';
 export const SET_USER_LOCAL_DETAILS = 'SET_USER_LOCAL_DETAILS';
 export const REMOVE_USER = 'REMOVE_USER';
 export const SET_SPECIFIC_POLL = 'SET_SPECIFIC_POLL';
 export const TOGGLE_LOGIN_MODAL = "TOGGLE_LOGIN_MODAL";
-export const SET_USER_TOKEN = "SET_USER_TOKEN";
+export const SET_ERROR_MSG = "SET_ERROR_MSG";
 
-export function setUserToken(token) {
+export const setUserTwitterDetails = (user) => {
   return {
-    type: SET_USER_TOKEN,
-    token
-  };
-}
-
-export function setUserDetails(user) {
-  return {
-    type: SET_USER_DETAILS,
+    type: SET_USER_TWITTER_DETAILS,
     user
   };
 }
 
-export function setUserLocalDetails(user) {
+const setUserLocalDetails = (user) => {
+  console.log(user);
   return {
     type: SET_USER_LOCAL_DETAILS,
     user
   }
 }
 
-export function receiveUserLocalDetails() {
+export const submitUserLocalDetails = (user, path) => {
+  return dispatch => {
+    fetch(path, {
+      method: "POST",
+      headers: new Headers({
+        'Accept': 'application/json',
+        'Content-type' : 'application/json'
+      }),
+      body: JSON.stringify(user)
+    })
+    .then(response => {
+      if (!response.ok) {
+        return response.text().then(text => { dispatch(rejectResults(text)); });
+      }
+      return response.json();
+    }, error => console.error("Error: " + error))
+    .then(json => {
+      if (json !== undefined) {
+        dispatch(setUserLocalDetails(json));
+        dispatch(toggleLoginModal(""));
+        localStorage.setItem("abcd", JSON.stringify({
+          isUserAuthenticated: true,
+          user: {
+            twitter: { username: "", id: ""},
+            local: {
+              username: json.local.email.split("@")[0],
+              email: json.local.email
+            },
+          }
+        }));
+      }
+    });
+  }
+}
+
+export const receiveUserLocalDetails = () => {
   return dispatch => {
     fetch("/profile", {
       method: "GET",
@@ -37,43 +66,50 @@ export function receiveUserLocalDetails() {
         "Content-type":"application/json"
       })
     })
-    .then(response => response.json())
-    .then(json => dispatch(setUserLocalDetails(json)))
-    .catch(error => dispatch(rejectResults(error)));
+    .then(response => response.json(), error => dispatch(rejectResults(error)))
+    .then(json => dispatch(setUserLocalDetails(json)));
   };
 }
 
-export function removeUser() {
+export const removeUser = () => {
   return {
     type: REMOVE_USER
   };
 }
 
-function requestResults() {
+const requestResults = () => {
   return {
     type: FETCH_RESULTS_PENDING
   };
 }
 
-function receiveResults(polls) {
+const receiveResults = (polls) => {
   return {
     type: FETCH_RESULTS_RECEIVED,
     polls
   };
 }
 
-function rejectResults(error) {
+const rejectResults = (error) => {
   return {
     type: FETCH_RESULTS_REJECTED,
     error
   };
 }
 
-export function toggleLoginModal(userFormPath) {
+export const setErrorMessage = (error) => {
+  console.log("Is it here?");
+  return {
+    type: SET_ERROR_MSG,
+    error
+  }
+}
+
+export const toggleLoginModal = (userFormPath) => {
   return { type: TOGGLE_LOGIN_MODAL, userFormPath };
 }
 
-export function getPublicPolls() {
+export const getPublicPolls = () => {
   return (dispatch) => {
     dispatch(requestResults());
     return fetch("/polls", {
@@ -82,48 +118,38 @@ export function getPublicPolls() {
           'Content-type' : 'application/json'
         })
       })
-      .then(response => response.json())
-      .then(json => dispatch(receiveResults(json)))
-      .catch(error => dispatch(rejectResults(error)));
-
+      .then(response => response.json(), error => dispatch(rejectResults(error)))
+      .then(json => dispatch(receiveResults(json)));
   };
 }
 
-export function getPolls(dest, token) {
+export const getPolls = (dest) => {
   return (dispatch) => {
     dispatch(requestResults());
-    return fetch(dest, {
-        method: "GET",
-        headers: new Headers({
-          'Content-type' : 'application/json',
-          'x-auth-token' : token
-        })
-      })
-      .then(response => response.json())
-      .then(json => dispatch(receiveResults(json)))
-      .catch(error => dispatch(rejectResults(error)));
+    return fetch(dest)
+      .then(response => response.json(), error => dispatch(rejectResults(error)))
+      .then(json => dispatch(receiveResults(json)));
 
   };
 }
 
-export function getSpecificPoll (dest) {
+export const getSpecificPoll = (dest) => {
   return (dispatch, getState) => {
     dispatch(requestResults());
     return fetch(dest)
-    .then(response => response.json())
-    .then(json => dispatch(setSpecificPoll(json)))
-    .catch(error => dispatch(rejectResults(error)));
+    .then(response => response.json(), error => dispatch(rejectResults(error)))
+    .then(json => dispatch(setSpecificPoll(json)));
   };
 }
 
-function setSpecificPoll(poll) {
+const setSpecificPoll = (poll) => {
   return {
     type: SET_SPECIFIC_POLL,
     poll
   };
 }
 
-export function voteOnPoll(dest, obj) {
+export const voteOnPoll = (dest, obj) => {
   return (dispatch) => {
     return fetch(dest, {
         method: "POST",
@@ -136,7 +162,7 @@ export function voteOnPoll(dest, obj) {
   };
 }
 
-export function deletePoll(dest) {
+export const deletePoll = (dest) => {
   return (dispatch) => {
     return fetch(dest, {
         method: "DELETE"
@@ -145,13 +171,12 @@ export function deletePoll(dest) {
   };
 }
 
-export function addPoll(dest, token, obj) {
+export const addPoll = (dest, obj) => {
   return (dispatch) => {
     return fetch(dest, {
       method: "POST",
       headers: {
-        'Content-Type': 'application/json',
-        'x-auth-token' : token
+        'Content-Type': 'application/json'
       },
       body: JSON.stringify(obj)
     })

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import '../assets/css/homestyle.css';
 import { Image } from 'react-bootstrap';
+import '../assets/css/homestyle.css';
 import react from '../assets/images/react.png';
 import redux from '../assets/images/redux.png';
 import express from '../assets/images/express.jpg';

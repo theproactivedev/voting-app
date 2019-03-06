@@ -1,14 +1,10 @@
 import React, { Component } from 'react';
-import PollChart from '../components/PollChart.js';
 import { Redirect } from 'react-router-dom';
-import {
-  getSpecificPoll,
-  deletePoll,
-  voteOnPoll
-} from '../actions.js';
-import DangerError from '../components/DangerError.js';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import { getSpecificPoll, deletePoll, voteOnPoll } from '../actions.js';
+import DangerError from '../components/DangerError.js';
+import PollChart from '../components/PollChart.js';
 
 class PollItem extends Component {
   constructor(props) {
@@ -16,7 +12,7 @@ class PollItem extends Component {
     this.state = {
       query: "",
       choices: [],
-      pollAuthor: "",
+      author: "",
       vote: "Select your answer.",
       hasVoted: true,
       componentLink: ""
@@ -47,7 +43,7 @@ class PollItem extends Component {
       this.setState({
         query : nextProps.currentPoll.question,
         choices : nextProps.currentPoll.options,
-        pollAuthor : nextProps.currentPoll.pollAuthor
+        author : nextProps.currentPoll.author
       });
     }
   }
@@ -105,7 +101,7 @@ class PollItem extends Component {
       );
     });
 
-    if (user.userName !== "") {
+    if (user.twitter.username !== "" || user.local.username !== "") {
       const editable = (
         <option key={options.length+1} value="Others">Others</option>
       );
@@ -116,7 +112,7 @@ class PollItem extends Component {
       <div className="gradient">
       <div className="container">
         {!this.state.hasVoted &&
-          <DangerError />
+          <DangerError msg={"Please select your answer."} />
         }
 
         <div className="row poll">
@@ -124,25 +120,25 @@ class PollItem extends Component {
             <form>
               <div className="form-group">
                 <label className="question">{this.state.query}
-                {user.userId === this.state.pollAuthor &&
+                {user.userId === this.state.author &&
                   <span className="pull-right" onClick={this.deletePoll}><i className="fa fa-trash" aria-hidden="true"></i></span>
                 }
                 </label>
                 <p>I would like to vote for: </p>
-                <select className="form-control" onChange={this.handleVoteChange}>
+                <select className="form-control" onChange={(e) => this.handleVoteChange(e)}>
                   <option key={0} value="Select your answer.">Select your answer.</option>
                   {options}
                 </select>
               </div>
               {this.state.vote === "Others" &&
-                <div class="form-group">
+                <div className="form-group">
                   <label htmlFor="otherAnswer">Others: </label>
                   <input type="text" className="form-control" id="otherAnswer" name="others" placeholder="Customized Option" />
                 </div>
               }
               <div className="form-group">
-                <input type="submit" value="Submit" className="btn btn-primary" onClick={this.handleSubmit} />
-                {user.userName !== "" &&
+                <input type="submit" value="Submit" className="btn btn-primary" onClick={(e) => this.handleSubmit(e)} />
+                {user.twitter.username.length > 0 &&
                     <button type="button" className="btn btn-info pull-right" onClick={this.tweetPoll}>Tweet</button>
                 }
               </div>

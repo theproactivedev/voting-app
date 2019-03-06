@@ -1,15 +1,16 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
-const DangerError = () => {
+const DangerError = ({ msg }) => {
   return (
-    <div className="row">
-      <div className="col-sm-12 col-md-12">
-        <div className="alert alert-danger">
-        <p>Please select your answer.</p>
-        </div>
-      </div>
+    <div className="alert alert-danger mb-0 mt-3">
+    <p className="mb-0">{msg}</p>
     </div>
   );
 };
+
+DangerError.propTypes = {
+  msg: PropTypes.string.isRequired
+}
 
 export default DangerError;

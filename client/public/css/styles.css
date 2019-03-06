@@ -25,11 +25,10 @@ ul {
 
 ul li {
   list-style-type: none;
-  font-size: 1.125em;
 }
 
 p {
-  font-size: 1.125em;
+  font-size: 1em;
 }
 
 h1 {
@@ -53,14 +52,50 @@ h2 {
   color: rgb(165, 164, 164);
 }
 
+.dropdown-menu {
+  background-color: #343a40;
+}
+
 .modal {
   padding-left: 0;
+}
+
+.modal-content {
+  background-color: #000;
+  /* -webkit-transform: skewX(5deg);
+  -moz-transform: skewX(5deg);
+  -ms-transform: skewX(5deg);
+  -o-transform: skewX(5deg);
+  transform: skewX(5deg); */
+}
+
+.black {
+  background-color: #000;
+
+}
+
+.user-modal {
+  background-color: #fff;
+  position: relative;
+  overflow: hidden;
+  height: 100vh;
+  width: 100%;
+}
+
+.modal-header {
+  border-bottom: none;
 }
 
 .modal-dialog {
   width: 100%;
   margin: 0;
   max-width: 100%;
+  background-color: #fff;
+  -webkit-transform: skewX(-5deg);
+  -moz-transform: skewX(-5deg);
+  -ms-transform: skewX(-5deg);
+  -o-transform: skewX(-5deg);
+  transform: skewX(-5deg);
 }
 
 .modal-content {
@@ -76,6 +111,10 @@ div.poll {
 .postDate {
   font-size: 14px;
   letter-spacing: 0.5px;
+}
+
+.pollQuestion a:hover {
+  text-decoration: none;
 }
 
 .votes {
@@ -147,10 +186,57 @@ footer a:hover {
   font-weight: bold;
 }
 
+.modal-header .close {
+  color: #fff;
+  padding: 7px 12px;
+  border-radius: 50%;
+  background-color: #000;
+  opacity: 1;
+  position: relative;
+  top: 15px;
+} 
+
 @media screen and (min-width:768px) {
   div.poll {
     border: 1px solid #46b8da;
     border-left: 8px solid #46b8da;
     padding: 40px;
+  }
+}
+
+@media screen and (min-width: 992px) {
+  .user-modal:after {
+    left: 1150px; 
+    height: 155vh;
+    width: 100%;
+    background-color: #000;
+    position: absolute;
+    content: "";
+    color: #fff;
+    transform: rotate(315deg);
+    transform-origin: bottom left;
+  }
+
+  .signup-brand {
+    position: relative;
+    top: 420px;
+    z-index: 99;
+    font-size: 48px;
+    font-family: 'Alfa Slab One', serif;
+    letter-spacing: 1px;
+    color: #fff;
+  }
+
+  .modal-header {
+    position: relative;
+    z-index: 100;
+  }
+
+}
+
+@media screen and (min-width: 1200px) {
+  .user-modal:after {
+    left: 1300px; 
+    height: 175vh;
   }
 }

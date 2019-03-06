@@ -1,18 +1,13 @@
 import React, {Component} from 'react';
 import { Route, Switch, withRouter } from 'react-router-dom';
-import Polls from '../components/Polls';
-import PollForm from './PollForm';
-import Home from '../components/Home';
-// import UserFormContainer from '../components/UserFormContainer';
-import Profile from './Profile';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import Polls from '../components/Polls';
+import Home from '../components/Home';
+import PollForm from './PollForm';
 
 class MainContent extends Component {
 	render() {
-
-		// <Route path="/signup" component={UserFormContainer} />
-		// <Route path="/login" component={UserFormContainer} />
 		const { isUserAuthenticated, user } = this.props;
 		return(
 			<Switch>
@@ -22,7 +17,6 @@ class MainContent extends Component {
 				<Route path="/newPoll" render={(props) => (
 				  <PollForm {...props} isUserAuthenticated={isUserAuthenticated} user={user}  />
 				)} />
-				<Route path="/profile" component={Profile} />
 			</Switch>
 		);
 	}
@@ -42,4 +36,3 @@ MainContent.propTypes = {
 };
 
 export default withRouter(connect(mapStateToProps)(MainContent));
-// export default MainContent;

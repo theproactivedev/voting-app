@@ -1,19 +1,18 @@
-var Polls = require("../models/Polls");
-var Users = require("../models/Users");
+const Polls = require("../models/Polls");
+const Users = require("../models/Users");
 require("../config/passport.js");
-var path = require("path");
-var express = require("express");
-var router = express.Router();
-var jwt = require('jsonwebtoken');
-var expressJwt = require('express-jwt');
-var request = require('request');
-var configAuth = require("../config/auth.js");
+const express = require("express");
+const router = express.Router();
+const jwt = require('jsonwebtoken');
+const expressJwt = require('express-jwt');
+const request = require('request');
+const configAuth = require("../config/auth.js");
 const fs = require("fs");
 const privateKey = fs.readFileSync('app/config/private.key', 'utf8');
 const publicKey = fs.readFileSync('app/config/public.key', 'utf8');
 
 module.exports = function(app, passport) {
-  var createToken = function(auth) {
+  const createToken = function(auth) {
     return jwt.sign({
       id: auth.id
     }, privateKey, { algorithm: 'RS256' },
@@ -22,7 +21,7 @@ module.exports = function(app, passport) {
     });
   };
 
-  var generateToken = function (req, res, next) {
+  const generateToken = function (req, res, next) {
     console.log("Generate Token");
     req.token = createToken(req.auth);
     return next();
@@ -33,36 +32,38 @@ module.exports = function(app, passport) {
     return next();
   }
 
-  var sendToken = function (req, res, next) {
-    res.setHeader('x-auth-token', req.token);
-    return next();
-  };
+  // var sendToken = function (req, res, next) {
+  //   res.setHeader('x-auth-token', req.token);
+  //   return next();
+  // };
 
-  let sendTokenUsingTwitter = (req, res) => res.status(200).send(JSON.stringify(req.user));
-  let sendTokenUsingLocal = (req, res) => res.status(200).json(req.user);
+  const sendUserUsingTwitter = (req, res) => res.status(200).send(JSON.stringify(req.user));
+  const sendUserUsingLocal = (req, res) => res.status(200).json(req.user);
 
-  var authenticate = expressJwt({
+  const authenticate = expressJwt({
     secret: publicKey,
     algorithms: [ 'RS256' ],
     requestProperty: 'auth',
-    getToken: function(req) {
-      if (req.headers['x-auth-token']) {
-        return req.headers['x-auth-token'];
-      } else if (req.cookies["jawbtc"]) { 
+    getToken: function(req, res) {
+      // if (req.headers['x-auth-token']) {
+      //   return req.headers['x-auth-token'];
+      // } else
+      
+      if (req.cookies["jawbtc"]) { 
         return req.cookies["jawbtc"];
-        
       } else {
-        console.log("No token");
-        return new Error("Please sign out and log in again.");
+        // return res.json({ error : })
+        // throw new Error("Sorry, you're not authorized to go here.Try to sign up or log in. Then, visit this page again.");                
       }
     }
   });
-  const clearTokenFromCookie = (req, res, next) => {
-    res.clearCookie("jawbtc");
-    return next();
-  }
 
-  var getCurrentUser = function(req, res, next) {
+  const clearTokenFromCookie = (req, res) => {
+    res.clearCookie("jawbtc");
+    return res.end();
+  };
+
+  const getCurrentUser = function(req, res, next) {
     Users.findOne({
       "_id" : req.auth.id
     }, function(err, user) {
@@ -124,13 +125,13 @@ module.exports = function(app, passport) {
         };
 
         return next();
-      }, generateToken, saveTokenInCookie, sendToken, sendTokenUsingTwitter);
+      }, generateToken, saveTokenInCookie, sendUserUsingTwitter);
 
   app.post('/signup', function(req, res, next) {
     const { body: { user } } = req;
 
     passport.authenticate('local-signup', { session:false }, function(err, user, info) {
-      if (!user) return res.status(401).send("User Not Authenticated");
+      if (!user) return res.status(401).send(info.message);
 
       req.auth = {
         id: user.id
@@ -142,16 +143,15 @@ module.exports = function(app, passport) {
       });
       return next();
     })(req, res, next);
-  }, generateToken, saveTokenInCookie, sendToken, sendTokenUsingLocal);
+  }, generateToken, saveTokenInCookie, sendUserUsingLocal);
 
   
   app.post('/login', function(req, res, next) {
     const { body: { user } } = req;
 
     passport.authenticate('login', { session:false }, function(err, user, info) {
-      console.log(info);
-      if (!user) return res.status(401).send("User Not Authenticated");
-      console.log(user.local.email + " email");
+      if (!user) return res.status(401).send(info.message);
+
       req.auth = {
         id: user.id
       };
@@ -162,23 +162,12 @@ module.exports = function(app, passport) {
       });
       return next();
     })(req, res, next);
-  }, generateToken, saveTokenInCookie, sendToken, sendTokenUsingLocal);
+  }, generateToken, saveTokenInCookie, sendUserUsingLocal);
 
-  app.route("/logout").get(clearTokenFromCookie, function(req, res) {
-    console.log(req.cookies["jawbtc"]);
-    return res.redirect("/");
-  });
+  app.route("/logout").get(authenticate, getCurrentUser, clearTokenFromCookie);
 
-  app.route("/profile").get(authenticate, getCurrentUser, function(req,res) {
-    console.log("Did it reach here?");
-    console.log(typeof req.user);
-    console.log(req.user);
-    if (req.user != undefined) {
-    console.log("How about here?");
-
-      console.log(req.user);
-      res.json(req.user);
-    }
+  app.route("/user").get(authenticate, getCurrentUser, function(req, res) {
+    console.log("user is " + req.user);
   });
 
   app.route("/polls").get(function(req, res) {
@@ -224,8 +213,7 @@ module.exports = function(app, passport) {
     		question: req.body.question,
     		options: list,
         totalVotes: 0,
-        authorID: req.auth.id,
-        twitterID: req.body.twitterId
+        authorID: req.auth.id
     	});
 
     	poll.save(function(err) {
@@ -291,13 +279,13 @@ module.exports = function(app, passport) {
       Polls.remove({"question" : req.params.item + "?"}, function(err) {
         console.log(err);
       });
-      res.redirect("/polls");
+      res.redirect("/myPolls");
     }
   });
 
-  // app.get('*', (req, res) => {
-  //   res.sendFile(path.join(__dirname + '/client/build/index.html'));
-  // });
+  app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname + '/client/build/index.html'));
+  });
 
   app.use('/api/v1', router);
 

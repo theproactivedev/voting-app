@@ -5,56 +5,65 @@ var Schema = mongoose.Schema;
 var bcrypt   = require('bcrypt-nodejs');
 
 var UserSchema = new Schema({
-  twitterProvider: {
+  twitter: {
     type: {
-      name: String,
-      identification: String,
+      username: String,
+      id: String,
       token: String,
       tokenSecret: String
     }
   },
   local: {
     email: String,
-    hash: String,
-    salt: String,
     password: String,
   }
 });
 
-UserSchema.statics.upsertTwitterUser = function(token, tokenSecret, profile, cb) {
+UserSchema.statics.upsertTwitterUser = function(req, token, tokenSecret, profile, cb) {
   var that = this;
 
-  return this.findOne({
-    'twitterProvider.identification': profile.id
-  }, function(err, user) {
-    if (!user) {
-      var newUser = new that({
-        twitterProvider: {
-          name: profile.displayName,
-          identification: profile.id,
-          token: token,
-          tokenSecret: tokenSecret
+  process.nextTick(function() {
+    if (!req.user) { 
+      UserSchema.findOne({ "twitter.id" : profile.id }, function(err, user) { 
+        if (!user) {
+          var newUser = new that({
+            twitter: {
+              username: profile.displayName,
+              id: profile.id,
+              token: token,
+              tokenSecret: tokenSecret
+            }
+          });
+    
+          newUser.save(function(error, savedUser) {
+            if (error) {
+              console.log(error);
+            }
+            return cb(error, savedUser);
+          });
+        } else {
+          return cb(err, user);
         }
-      });
-
-      newUser.save(function(error, savedUser) {
-        if (error) {
-          console.log(error);
-        }
-        return cb(error, savedUser);
       });
     } else {
-      return cb(err, user);
+      let user = req.user;
+      user.twitter.username = profile.displayName;
+      user.twitter.id = profile.id;
+      user.twitter.token = token;
+      user.twitter.tokenSecret = tokenSecret;
+      user.save(function(err) {
+        if (err) throw err;
+        return done(null, user);
+      });
     }
+
   });
 };
 
-// generating a hash
 UserSchema.methods.generateHash = function(password) {
   return bcrypt.hashSync(password, bcrypt.genSaltSync(8), null);
 };
 
-// checking if password is valid
 UserSchema.methods.isValidPassword = function(password) {
   return bcrypt.compareSync(password, this.local.password);
 };

@@ -4,7 +4,8 @@
   "description": "It's a voting app built with HTML, CSS, React, ExpressJS and MongoDB.",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js"
+    "start": "node server.js",
+    "heroku-postbuild": "cd client && npm install --only=dev && npm install && npm run build"
   },
   "author": "Eirin Gonzales",
   "license": "ISC",

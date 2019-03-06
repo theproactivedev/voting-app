@@ -1,36 +1,34 @@
 import React from 'react';
 import { Modal } from 'react-bootstrap';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router-dom';
+import PropTypes from 'prop-types';
 import { toggleLoginModal } from '../actions';
 import UserForm from './UserForm';
-import PropTypes from 'prop-types';
 
 class UserFormModal extends React.Component {
   render() {
-    if (this.props.modalObj.path === "/signup") {
-      this.props.history.push("/signup");
-    } else if (this.props.modalObj.path === "/login") {
-      this.props.history.push("/login");
-    } else {
-      // this.props.history.push("/");
-    }
+    const { modalObj } = this.props;
+    let title = modalObj.path === "/signup" ? "Sign Up" : "Log In";
 
     return (
       <Modal
-        show={this.props.modalObj.open}
+        show={modalObj.open}
         onHide={() => this.props.toggleLoginModal("")}
         dialogClassName="modal-90w"
         aria-labelledby="example-custom-modal-styling-title"
       >
-        <Modal.Header closeButton>
-          <Modal.Title id="example-custom-modal-styling-title">
-            Fill up the form.
-          </Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <UserForm data={this.props.modalObj.path} />
-        </Modal.Body>
+        <div className="user-modal pt-5">
+          <div className="container">
+          <Modal.Header closeButton className="p-0">
+            <Modal.Title id="example-custom-modal-styling-title">
+              {title.toUpperCase()}
+            </Modal.Title>
+          </Modal.Header>
+          <Modal.Body className="p-0">
+            <UserForm data={modalObj.path} />
+          </Modal.Body>
+          </div>
+        </div>
       </Modal>
     );
   }
@@ -43,10 +41,8 @@ const mapDispatchToProps = dispatch => {
 };
 
 UserFormModal.propTypes = {
-  history: PropTypes.object.isRequired,
-  modalObj: PropTypes.object.isRequired
+  modalObj: PropTypes.object.isRequired,
+  toggleLoginModal: PropTypes.func.isRequired
 }
 
-export default withRouter(connect(null, mapDispatchToProps)(UserFormModal));
-
-// export default UserFormM
+export default connect(null, mapDispatchToProps)(UserFormModal);

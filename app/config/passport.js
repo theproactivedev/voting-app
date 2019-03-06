@@ -24,11 +24,12 @@ module.exports = function (passport) {
 
 	passport.use("twitter-token", new TwitterTokenStrategy({
 		consumerKey: configAuth.twitterAuth.consumerKey,
-		consumerSecret: configAuth.twitterAuth.consumerSecret
+		consumerSecret: configAuth.twitterAuth.consumerSecret,
+		passReqToCallback: true
 	},
-	function (token, tokenSecret, profile, done) {
-		Users.upsertTwitterUser(token, tokenSecret, profile, function(err, user) {
-		return done(err, user);
+	function (req, token, tokenSecret, profile, done) {
+		Users.upsertTwitterUser(req, token, tokenSecret, profile, function(err, user) {
+			return done(err, user);
 		});
 	}));
 
@@ -42,25 +43,23 @@ module.exports = function (passport) {
 			Users.findOne({'local.email': email}, function(err, existingUser) {
 				if (err) return done(err);
 
-				if (existingUser) return done(null, false, req.flash('signupMessage', 'That email is already taken.'));
+				if (existingUser) return done(null, false, { message: 'That email is already taken.'});
 
 				if(req.user) {
 					var user            = req.user;
 					user.local.email    = email;
 					user.local.password = user.generateHash(password);
 					user.save(function(err) {
-							if (err)
-									throw err;
-							return done(null, user);
+						if (err) throw err;
+						return done(null, user);
 					});
 				} else {
 					var newUser            = new Users();
 					newUser.local.email    = email;
 					newUser.local.password = newUser.generateHash(password);
 					newUser.save(function(err) {
-							if (err)
-									throw err;
-							return done(null, newUser);
+						if (err)throw err;
+						return done(null, newUser);
 					});
 				}
 			});
@@ -73,10 +72,10 @@ module.exports = function (passport) {
 	}, async (email, password, done) => {
 	try {
 			const user = await Users.findOne({ "local.email" : email });
-			if( !user ) return done(null, false, { message : 'User not found'});
+			if( !user ) return done(null, false, { message : 'User not found. Please create an account first.'});
 
 			const validate = await user.isValidPassword(password);
-			if( !validate ) return done(null, false, { message : 'Wrong Password'});
+			if( !validate ) return done(null, false, { message : 'Email address and/or password combination is invalid. Please try again.'});
 			
 			return done(null, user, { message : 'Logged in Successfully'});
 	} catch (error) {

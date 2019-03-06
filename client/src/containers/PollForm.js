@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import {Redirect} from 'react-router-dom';
-import Form from '../components/Form.js';
-import { addPoll } from '../actions.js';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import { addPoll } from '../actions.js';
+import Form from '../components/Form.js';
 
 class PollForm extends Component {
 
@@ -45,10 +45,10 @@ class PollForm extends Component {
 	postData(query, choices) {
 		var obj = {
 			question: query, options: choices,
-			twitterId: this.props.user.userId
+			userId: this.props.user.userId
 		};
 
-		this.props.dispatch(addPoll("/newPoll", this.props.user.userToken, obj));
+		this.props.dispatch(addPoll("/newPoll", obj));
 		this.setState({
 			query: "", choices: [], redirect: true, hasCreatedPoll: true
 		});
@@ -56,8 +56,12 @@ class PollForm extends Component {
 
 	render() {
 		if (this.state.redirect) {
-			return <Redirect to={{pathname: '/polls'}} />
+			return <Redirect to={{pathname: '/myPolls'}} />
 		}
+
+		if (!this.props.isUserAuthenticated) {
+      return <Redirect to={{pathname: '/'}} />
+    }
 
 		return(
 			<div>
@@ -71,15 +75,16 @@ class PollForm extends Component {
 }
 
 function mapStateToProps(state) {
-  const { user } = state;
+  const { user, isUserAuthenticated } = state;
   return {
-    user
+    user, isUserAuthenticated
   };
 }
 
 PollForm.propTypes = {
-  user: PropTypes.object.isRequired,
-  dispatch: PropTypes.func.isRequired
+	user: PropTypes.object.isRequired,
+	isUserAuthenticated: PropTypes.bool.isRequired,
+	dispatch: PropTypes.func.isRequired
 };
 
 export default connect(mapStateToProps)(PollForm);
