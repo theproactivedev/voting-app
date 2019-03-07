@@ -16,7 +16,6 @@ export const setUserTwitterDetails = (user) => {
 }
 
 const setUserLocalDetails = (user) => {
-  console.log(user);
   return {
     type: SET_USER_LOCAL_DETAILS,
     user
