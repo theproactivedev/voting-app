@@ -80,7 +80,7 @@ module.exports = function(app, passport) {
       request.post({
         url: 'https://api.twitter.com/oauth/request_token',
         oauth: {
-          oauth_callback: "https://eg-fcc-votingapp.herokuapp.com/twitter-callback",
+          oauth_callback: "https%3A%2F%2Feg-fcc-votingapp.herokuapp.com%2Ftwitter-callback",
           consumer_key: configAuth.twitterAuth.consumerKey,
           consumer_secret: configAuth.twitterAuth.consumerSecret
         }
