@@ -22,7 +22,6 @@ module.exports = function(app, passport) {
   };
 
   const generateToken = function (req, res, next) {
-    console.log("Generate Token");
     req.token = createToken(req.auth);
     return next();
   };
@@ -139,7 +138,6 @@ module.exports = function(app, passport) {
 
       req.logIn(user, function(err) {
         if (err) { return next(err); }
-        console.log(user);
       });
       return next();
     })(req, res, next);
@@ -158,7 +156,6 @@ module.exports = function(app, passport) {
 
       req.logIn(user, function(err) {
         if (err) { return next(err); }
-        console.log(user);
       });
       return next();
     })(req, res, next);
@@ -167,7 +164,7 @@ module.exports = function(app, passport) {
   app.route("/logout").get(authenticate, getCurrentUser, clearTokenFromCookie);
 
   app.route("/user").get(authenticate, getCurrentUser, function(req, res) {
-    console.log("user is " + req.user);
+    // console.log("user is " + req.user);
   });
 
   app.route("/polls").get(function(req, res) {
