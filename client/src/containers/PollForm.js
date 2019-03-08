@@ -43,9 +43,10 @@ class PollForm extends Component {
 	}
 
 	postData(query, choices) {
+		const { user: { twitter, local } } = this.props;
 		var obj = {
 			question: query, options: choices,
-			userId: this.props.user.userId
+			author: local.username.length > 0 ? local.username : twitter.username
 		};
 
 		this.props.dispatch(addPoll("/newPoll", obj));

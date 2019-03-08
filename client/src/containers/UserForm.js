@@ -16,6 +16,7 @@ class UserForm extends Component {
     this.onSubmit = this.onSubmit.bind(this);
     this.handleEmailChange = this.handleEmailChange.bind(this);
     this.handlePasswordChange = this.handlePasswordChange.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
   }
 
   handleEmailChange(e) {
@@ -26,20 +27,21 @@ class UserForm extends Component {
     this.setState({ password: e.target.value });
   }
 
+  handleSubmit() {
+    this.props.submitUser({ 
+      email: this.state.email, password: this.state.password 
+    }, this.props.data); 
+  }
+
   onSubmit(e) {
     e.preventDefault();
     const { email, password } = this.state;
 
     let regex = /(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]{10,}/g;
-    // regex.test(password)
     if (email !== "" && regex.test(password) && this.props.data === "/signup") {
-      this.props.submitUser({ 
-        email: this.state.email, password: this.state.password 
-      }, this.props.data); 
+      this.handleSubmit();
     } else if (email !== "" && password !== "" && this.props.data === "/login") {
-      this.props.submitUser({ 
-        email: this.state.email, password: this.state.password 
-      }, this.props.data); 
+      this.handleSubmit();
     } else {
       this.props.setErrorMessage("Please create a stronger password.");
     }
@@ -57,25 +59,25 @@ class UserForm extends Component {
               <DangerError msg={this.props.error} />        
             }
             <form action="" method="post" onSubmit={(e) => this.onSubmit(e)} className="px-0 py-3 py-lg-5">
-            <div className="form-group">
-              <label><strong>Email</strong></label>
-              <input type="email" className="form-control" name="email" value={this.state.email} onChange={(e) => this.handleEmailChange(e)} required />
-            </div>
-            <div className="form-group">
-              <label><strong>Password</strong></label>
-              {isSignUp &&
-                <p>Please create a password with more than 10 characters, an uppercase and lowercase letters and numbers.</p>
-              }
-              {isSignUp &&
-                <input type="password" className="form-control" name="password" value={this.state.password} onChange={(e) => this.handlePasswordChange(e)} required pattern=".{10,}" title="Minimum of 10 characters" />
-              }
-              {!isSignUp &&
-                <input type="password" className="form-control" name="password" value={this.state.password} onChange={(e) => this.handlePasswordChange(e)} required />
-              }
-            </div>
+              <div className="form-group">
+                <label><strong>Email</strong></label>
+                <input type="email" className="form-control" name="email" value={this.state.email} onChange={(e) => this.handleEmailChange(e)} required />
+              </div>
+              <div className="form-group">
+                <label><strong>Password</strong></label>
+                {isSignUp &&
+                  <p>Please create a password with more than 10 characters, an uppercase and lowercase letters and numbers.</p>
+                }
+                {isSignUp &&
+                  <input type="password" className="form-control" name="password" value={this.state.password} onChange={(e) => this.handlePasswordChange(e)} required pattern=".{10,}" title="Minimum of 10 characters" />
+                }
+                {!isSignUp &&
+                  <input type="password" className="form-control" name="password" value={this.state.password} onChange={(e) => this.handlePasswordChange(e)} required />
+                }
+              </div>
 
-            <button type="submit" className="btn btn-primary">{btnText}</button>
-          </form>
+              <button type="submit" className="btn btn-primary">{btnText}</button>
+            </form>
           </div>
           <div className="d-none d-lg-block col-lg-6">
             <p className="signup-brand text-right pl-lg-4">FCC Voting App</p>

@@ -104,6 +104,15 @@ h2 {
   border: 0;
 }
 
+.general .alert {
+  z-index: 99;
+  position: absolute;
+  width: 80%;
+  margin-top: 24px;
+  left: 50%;
+  margin-left: -40%;
+}
+
 div.poll {
   margin-top: 40px;
 }
@@ -197,6 +206,12 @@ footer a:hover {
 } 
 
 @media screen and (min-width:768px) {
+  .general .alert {
+    left: 50%;
+    margin-left: -25%;
+    width: 50%;
+  }
+
   div.poll {
     border: 1px solid #46b8da;
     border-left: 8px solid #46b8da;
@@ -205,6 +220,7 @@ footer a:hover {
 }
 
 @media screen and (min-width: 992px) {
+
   .user-modal:after {
     left: 1150px; 
     height: 155vh;

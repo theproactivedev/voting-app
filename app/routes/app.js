@@ -43,19 +43,23 @@ module.exports = function(app, passport) {
     secret: publicKey,
     algorithms: [ 'RS256' ],
     requestProperty: 'auth',
-    getToken: function(req, res) {
+    getToken: function(req) {
       // if (req.headers['x-auth-token']) {
       //   return req.headers['x-auth-token'];
-      // } else
-      
+      // }
       if (req.cookies["jawbtc"]) { 
         return req.cookies["jawbtc"];
-      } else {
-        // return res.json({ error : })
-        // throw new Error("Sorry, you're not authorized to go here.Try to sign up or log in. Then, visit this page again.");                
       }
     }
   });
+
+  const handleJWTError = (err, req, res, next) => {
+    console.log("Is it this?");
+    if(err.name === 'UnauthorizedError') {
+      return res.status(401).send("Unauthorized Access. Sign up or log in first.");        
+    }
+    return next();
+  };
 
   const clearTokenFromCookie = (req, res) => {
     res.clearCookie("jawbtc");
@@ -163,14 +167,11 @@ module.exports = function(app, passport) {
 
   app.route("/logout").get(authenticate, getCurrentUser, clearTokenFromCookie);
 
-  app.route("/user").get(authenticate, getCurrentUser, function(req, res) {
-    // console.log("user is " + req.user);
-  });
-
   app.route("/polls").get(function(req, res) {
   	Polls.find({}, function(err, data) {
   		if (err) {
-  			console.log(err);
+        console.log(err);
+        return res.redirect("/");
   		}
 
   		if(data) {
@@ -181,22 +182,18 @@ module.exports = function(app, passport) {
   	});
   });
 
-  app.route("/myPolls").get(authenticate, getCurrentUser,
-    function(req, res) {
+  app.route("/myPolls").post(authenticate, handleJWTError, getCurrentUser, function(req, res) {
     Polls.find({
-      "authorID" : req.auth.id
+      "authorID" : req.body.username
     }, function(err, data) {
-      if (err) {
-        console.log(err);
-      }
-
+      if (err) return console.log(err);
       if (data) {
         res.json(data);
       }
     });
   });
 
-  app.route("/newPoll").post(authenticate, getCurrentUser,
+  app.route("/newPoll").post(authenticate, handleJWTError, getCurrentUser,
     function(req, res) {
     if (typeof req.body === undefined) {
       console.log("New Poll undefined");
@@ -210,7 +207,7 @@ module.exports = function(app, passport) {
     		question: req.body.question,
     		options: list,
         totalVotes: 0,
-        authorID: req.auth.id
+        authorID: req.body.author
     	});
 
     	poll.save(function(err) {

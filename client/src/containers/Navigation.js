@@ -8,7 +8,7 @@ import PropTypes from 'prop-types';
 import { removeUser, setUserTwitterDetails, toggleLoginModal } from '../actions';
 import UserFormModal from '../containers/UserFormModal';
 import AuthenticatedMenu from '../components/AuthenticatedMenu';
-
+import DangerError from '../components/DangerError';
 
 class Navigation extends Component {
 
@@ -25,7 +25,7 @@ class Navigation extends Component {
       if (user.twitterProvider) {
         let userObj = {
           "id" : user.twitter.id,
-          "username" : user.twitter.username
+          "username" : user.twitter.username,
         };
         this.props.dispatch(setUserTwitterDetails(userObj));
         localStorage.setItem("abcd",  JSON.stringify({
@@ -102,7 +102,7 @@ class Navigation extends Component {
                         <Nav.Link eventKey={'/twitter-authenticate'}>
                           <TwitterLogin className="twitter-btn p-0 border-0" showIcon={false} loginUrl="https://eg-fcc-votingapp.herokuapp.com/api/v1/auth/twitter"
                           onFailure={this.onFailed} onSuccess={this.onSuccess}
-                          requestTokenUrl="https://eg-fcc-votingapp.herokuapp.com/api/v1/auth/twitter/reverse" />
+                          requestTokenUrl="https://eg-fcc-votingapp.herokuapp.com/api/v1/auth/twitter/reverse"/>
                         </Nav.Link>
                     </NavDropdown>
                   </Nav.Item>
@@ -112,16 +112,21 @@ class Navigation extends Component {
           </Container>
         </Navbar>
         <UserFormModal modalObj={{ open: showLoginModal, path: loginModalPath }} />
+        {this.props.error === "Unauthorized Access. Sign up or log in first." &&
+          <div className="container general">
+            <DangerError msg={"Unauthorized Access. Sign up or log in first."} />
+          </div>
+        }
       </div>
       );
   }
 }
 
 function mapStateToProps(state) {
-  const { isUserAuthenticated, user, userModal } = state;
+  const { isUserAuthenticated, user, userModal, error } = state;
   return {
     isUserAuthenticated,
-    user, userModal
+    user, userModal, error
   };
 }
 

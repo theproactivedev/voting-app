@@ -8,15 +8,10 @@ var configAuth = require('./auth');
 module.exports = function (passport) {
 
 	passport.serializeUser(function(user, done) {
-		console.log("Serialize User");
-		console.log(user.id);
 		done(null, user.id);
 	});
 
-	// used to deserialize the user
 	passport.deserializeUser(function(id, done) {
-		console.log("DeSerialize User");
-
 		Users.findById(id, function(err, user) {
 				done(err, user);
 		});

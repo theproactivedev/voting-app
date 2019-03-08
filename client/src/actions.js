@@ -97,7 +97,6 @@ const rejectResults = (error) => {
 }
 
 export const setErrorMessage = (error) => {
-  console.log("Is it here?");
   return {
     type: SET_ERROR_MSG,
     error
@@ -117,26 +116,47 @@ export const getPublicPolls = () => {
           'Content-type' : 'application/json'
         })
       })
-      .then(response => response.json(), error => dispatch(rejectResults(error)))
+      .then(response => {
+        if (!response.ok) {
+          return response.text().then(text => { dispatch(rejectResults(text)); })
+        }
+        return response.json();
+      }, error => dispatch(rejectResults(error)))
       .then(json => dispatch(receiveResults(json)));
   };
 }
 
-export const getPolls = (dest) => {
+export const getPolls = (username="") => {
   return (dispatch) => {
     dispatch(requestResults());
-    return fetch(dest)
-      .then(response => response.json(), error => dispatch(rejectResults(error)))
+    return fetch("/myPolls", {
+        method: "POST",
+        headers: new Headers({
+          'Content-type' : 'application/json'
+        }),
+        body: JSON.stringify({ username })
+      })
+      .then(response => {
+        if (!response.ok) {
+          return response.text().then(text => { dispatch(rejectResults(text)); })
+        }
+        return response.json();
+      }, error => dispatch(rejectResults(error)))
       .then(json => dispatch(receiveResults(json)));
-
   };
 }
 
 export const getSpecificPoll = (dest) => {
-  return (dispatch, getState) => {
+  return (dispatch) => {
     dispatch(requestResults());
     return fetch(dest)
-    .then(response => response.json(), error => dispatch(rejectResults(error)))
+    .then(response => {
+      if (!response.ok) {
+        return response.text().then(text => { dispatch(rejectResults(text)); })
+      }
+
+      return response.json();
+    }, error => dispatch(rejectResults(error)))
     .then(json => dispatch(setSpecificPoll(json)));
   };
 }

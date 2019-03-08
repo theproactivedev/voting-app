@@ -20,22 +20,16 @@ class PollItem extends Component {
 
     this.tweetPoll = this.tweetPoll.bind(this);
     this.deletePoll = this.deletePoll.bind(this);
-    this.getSpecificPoll = this.getSpecificPoll.bind(this);
     this.submitVote = this.submitVote.bind(this);
     this.handleVoteChange = this.handleVoteChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
-  getSpecificPoll() {
-    const { dispatch } = this.props;
-    dispatch(getSpecificPoll(this.state.componentLink));
-  }
-
-  componentWillMount() {
+  componentDidMount() {
     const { ownProps, match } = this.props;
-    this.setState({
-      componentLink: ownProps.data + "/" + match.params.item
-    }, this.getSpecificPoll);
+    let pollItem = ownProps.data + "/" + match.params.item;
+    this.setState({ componentLink:  pollItem });
+    this.props.dispatch(getSpecificPoll(pollItem));
   }
 
   componentWillReceiveProps(nextProps) {
@@ -55,20 +49,23 @@ class PollItem extends Component {
   }
 
   handleSubmit(e) {
+    let that = this;
     e.preventDefault();
     if (this.state.vote === "Select your answer.") {
       this.setState({ hasVoted : false });
     } else {
       this.submitVote();
       this.setState({ hasVoted : true });
-      setTimeout(this.getSpecificPoll, 600);
+      setTimeout(function() {
+        that.props.dispatch(getSpecificPoll(that.state.componentLink));
+      }, 600);
     }
   }
 
   submitVote() {
     let vote = this.state.vote;
 
-    if (this.state.vote === "Others") {
+    if (vote === "Others") {
       vote =  document.getElementById("otherAnswer").value;
       this.setState({
         vote: 'Select your answer.'
@@ -83,12 +80,12 @@ class PollItem extends Component {
 
   deletePoll() {
     this.props.dispatch(deletePoll(this.state.componentLink));
-    this.setState({redirect: true});
+    this.setState({ redirect: true });
   }
 
   render() {
 
-    const { user } = this.props;
+    const { user : { twitter, local } } = this.props;
     let options = [];
 
     if (this.state.redirect) {
@@ -101,7 +98,7 @@ class PollItem extends Component {
       );
     });
 
-    if (user.twitter.username !== "" || user.local.username !== "") {
+    if (twitter.username !== "" || local.username !== "") {
       const editable = (
         <option key={options.length+1} value="Others">Others</option>
       );
@@ -117,10 +114,10 @@ class PollItem extends Component {
 
         <div className="row poll">
           <div className="col-sm-12 col-md-4 col-lg-4">
-            <form>
+            <form action="" method="POST" onSubmit={(e) => this.handleSubmit(e)}>
               <div className="form-group">
                 <label className="question">{this.state.query}
-                {user.userId === this.state.author &&
+                {(local.username === this.state.author || twitter.username === this.state.author) &&
                   <span className="pull-right" onClick={this.deletePoll}><i className="fa fa-trash" aria-hidden="true"></i></span>
                 }
                 </label>
@@ -137,9 +134,9 @@ class PollItem extends Component {
                 </div>
               }
               <div className="form-group">
-                <input type="submit" value="Submit" className="btn btn-primary" onClick={(e) => this.handleSubmit(e)} />
-                {user.twitter.username.length > 0 &&
-                    <button type="button" className="btn btn-info pull-right" onClick={this.tweetPoll}>Tweet</button>
+                <input type="submit" value="Submit" className="btn btn-primary" />
+                {twitter.username.length > 0 &&
+                <button type="button" className="btn btn-info pull-right" onClick={this.tweetPoll}>Tweet</button>
                 }
               </div>
             </form>

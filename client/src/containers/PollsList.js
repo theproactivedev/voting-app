@@ -8,11 +8,11 @@ import ClipLoader from 'react-spinners/ClipLoader';
 
 class PollsList extends Component {
   componentDidMount() {
-    const { ownProps } = this.props;
-    if (this.props.data === "/polls") {
-      this.props.dispatch(getPublicPolls());
-    } else if (this.props.data === "/myPolls") {
-      this.props.dispatch(getPolls(ownProps.data));
+    const { data, dispatch, user : { twitter, local } } = this.props;
+    if (data === "/polls") {
+      dispatch(getPublicPolls());
+    } else if (data === "/myPolls") {
+      dispatch(getPolls(local.username || twitter.username));
     }
   }
 
@@ -73,11 +73,11 @@ class PollsList extends Component {
 }
 
 function mapStateToProps(state, ownProps) {
-  const { isUserAuthenticated, polls, isFetching } = state;
+  const { isUserAuthenticated, polls, isFetching, user } = state;
   return {
     isUserAuthenticated,
     polls,
-    ownProps, isFetching
+    ownProps, isFetching, user
   };
 }
 

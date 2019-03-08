@@ -1,11 +1,13 @@
 import React from 'react';
+import Alert from 'react-bootstrap/Alert';
 import PropTypes from 'prop-types';
 
 const DangerError = ({ msg }) => {
   return (
-    <div className="alert alert-danger mb-0 mt-3">
-    <p className="mb-0">{msg}</p>
-    </div>
+    <Alert dismissible variant="danger">
+      <Alert.Heading>Oh snap! You got an error!</Alert.Heading>
+      <p className="mb-0">{msg}</p>
+    </Alert>
   );
 };
 
