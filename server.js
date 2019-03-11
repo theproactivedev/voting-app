@@ -6,8 +6,6 @@ const passport = require('passport');
 const path = require('path');
 const cookieParser = require('cookie-parser');
 const cors = require('cors');
-// const flash = require('connect-flash');
-// const morgan = require('morgan');
 var app = express();
 const helmet = require("helmet");
 
@@ -25,13 +23,11 @@ var corsOption = {
 };
 app.use(cors(corsOption));
 app.use(express.static(path.join(__dirname, 'client/build')));
-// app.use(morgan('dev'));
 app.use(cookieParser());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(passport.initialize());
 app.use(helmet());
-// app.use(flash());
 
 routes(app, passport);
 

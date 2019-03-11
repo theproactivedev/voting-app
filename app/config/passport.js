@@ -19,11 +19,10 @@ module.exports = function (passport) {
 
 	passport.use("twitter-token", new TwitterTokenStrategy({
 		consumerKey: configAuth.twitterAuth.consumerKey,
-		consumerSecret: configAuth.twitterAuth.consumerSecret,
-		passReqToCallback: true
+		consumerSecret: configAuth.twitterAuth.consumerSecret
 	},
-	function (req, token, tokenSecret, profile, done) {
-		Users.upsertTwitterUser(req, token, tokenSecret, profile, function(err, user) {
+	function (token, tokenSecret, profile, done) {
+		Users.upsertTwitterUser(token, tokenSecret, profile, function(err, user) {
 			return done(err, user);
 		});
 	}));

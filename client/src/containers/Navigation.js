@@ -22,7 +22,7 @@ class Navigation extends Component {
 
   onSuccess(response) {
     response.json().then(user => {
-      if (user.twitterProvider) {
+      if (user.twitter) {
         let userObj = {
           "id" : user.twitter.id,
           "username" : user.twitter.username,
@@ -50,9 +50,7 @@ class Navigation extends Component {
   logout() {
     this.props.dispatch(removeUser());
     localStorage.removeItem('abcd');
-    fetch("/logout", {
-      method: "GET"
-    }).catch(error => console.log(error));
+    fetch("/logout").catch(error => console.log(error));
   }
 
   render() {

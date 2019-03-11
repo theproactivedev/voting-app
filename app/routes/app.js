@@ -27,7 +27,7 @@ module.exports = function(app, passport) {
   };
   
   const saveTokenInCookie = (req, res, next) => {
-    res.cookie("jawbtc", req.token, { maxAge: 600000000, httpOnly: true });
+    res.cookie("jawbtc", req.token, { maxAge: 600000000, httpOnly: false });
     return next();
   }
 
@@ -54,7 +54,6 @@ module.exports = function(app, passport) {
   });
 
   const handleJWTError = (err, req, res, next) => {
-    console.log("Is it this?");
     if(err.name === 'UnauthorizedError') {
       return res.status(401).send("Unauthorized Access. Sign up or log in first.");        
     }
@@ -79,12 +78,12 @@ module.exports = function(app, passport) {
     });
   };
 
-  router.route('/auth/twitter/reverse')
+    router.route('/auth/twitter/reverse')
     .post(function(req, res) {
       request.post({
         url: 'https://api.twitter.com/oauth/request_token',
         oauth: {
-          oauth_callback: "https%3A%2F%2Feg-fcc-votingapp.herokuapp.com%2Ftwitter-callback",
+          oauth_callback: "https://eg-fcc-votingapp.herokuapp.com/twitter-callback",
           consumer_key: configAuth.twitterAuth.consumerKey,
           consumer_secret: configAuth.twitterAuth.consumerSecret
         }

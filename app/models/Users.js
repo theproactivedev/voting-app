@@ -19,44 +19,29 @@ var UserSchema = new Schema({
   }
 });
 
-UserSchema.statics.upsertTwitterUser = function(req, token, tokenSecret, profile, cb) {
+UserSchema.statics.upsertTwitterUser = function(token, tokenSecret, profile, cb) {
   var that = this;
-
-  process.nextTick(function() {
-    if (!req.user) { 
-      UserSchema.findOne({ "twitter.id" : profile.id }, function(err, user) { 
-        if (!user) {
-          var newUser = new that({
-            twitter: {
-              username: profile.displayName,
-              id: profile.id,
-              token: token,
-              tokenSecret: tokenSecret
-            }
-          });
-    
-          newUser.save(function(error, savedUser) {
-            if (error) {
-              console.log(error);
-            }
-            return cb(error, savedUser);
-          });
-        } else {
-          return cb(err, user);
+  
+  return this.findOne({ "twitter.id" : profile.id }, function(err, user) { 
+    if (!user) {
+      var newUser = new that({
+        twitter: {
+          username: profile.displayName,
+          id: profile.id,
+          token: token,
+          tokenSecret: tokenSecret
         }
       });
-    } else {
-      let user = req.user;
-      user.twitter.username = profile.displayName;
-      user.twitter.id = profile.id;
-      user.twitter.token = token;
-      user.twitter.tokenSecret = tokenSecret;
-      user.save(function(err) {
-        if (err) throw err;
-        return done(null, user);
-      });
-    }
 
+      newUser.save(function(error, savedUser) {
+        if (error) {
+          console.log(error);
+        }
+        return cb(error, savedUser);
+      });
+    } else {
+      return cb(err, user);
+    }
   });
 };
 
