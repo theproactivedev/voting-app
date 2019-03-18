@@ -1,7 +1,7 @@
 import React from 'react';
 import { Switch, Route } from 'react-router-dom';
-import PollsList from '../containers/PollsList';
-import PollItem from '../containers/PollItem';
+import PollsList from '../../containers/PollsList';
+import PollItem from '../../containers/PollItem';
 
 const Polls = () => {
 	return(

@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import { Route, Switch, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import Polls from '../components/Polls';
+import Polls from '../components/polls/Polls';
 import Home from '../components/Home';
 import PollForm from './PollForm';
 
@@ -31,8 +31,8 @@ function mapStateToProps(state) {
 }
 
 MainContent.propTypes = {
-	isUserAuthenticated: PropTypes.bool.isRequired,
-	user: PropTypes.object.isRequired
+	isUserAuthenticated: PropTypes.bool,
+	user: PropTypes.object
 };
 
 export default withRouter(connect(mapStateToProps)(MainContent));

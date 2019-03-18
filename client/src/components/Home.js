@@ -2,21 +2,20 @@ import React from 'react';
 import '../assets/css/homestyle.css';
 import Tools from './Tools';
 import ProjectDescription from './ProjectDescription';
+import Slide from 'react-reveal/Slide';
 
-const Home = () => {
-	return(
-		<div>
-			<div id="home">
-				<div className="overlay">
+const Home = () => (
+	<div>
+		<div id="home">
+			<div className="overlay">
 				<div className="container">
-					<h1>Build a Voting App</h1>
-				</div>
+					<Slide bottom><h1>Build a Voting App</h1></Slide>
 				</div>
 			</div>
-			<ProjectDescription />
-			<Tools />
 		</div>
-	);
-};
+		<ProjectDescription />
+		<Tools />
+	</div>
+);
 
 export default Home;

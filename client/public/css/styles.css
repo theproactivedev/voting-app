@@ -1,17 +1,20 @@
 :root {
-  --blue-shade: #0056b3;
+  --blue-shade: #0f6ca1;;
 }
 
 body {
   -webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
   font-family: 'Open Sans', sans-serif;
-  position: relative;
-  min-height: 100vh;
 }
 
-#root > div:first-of-type {
+/* #root > div:first-of-type {
   padding-bottom: 60px;
+} */
+
+#root > div {
+  position: relative;
+  min-height: 100vh;
 }
 
 .mb-5 {
@@ -31,8 +34,22 @@ p {
   font-size: 1em;
 }
 
+a {
+  color: #0f6ca1;
+  transition: all 0.3s ease;
+}
+
+a:hover {
+  color: #004d7a;
+}
+
+.dropdown-item.active, .dropdown-item:active {
+  background-color: #a8eb12;
+  color: #343a40;
+}
+
 h1 {
-  font-size: 50px;
+  font-size: 40px;
   font-family: 'Alfa Slab One', serif;
   letter-spacing: 1px;
   text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.8);
@@ -42,14 +59,27 @@ h2 {
   font-family: 'Roboto Slab', serif;
 }
 
-.header {
-  background-color: #00d8ff;
-  padding-top: 20px;
-  padding-bottom: 20px;
+.btn-primary {
+  background-color: #004d7a;
+  border-color: #004d7a;
 }
 
-.navbar-brand:hover {
-  color: rgb(165, 164, 164);
+.btn-primary:hover {
+  background-color: #00bf72;
+  border-color: #00bf72;
+}
+
+.header {
+  background-color: #00d8ff;
+  background-image: linear-gradient(to right bottom, #051937, #004d7a, #008793, #00bf72, #a8eb12);
+  padding-top: 40px;
+  padding-bottom: 30px;
+}
+
+.navbar-dark .navbar-brand:hover,
+.navbar-dark .navbar-nav .nav-link:hover,
+.navbar-dark .navbar-nav .nav-link.active  {
+  color: #a8eb12;
 }
 
 .dropdown-menu {
@@ -60,13 +90,12 @@ h2 {
   padding-left: 0;
 }
 
+.modal h1 {
+  text-shadow: none;
+}
+
 .modal-content {
   background-color: #000;
-  /* -webkit-transform: skewX(5deg);
-  -moz-transform: skewX(5deg);
-  -ms-transform: skewX(5deg);
-  -o-transform: skewX(5deg);
-  transform: skewX(5deg); */
 }
 
 .black {
@@ -113,6 +142,10 @@ h2 {
   margin-left: -40%;
 }
 
+.poll-items .react-reveal {
+  width: 100%;
+}
+
 div.poll {
   margin-top: 40px;
 }
@@ -127,7 +160,7 @@ div.poll {
 }
 
 .votes {
-  background-color: var(--blue-shade,'#0056b3');
+  background-color: var(--blue-shade,'#0f6ca1');
   padding: 2px 15px;
   border-radius: 25px;
   font-size: 14px;
@@ -172,10 +205,11 @@ div.btn-success p {
 }
 
 footer {
+  background-color: #fff;
   color: #484949;
   font-size: 0.9em;
   position: absolute;
-  bottom: 0;
+  bottom: -60px;
   height: 60px;
   width: 100%;
 }
@@ -190,9 +224,8 @@ footer a {
 }
 
 footer a:hover {
-  color: #00d8ff;
+  color: #a8eb12;
   text-decoration: none;
-  font-weight: bold;
 }
 
 .modal-header .close {
@@ -206,6 +239,10 @@ footer a:hover {
 } 
 
 @media screen and (min-width:768px) {
+  h1 {
+    font-size: 50px;
+  }
+
   .general .alert {
     left: 50%;
     margin-left: -25%;
@@ -213,8 +250,7 @@ footer a:hover {
   }
 
   div.poll {
-    border: 1px solid #46b8da;
-    border-left: 8px solid #46b8da;
+    border: 1px solid #008793;
     padding: 40px;
   }
 }

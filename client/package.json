@@ -9,6 +9,7 @@
     "react-chartjs-2": "^2.6.2",
     "react-dom": "^16.8.2",
     "react-redux": "^6.0.0",
+    "react-reveal": "^1.2.2",
     "react-router-bootstrap": "^0.24.4",
     "react-router-dom": "^4.3.1",
     "react-scripts": "^2.1.5",
@@ -32,6 +33,10 @@
     "not op_mini all"
   ],
   "devDependencies": {
-    "react-test-renderer": "^16.8.4"
+    "check-prop-types": "^1.1.2",
+    "enzyme": "^3.9.0",
+    "enzyme-adapter-react-16": "^1.10.0",
+    "react-test-renderer": "^16.8.4",
+    "react-testing-library": "^6.0.0"
   }
 }

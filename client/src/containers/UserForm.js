@@ -52,37 +52,35 @@ class UserForm extends Component {
     const isSignUp = this.props.data === "/signup" ? true : false;
 
     return (
-      <div className="container">
-        <div className="row">
-          <div className="col-12 col-md-8 col-lg-6 px-0">
-            {this.props.error !== "" &&
-              <DangerError msg={this.props.error} />        
-            }
-            <form action="" method="post" onSubmit={(e) => this.onSubmit(e)} className="px-0 py-3 py-lg-5">
-              <div className="form-group">
-                <label><strong>Email</strong></label>
-                <input type="email" className="form-control" name="email" value={this.state.email} onChange={(e) => this.handleEmailChange(e)} required />
-              </div>
-              <div className="form-group">
-                <label><strong>Password</strong></label>
-                {isSignUp &&
-                  <p>Please create a password with more than 10 characters, an uppercase and lowercase letters and numbers.</p>
-                }
-                {isSignUp &&
-                  <input type="password" className="form-control" name="password" value={this.state.password} onChange={(e) => this.handlePasswordChange(e)} required pattern=".{10,}" title="Minimum of 10 characters" />
-                }
-                {!isSignUp &&
-                  <input type="password" className="form-control" name="password" value={this.state.password} onChange={(e) => this.handlePasswordChange(e)} required />
-                }
-              </div>
+      <div className="row">
+        <div className="col-12 col-md-8 col-lg-6 px-0">
+          {this.props.error !== "" &&
+            <DangerError msg={this.props.error} />        
+          }
+          <form action="" method="post" onSubmit={(e) => this.onSubmit(e)} className="px-0 py-3 py-lg-5">
+            <div className="form-group">
+              <label><strong>Email</strong></label>
+              <input type="email" className="form-control" name="email" value={this.state.email} onChange={(e) => this.handleEmailChange(e)} required />
+            </div>
+            <div className="form-group">
+              <label><strong>Password</strong></label>
+              {isSignUp &&
+                <p>Please create a password with more than 10 characters, an uppercase and lowercase letters and numbers.</p>
+              }
+              {isSignUp &&
+                <input type="password" className="form-control" name="password" value={this.state.password} onChange={(e) => this.handlePasswordChange(e)} required pattern=".{10,}" title="Minimum of 10 characters" />
+              }
+              {!isSignUp &&
+                <input type="password" className="form-control" name="password" value={this.state.password} onChange={(e) => this.handlePasswordChange(e)} required />
+              }
+            </div>
 
-              <button type="submit" className="btn btn-primary">{btnText}</button>
-            </form>
-          </div>
-          <div className="d-none d-lg-block col-lg-6">
-            <p className="signup-brand text-right pl-lg-4">FCC Voting App</p>
-          </div>
+            <button type="submit" className="btn btn-primary">{btnText}</button>
+          </form>
         </div>
+        <div className="d-none d-lg-block col-lg-6">
+          <p className="signup-brand text-right pl-lg-4">FCC Voting App</p>
+        </div> 
       </div>
     );
   }
@@ -102,10 +100,10 @@ const mapDispatchToProps = dispatch => {
 };
 
 UserForm.propTypes = {
-  isUserAuthenticated: PropTypes.bool.isRequired,
-  error: PropTypes.string.isRequired,
-  submitUser: PropTypes.func.isRequired,
-  setErrorMessage: PropTypes.func.isRequired
+  isUserAuthenticated: PropTypes.bool,
+  error: PropTypes.string,
+  submitUser: PropTypes.func,
+  setErrorMessage: PropTypes.func
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(UserForm);

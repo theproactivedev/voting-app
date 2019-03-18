@@ -2,22 +2,35 @@ import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
 import { LinkContainer } from 'react-router-bootstrap';
 import { Navbar, Nav, NavDropdown, Container } from 'react-bootstrap';
-import TwitterLogin from 'react-twitter-auth';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { removeUser, setUserTwitterDetails, toggleLoginModal } from '../actions';
-import UserFormModal from '../containers/UserFormModal';
+import UserFormModal from '../components/UserFormModal';
 import AuthenticatedMenu from '../components/AuthenticatedMenu';
 import DangerError from '../components/DangerError';
+import Login from '../components/Login';
 
 class Navigation extends Component {
 
   constructor(props) {
     super(props);
 
+    this.state = {
+      activeState: false
+    };
+
     this.onSuccess = this.onSuccess.bind(this);
-    this.onFailed = this.onFailed.bind(this);
+    this.onFailure = this.onFailure.bind(this);
     this.logout = this.logout.bind(this);
+    this.toggleModal = this.toggleModal.bind(this); 
+    this.removeActiveNavItem = this.removeActiveNavItem.bind(this); 
+  }
+
+  removeActiveNavItem() {
+    console.log("Hello");
+    this.setState({
+      activeState: false
+    });
   }
 
   onSuccess(response) {
@@ -42,7 +55,7 @@ class Navigation extends Component {
     });
   }
 
-  onFailed(error) {
+  onFailure(error) {
     // Add a nicer alert here.
     alert(error);
   }
@@ -53,15 +66,24 @@ class Navigation extends Component {
     fetch("/logout").catch(error => console.log(error));
   }
 
+  toggleModal(path) {
+    this.props.dispatch(toggleLoginModal(path));
+  }
+
   render() {
     const { isUserAuthenticated, userModal : { showLoginModal, loginModalPath }, user } = this.props;
     let username = user.local.username.length > 0 ? user.local.username : user.twitter.username;
+    let loginProps = { 
+      onSuccess: this.onSuccess, 
+      onFailure: this.onFailure, 
+      toggleModal: this.toggleModal 
+    };
 
 		return(
       <div>
         <Navbar bg="dark" variant="dark" expand="lg" collapseOnSelect>
           <Container>
-            <LinkContainer to="/">
+            <LinkContainer to="/" onClick={this.removeActiveNavItem} >
               <Navbar.Brand>FCC Voting App</Navbar.Brand>
             </LinkContainer>
             <Navbar.Toggle aria-controls="basic-navbar-nav" />
@@ -69,12 +91,12 @@ class Navigation extends Component {
               <Nav className="justify-content-end w-100" as="ul">
                 <Nav.Item as="li">
                   <LinkContainer eventKey={'/polls'} to={'/polls'} >
-                    <Nav.Link href="/polls">Polls</Nav.Link>
+                    <Nav.Link active={this.state.activeState} href="/polls">Polls</Nav.Link>
                   </LinkContainer>
                 </Nav.Item>
 
                 {isUserAuthenticated &&
-                  <AuthenticatedMenu />
+                  <AuthenticatedMenu activeState={this.state.activeState} />
                 }
 
                 {isUserAuthenticated &&
@@ -89,26 +111,18 @@ class Navigation extends Component {
 
                 {!isUserAuthenticated &&
                   <Nav.Item as="li" key={'/signup'}>
-                    <Nav.Link onClick={() => this.props.dispatch(toggleLoginModal("/signup")) } >Sign Up</Nav.Link>
+                    <Nav.Link onClick={() => this.toggleModal("/signup") } >Sign Up</Nav.Link>
                   </Nav.Item>
                 }
 
                 {!isUserAuthenticated &&
-                  <Nav.Item as="li" key="login" >
-                    <NavDropdown className="bg-dark text-white" title="Log In" id="login-dropdown">
-                        <Nav.Link onClick={() => this.props.dispatch(toggleLoginModal("/login")) }>Sign in with Email</Nav.Link>
-                        <Nav.Link eventKey={'/twitter-authenticate'}>
-                          <TwitterLogin className="twitter-btn p-0 border-0" showIcon={false} loginUrl="https://eg-fcc-votingapp.herokuapp.com/api/v1/auth/twitter"
-                          onFailure={this.onFailed} onSuccess={this.onSuccess}
-                          requestTokenUrl="https://eg-fcc-votingapp.herokuapp.com/api/v1/auth/twitter/reverse"/>
-                        </Nav.Link>
-                    </NavDropdown>
-                  </Nav.Item>
+                  <Login {...loginProps} />
                 } 
               </Nav>
             </Navbar.Collapse>
           </Container>
         </Navbar>
+
         <UserFormModal modalObj={{ open: showLoginModal, path: loginModalPath }} />
         {this.props.error === "Unauthorized Access. Sign up or log in first." &&
           <div className="container general">
@@ -129,10 +143,10 @@ function mapStateToProps(state) {
 }
 
 Navigation.propTypes = {
-	isUserAuthenticated: PropTypes.bool.isRequired,
-  user: PropTypes.object.isRequired,
-  userModal: PropTypes.object.isRequired,
-  dispatch: PropTypes.func.isRequired
+	isUserAuthenticated: PropTypes.bool,
+  user: PropTypes.object,
+  userModal: PropTypes.object,
+  dispatch: PropTypes.func
 };
 
 export default withRouter(connect(mapStateToProps)(Navigation));

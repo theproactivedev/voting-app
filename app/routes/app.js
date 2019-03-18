@@ -192,8 +192,7 @@ module.exports = function(app, passport) {
     });
   });
 
-  app.route("/newPoll").post(authenticate, handleJWTError, getCurrentUser,
-    function(req, res) {
+  app.route("/newPoll").post(authenticate, handleJWTError, getCurrentUser, function(req, res) {
     if (typeof req.body === undefined) {
       console.log("New Poll undefined");
     } else {

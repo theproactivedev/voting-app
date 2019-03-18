@@ -6,6 +6,8 @@ import {
 } from './reducers';
 import { loadState } from './localStorage.js';
 
+const middlewares = [thunkMiddleware];
+
 export const configureStore = () => {
   // const loggerMiddleware = createLogger();
   const persistedState = loadState();
@@ -17,7 +19,7 @@ export const configureStore = () => {
   let store = createStore(
       votingApp,
       finalState,
-      applyMiddleware(thunkMiddleware)
+      applyMiddleware(...middlewares)
     );
 
   return store;

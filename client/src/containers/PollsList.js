@@ -1,12 +1,20 @@
 import React, { Component } from 'react';
-import { Link, Redirect} from 'react-router-dom';
+import { Redirect} from 'react-router-dom';
 import { ListGroup } from 'react-bootstrap';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { getPolls, getPublicPolls } from '../actions.js';
 import ClipLoader from 'react-spinners/ClipLoader';
+import PageTitle from '../components/PageTitle';
+import PollListItem from '../components/polls/PollListItem';
 
 class PollsList extends Component {
+  constructor(props) {
+    super(props);
+
+    this.renderPollItems = this.renderPollItems.bind(this);
+  }
+
   componentDidMount() {
     const { data, dispatch, user : { twitter, local } } = this.props;
     if (data === "/polls") {
@@ -16,55 +24,43 @@ class PollsList extends Component {
     }
   }
 
+  renderPollItems() {
+    const { polls } = this.props;
+    if (polls !== undefined) {
+			return polls.map(function(poll, index) {
+        return <PollListItem key={index} poll={poll} />
+			});
+    }
+
+    return [];
+  }
+
   render() {
-    const { data, polls, isUserAuthenticated } = this.props;
+    const { data, polls, isUserAuthenticated, isFetching } = this.props;
+    let headline = data === "/polls" ? "Polls" : "My Polls";
+    let pollItems = this.renderPollItems();
 
     if (!isUserAuthenticated && data === "/myPolls") {
       return <Redirect to={{pathname: '/'}} />
     }
-    
-    let headline = data === "/polls" ? "Polls" : "My Polls";
-    let pollsList = [];
-		if (polls !== undefined) {
-			pollsList = polls.map(function(poll, index) {
-        let postDate = new Date(poll.postDate);
-        let postDateStr = `${postDate.getUTCFullYear()}/${postDate.getMonth() + 1}/${postDate.getDate()}`;
-
-				return (
-					<ListGroup.Item action variant="light" key={index} as="li" className="pollQuestion">
-            <Link to={`/polls/${poll.question}`} className="d-block w-100">
-            {poll.postDate.length > 0 &&
-            <p className="postDate pb-1 mb-0">{postDateStr}</p>
-            }
-            <p className="mb-0 d-inline-block">{poll.question}</p>
-            <span title="Total Votes" className="votes float-right">{poll.totalVotes}</span>            
-            </Link>
-          </ListGroup.Item>
-				);
-			});
-		}
 
     return(
       <div>
-        <div className="header mb-5">
-          <div className="container">
-            <h1 className="text-white text-center py-4">{headline}</h1>
-          </div>
-        </div>
+        <PageTitle title={headline} />
         <div className="container">
           <div className="text-center justify-content-center">
-            <ClipLoader sizeUnit={"px"} size={60} color={"#00d8ff"} loading={this.props.isFetching} />
+            <ClipLoader sizeUnit={"px"} size={60} color={"#008793"} loading={isFetching} />
           </div>
-          {!this.props.isUserAuthenticated && !this.props.isFetching &&
+          {!isUserAuthenticated && !isFetching &&
             <div className="mb-3">
               <p>Vote your answer and share it on Twitter. And you can also create your own answer if you&#39;re signed in. So make sure to sign in!</p>
             </div>
           }
-          {polls.length === 0 && !this.props.isFetching &&
+          {polls.length === 0 && !isFetching &&
             <p>No questions. Sign in and create your own poll.</p>
           }
-          {!this.props.isFetching && polls.length > 0 &&
-            <ListGroup as="ul">{pollsList}</ListGroup>
+          {!isFetching && polls.length > 0 &&
+            <ListGroup as="ul" className="poll-items">{pollItems}</ListGroup>
           }
         </div>
       </div>
@@ -82,10 +78,10 @@ function mapStateToProps(state, ownProps) {
 }
 
 PollsList.propTypes = {
-	isUserAuthenticated: PropTypes.bool.isRequired,
-  polls: PropTypes.array.isRequired,
-  ownProps: PropTypes.object.isRequired,  
-  dispatch: PropTypes.func.isRequired 
+	isUserAuthenticated: PropTypes.bool,
+  polls: PropTypes.array,
+  ownProps: PropTypes.object,  
+  dispatch: PropTypes.func 
 };
 
 export default connect(mapStateToProps)(PollsList);

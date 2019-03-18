@@ -79,8 +79,8 @@ class PollChart extends Component {
 }
 
 PollChart.propTypes = {
-  question: PropTypes.string.isRequired,
-  options: PropTypes.array.isRequired
+  question: PropTypes.string,
+  options: PropTypes.array
 };
 
 export default PollChart;

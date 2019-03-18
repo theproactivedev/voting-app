@@ -10,16 +10,16 @@ class AuthenticatedMenu extends Component {
 
     for(var i = 0; i < pathNames.length; i++) {
       const item = (
-        <Nav.Item as="li" key={paths[i]}>
+        <Nav.Item data-test="NavItemComponent" as="li" key={paths[i]}>
           <LinkContainer to={paths[i]} >
-            <Nav.Link>{pathNames[i]}</Nav.Link>
+            <Nav.Link active={this.props.activeState}>{pathNames[i]}</Nav.Link>
           </LinkContainer>
         </Nav.Item>
       );
       menu.push(item);
     }
 
-    return [...menu];
+    return menu;
   }
 }
 

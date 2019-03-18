@@ -3,7 +3,8 @@ import {Redirect} from 'react-router-dom';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { addPoll } from '../actions.js';
-import Form from '../components/Form.js';
+import Form from '../components/polls/Form';
+import PageTitle from '../components/PageTitle';
 
 class PollForm extends Component {
 
@@ -66,8 +67,8 @@ class PollForm extends Component {
 
 		return(
 			<div>
-				<Form hasCreatedPoll={this.state.hasCreatedPoll}
-					handleSubmit={this.handleSubmit} handleOptionsChange={this.handleOptionsChange}
+				<PageTitle title={'Create Poll'} />
+				<Form handleSubmit={this.handleSubmit} handleOptionsChange={this.handleOptionsChange}
 					handleQuestionChange={this.handleQuestionChange}
 				 />
 			</div>
@@ -83,9 +84,9 @@ function mapStateToProps(state) {
 }
 
 PollForm.propTypes = {
-	user: PropTypes.object.isRequired,
-	isUserAuthenticated: PropTypes.bool.isRequired,
-	dispatch: PropTypes.func.isRequired
+	user: PropTypes.object,
+	isUserAuthenticated: PropTypes.bool,
+	dispatch: PropTypes.func
 };
 
 export default connect(mapStateToProps)(PollForm);

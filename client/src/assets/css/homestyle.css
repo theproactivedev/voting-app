@@ -45,8 +45,6 @@ h2, p.lead {
 .tools {
   background-color: #222;
   color: #fff;
-  padding-top: 15px;
-  padding-bottom: 35px;
 }
 
 .tools p {
@@ -54,11 +52,24 @@ h2, p.lead {
 }
 
 .tools strong {
-  color: #00d8ff;
+  color: #a8eb12;
 }
 
-.image {
-  margin: 0 auto;
-  display: block;
+.tools .react-reveal {
+  margin: 0;
+  margin-right: 10px;
+  display: inline-block;
   text-align: center;
 }
+
+.tools .react-reveal img {
+  width: 100px;
+  height: 100px;
+}
+
+@media screen and (max-width: 375px) {
+  .tools .react-reveal:nth-child(even) {
+    margin-right: 0;
+  }
+}
+

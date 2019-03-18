@@ -3,7 +3,7 @@ import { Modal } from 'react-bootstrap';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { toggleLoginModal } from '../actions';
-import UserForm from './UserForm';
+import UserForm from '../containers/UserForm';
 
 class UserFormModal extends React.Component {
   render() {
@@ -21,11 +21,13 @@ class UserFormModal extends React.Component {
           <div className="container">
           <Modal.Header closeButton className="p-0">
             <Modal.Title id="example-custom-modal-styling-title">
-              {title.toUpperCase()}
+              <h1>{title}</h1>
             </Modal.Title>
           </Modal.Header>
           <Modal.Body className="p-0">
-            <UserForm data={modalObj.path} />
+            <div className="container">
+              <UserForm data={modalObj.path} />
+            </div>
           </Modal.Body>
           </div>
         </div>
@@ -41,8 +43,8 @@ const mapDispatchToProps = dispatch => {
 };
 
 UserFormModal.propTypes = {
-  modalObj: PropTypes.object.isRequired,
-  toggleLoginModal: PropTypes.func.isRequired
+  modalObj: PropTypes.object,
+  toggleLoginModal: PropTypes.func
 }
 
 export default connect(null, mapDispatchToProps)(UserFormModal);
