@@ -10,6 +10,7 @@ const configAuth = require("../config/auth.js");
 const fs = require("fs");
 const privateKey = fs.readFileSync('app/config/private.key', 'utf8');
 const publicKey = fs.readFileSync('app/config/public.key', 'utf8');
+const path = require("path");
 
 module.exports = function(app, passport) {
   const createToken = function(auth) {
