@@ -10,7 +10,7 @@ class AuthenticatedMenu extends Component {
 
     for(var i = 0; i < pathNames.length; i++) {
       const item = (
-        <Nav.Item data-test="NavItemComponent" as="li" key={paths[i]}>
+        <Nav.Item data-testid="NavItemComponent" as="li" key={paths[i]}>
           <LinkContainer to={paths[i]} >
             <Nav.Link active={this.props.activeState}>{pathNames[i]}</Nav.Link>
           </LinkContainer>

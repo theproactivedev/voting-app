@@ -3,7 +3,7 @@ import { Modal } from 'react-bootstrap';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { toggleLoginModal } from '../actions';
-import UserForm from '../containers/UserForm';
+import UserForm from './UserForm';
 
 class UserFormModal extends React.Component {
   render() {

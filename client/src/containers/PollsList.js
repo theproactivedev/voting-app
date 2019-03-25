@@ -28,7 +28,7 @@ class PollsList extends Component {
     const { polls } = this.props;
     if (polls !== undefined) {
 			return polls.map(function(poll, index) {
-        return <PollListItem key={index} poll={poll} />
+        return <PollListItem data-testid="PollListItemComponent" key={index} poll={poll} />
 			});
     }
 

@@ -60,7 +60,7 @@ class UserForm extends Component {
           <form action="" method="post" onSubmit={(e) => this.onSubmit(e)} className="px-0 py-3 py-lg-5">
             <div className="form-group">
               <label><strong>Email</strong></label>
-              <input type="email" className="form-control" name="email" value={this.state.email} onChange={(e) => this.handleEmailChange(e)} required />
+              <input type="email" className="form-control" name="email" value={this.state.email} onChange={(e) => this.handleEmailChange(e)} placeholder="Enter your email address" required />
             </div>
             <div className="form-group">
               <label><strong>Password</strong></label>
@@ -68,10 +68,10 @@ class UserForm extends Component {
                 <p>Please create a password with more than 10 characters, an uppercase and lowercase letters and numbers.</p>
               }
               {isSignUp &&
-                <input type="password" className="form-control" name="password" value={this.state.password} onChange={(e) => this.handlePasswordChange(e)} required pattern=".{10,}" title="Minimum of 10 characters" />
+                <input type="password" className="form-control" name="password" value={this.state.password} placeholder="Enter your password" onChange={(e) => this.handlePasswordChange(e)} required pattern=".{10,}" title="Minimum of 10 characters" />
               }
               {!isSignUp &&
-                <input type="password" className="form-control" name="password" value={this.state.password} onChange={(e) => this.handlePasswordChange(e)} required />
+                <input type="password" className="form-control" name="password" value={this.state.password} placeholder="Enter your password" onChange={(e) => this.handlePasswordChange(e)} required />
               }
             </div>
 

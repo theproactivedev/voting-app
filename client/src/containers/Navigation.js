@@ -5,7 +5,7 @@ import { Navbar, Nav, NavDropdown, Container } from 'react-bootstrap';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { removeUser, setUserTwitterDetails, toggleLoginModal } from '../actions';
-import UserFormModal from '../components/UserFormModal';
+import UserFormModal from './UserFormModal';
 import AuthenticatedMenu from '../components/AuthenticatedMenu';
 import DangerError from '../components/DangerError';
 import Login from '../components/Login';
@@ -125,6 +125,12 @@ class Navigation extends Component {
 
         <UserFormModal modalObj={{ open: showLoginModal, path: loginModalPath }} />
         {this.props.error === "Unauthorized Access. Sign up or log in first." &&
+        localStorage.getItem("abcd") !== undefined &&
+          <div className="container general">
+            <DangerError msg={"Unauthorized Access. Your token might have expired. Log in again."} />
+          </div>
+        }
+                {this.props.error === "Unauthorized Access. Sign up or log in first." &&
           <div className="container general">
             <DangerError msg={"Unauthorized Access. Sign up or log in first."} />
           </div>

@@ -62,11 +62,11 @@ class VotingForm extends Component {
           <div className="form-group">
             <label className="question" htmlFor="options">{query}
             {(local.username === author || twitter.username === author) &&
-              <span className="pull-right" onClick={deletePoll}><i className="fa fa-trash" aria-hidden="true"></i></span>
+              <span className="pull-right" onClick={deletePoll} data-testid="deletePoll"><i className="fa fa-trash" aria-hidden="true"></i></span>
             }
             </label>
             <p>I would like to vote for: </p>
-            <select id="options" className="form-control" onChange={(e) => this.handleVoteChange(e)}>
+            <select id="options" data-testid="optionsSelect" className="form-control" onChange={(e) => this.handleVoteChange(e)}>
               <option key={0} value="Select your answer.">Select your answer.</option>
               {options}
             </select>
