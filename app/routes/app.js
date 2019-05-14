@@ -279,7 +279,7 @@ module.exports = function(app, passport) {
   app.use('/api/v1', router);
 
   app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname + '/client/build/index.html'));
+    res.sendFile(path.resolve('./client/build/index.html'));
   });
 
 
