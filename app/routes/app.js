@@ -271,4 +271,10 @@ module.exports = function(app, passport) {
     }
   });
 
+
+  app.get('*', (req, res) => {
+    return res.sendFile(path.resolve("./client/build/index.html"));
+  });
+
+
 };
