@@ -13,6 +13,9 @@ const publicKey = fs.readFileSync('app/config/public.key', 'utf8');
 const path = require("path");
 
 module.exports = function(app, passport) {
+
+  app.use('/api/v1', router);
+
   const createToken = function(auth) {
     return jwt.sign({
       id: auth.id
@@ -32,11 +35,6 @@ module.exports = function(app, passport) {
     return next();
   }
 
-  // var sendToken = function (req, res, next) {
-  //   res.setHeader('x-auth-token', req.token);
-  //   return next();
-  // };
-
   const sendUserUsingTwitter = (req, res) => res.status(200).send(JSON.stringify(req.user));
   const sendUserUsingLocal = (req, res) => res.status(200).json(req.user);
 
@@ -45,9 +43,6 @@ module.exports = function(app, passport) {
     algorithms: [ 'RS256' ],
     requestProperty: 'auth',
     getToken: function(req) {
-      // if (req.headers['x-auth-token']) {
-      //   return req.headers['x-auth-token'];
-      // }
       if (req.cookies["jawbtc"]) { 
         return req.cookies["jawbtc"];
       }
@@ -276,10 +271,9 @@ module.exports = function(app, passport) {
     }
   });
 
-  app.use('/api/v1', router);
 
   app.get('*', (req, res) => {
-    res.sendFile(path.resolve('./client/build/index.html'));
+    return res.redirect("/");
   });
 
 

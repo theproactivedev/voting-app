@@ -52,7 +52,6 @@ h1 {
   font-size: 40px;
   font-family: 'Alfa Slab One', serif;
   letter-spacing: 1px;
-  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.8);
 }
 
 h2 {
@@ -88,10 +87,6 @@ h2 {
 
 .modal {
   padding-left: 0;
-}
-
-.modal h1 {
-  text-shadow: none;
 }
 
 .modal-content {

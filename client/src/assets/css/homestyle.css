@@ -8,6 +8,10 @@ h2, p.lead {
   text-align: center;
 }
 
+#home h1 {
+  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.8);
+}
+
 #home {
   background-image: url("../images/avel-chuklanov-38687.jpg");
   background-position: center;
