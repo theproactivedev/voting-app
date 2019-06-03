@@ -1,8 +1,8 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import PropTypes from 'prop-types';
-import { submitUserLocalDetails, setErrorMessage } from '../actions';
-import DangerError from '../components/DangerError';
+import React, { Component } from "react";
+import { connect } from "react-redux";
+import PropTypes from "prop-types";
+import { submitUserLocalDetails, setErrorMessage } from "../actions";
+import DangerError from "../components/DangerError";
 
 class UserForm extends Component {
   constructor(props) {

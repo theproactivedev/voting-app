@@ -1,10 +1,10 @@
-import React, { Component } from 'react';
-import { Redirect } from 'react-router-dom';
-import { connect } from 'react-redux';
-import PropTypes from 'prop-types';
-import { getSpecificPoll, deletePoll } from '../actions.js';
-import PollChart from '../components/polls/PollChart';
-import VotingForm from './VotingForm';
+import React, { Component } from "react";
+import { Redirect } from "react-router-dom";
+import { connect } from "react-redux";
+import PropTypes from "prop-types";
+import { getSpecificPoll, deletePoll } from "../actions.js";
+import PollChart from "../components/polls/PollChart";
+import VotingForm from "./VotingForm";
 
 class PollItem extends Component {
   constructor(props) {
@@ -39,7 +39,7 @@ class PollItem extends Component {
   }
 
   tweetPoll() {
-    window.open('https://twitter.com/intent/tweet?hashtags= freecodecamp&text='   + encodeURIComponent(this.state.query));
+    window.open("https://twitter.com/intent/tweet?hashtags= freecodecamp&text="   + encodeURIComponent(this.state.query));
   }
 
   deletePoll() {

@@ -1,8 +1,8 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import { getSpecificPoll, voteOnPoll } from '../actions.js';
-import DangerError from '../components/DangerError.js';
-import Fade from 'react-reveal/Fade';
+import React, { Component } from "react";
+import { connect } from "react-redux";
+import { getSpecificPoll, voteOnPoll } from "../actions.js";
+import DangerError from "../components/DangerError.js";
+import Fade from "react-reveal/Fade";
 
 class VotingForm extends Component {
   constructor(props) {
@@ -41,7 +41,7 @@ class VotingForm extends Component {
     if (vote === "Others") {
       vote =  document.getElementById("otherAnswer").value;
       this.setState({
-        vote: 'Select your answer.'
+        vote: "Select your answer."
       });
     }
     this.props.voteOnPoll(this.props.componentLink, {choice: vote });

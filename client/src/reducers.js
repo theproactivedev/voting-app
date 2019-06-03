@@ -4,8 +4,8 @@ import {
   SET_SPECIFIC_POLL,
   TOGGLE_LOGIN_MODAL,
   SET_ERROR_MSG
-} from './actions.js';
-import { combineReducers } from 'redux';
+} from "./actions.js";
+import { combineReducers } from "redux";
 
 export const initialState = {
   isFetching: false,

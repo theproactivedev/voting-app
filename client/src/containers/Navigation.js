@@ -1,14 +1,14 @@
-import React, { Component } from 'react';
-import { withRouter } from 'react-router-dom';
-import { LinkContainer } from 'react-router-bootstrap';
-import { Navbar, Nav, NavDropdown, Container } from 'react-bootstrap';
-import { connect } from 'react-redux';
-import PropTypes from 'prop-types';
-import { removeUser, setUserTwitterDetails, toggleLoginModal } from '../actions';
-import UserFormModal from './UserFormModal';
-import AuthenticatedMenu from '../components/AuthenticatedMenu';
-import DangerError from '../components/DangerError';
-import Login from '../components/Login';
+import React, { Component } from "react";
+import { withRouter } from "react-router-dom";
+import { LinkContainer } from "react-router-bootstrap";
+import { Navbar, Nav, NavDropdown, Container } from "react-bootstrap";
+import { connect } from "react-redux";
+import PropTypes from "prop-types";
+import { removeUser, setUserTwitterDetails, toggleLoginModal } from "../actions";
+import UserFormModal from "./UserFormModal";
+import AuthenticatedMenu from "../components/AuthenticatedMenu";
+import DangerError from "../components/DangerError";
+import Login from "../components/Login";
 
 class Navigation extends Component {
 
@@ -62,8 +62,8 @@ class Navigation extends Component {
 
   logout() {
     this.props.dispatch(removeUser());
-    localStorage.removeItem('abcd');
-    fetch("/logout").catch(error => console.log(error));
+    localStorage.removeItem("abcd");
+    fetch("/api/v1/logout").catch(error => console.log(error));
   }
 
   toggleModal(path) {
@@ -90,7 +90,7 @@ class Navigation extends Component {
             <Navbar.Collapse id="basic-navbar-nav">
               <Nav className="justify-content-end w-100" as="ul">
                 <Nav.Item as="li">
-                  <LinkContainer eventKey={'/polls'} to={'/polls'} >
+                  <LinkContainer eventKey={"/polls"} to={"/polls"} >
                     <Nav.Link active={this.state.activeState} href="/polls">Polls</Nav.Link>
                   </LinkContainer>
                 </Nav.Item>
@@ -102,7 +102,7 @@ class Navigation extends Component {
                 {isUserAuthenticated &&
                   <Nav.Item as="li" key={username} >
                     <NavDropdown title={username} id="user-dropdown" as="li">
-                      <LinkContainer eventKey={'/logout'} to={'/'} >
+                      <LinkContainer eventKey={"/logout"} to={"/"} >
                         <NavDropdown.Item onClick={this.logout}>Log out</NavDropdown.Item>
                       </LinkContainer>
                     </NavDropdown>
@@ -110,7 +110,7 @@ class Navigation extends Component {
                 }
 
                 {!isUserAuthenticated &&
-                  <Nav.Item as="li" key={'/signup'}>
+                  <Nav.Item as="li" key={"/signup"}>
                     <Nav.Link onClick={() => this.toggleModal("/signup") } >Sign Up</Nav.Link>
                   </Nav.Item>
                 }
@@ -126,11 +126,6 @@ class Navigation extends Component {
         <UserFormModal modalObj={{ open: showLoginModal, path: loginModalPath }} />
         {this.props.error === "Unauthorized Access. Sign up or log in first." &&
         localStorage.getItem("abcd") !== undefined &&
-          <div className="container general">
-            <DangerError msg={"Unauthorized Access. Your token might have expired. Log in again."} />
-          </div>
-        }
-                {this.props.error === "Unauthorized Access. Sign up or log in first." &&
           <div className="container general">
             <DangerError msg={"Unauthorized Access. Sign up or log in first."} />
           </div>

@@ -1,6 +1,6 @@
-import React from 'react';
-import Fade from 'react-reveal/Fade';
-import PropTypes from 'prop-types';
+import React from "react";
+import Fade from "react-reveal/Fade";
+import PropTypes from "prop-types";
 
 const PageTitle = ({ title }) => (
   <div className="header mb-5">

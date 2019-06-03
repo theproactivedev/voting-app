@@ -1,12 +1,12 @@
-import React, { Component } from 'react';
-import { Redirect} from 'react-router-dom';
-import { ListGroup } from 'react-bootstrap';
-import { connect } from 'react-redux';
-import PropTypes from 'prop-types';
-import { getPolls, getPublicPolls } from '../actions.js';
-import ClipLoader from 'react-spinners/ClipLoader';
-import PageTitle from '../components/PageTitle';
-import PollListItem from '../components/polls/PollListItem';
+import React, { Component } from "react";
+import { Redirect} from "react-router-dom";
+import { ListGroup } from "react-bootstrap";
+import { connect } from "react-redux";
+import PropTypes from "prop-types";
+import { getPolls, getPublicPolls } from "../actions.js";
+import ClipLoader from "react-spinners/ClipLoader";
+import PageTitle from "../components/PageTitle";
+import PollListItem from "../components/polls/PollListItem";
 
 class PollsList extends Component {
   constructor(props) {
@@ -41,7 +41,7 @@ class PollsList extends Component {
     let pollItems = this.renderPollItems();
 
     if (!isUserAuthenticated && data === "/myPolls") {
-      return <Redirect to={{pathname: '/'}} />
+      return <Redirect to={{pathname: "/"}} />
     }
 
     return(

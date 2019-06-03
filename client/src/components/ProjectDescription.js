@@ -1,5 +1,5 @@
-import React from 'react';
-import { ListGroupItem, ListGroup } from 'react-bootstrap';
+import React from "react";
+import { ListGroupItem, ListGroup } from "react-bootstrap";
 
 const ProjectDescription = () => {
   return (

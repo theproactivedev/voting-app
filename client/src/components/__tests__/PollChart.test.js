@@ -1,7 +1,7 @@
-import React from 'react';
-import PollChart from '../polls/PollChart';
-import { checkComponentPropTypes } from '../../utils/utils';
-import { render, cleanup } from 'react-testing-library';
+import React from "react";
+import PollChart from "../polls/PollChart";
+import { checkComponentPropTypes } from "../../utils/utils";
+import { render, cleanup } from "react-testing-library";
 
 describe("It should render PollChart", () => {
   afterEach(cleanup);

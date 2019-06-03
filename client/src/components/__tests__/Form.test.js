@@ -1,7 +1,7 @@
-import React from 'react';
-import Form from '../polls/Form';
-import { checkComponentPropTypes } from '../../utils/utils';
-import { render } from 'react-testing-library';
+import React from "react";
+import Form from "../polls/Form";
+import { checkComponentPropTypes } from "../../utils/utils";
+import { render } from "react-testing-library";
 
 describe("It should render form", () => {
   it("should be present", () => {

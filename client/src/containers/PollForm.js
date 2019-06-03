@@ -1,10 +1,10 @@
-import React, { Component } from 'react';
-import {Redirect} from 'react-router-dom';
-import { connect } from 'react-redux';
-import PropTypes from 'prop-types';
-import { addPoll } from '../actions.js';
-import Form from '../components/polls/Form';
-import PageTitle from '../components/PageTitle';
+import React, { Component } from "react";
+import {Redirect} from "react-router-dom";
+import { connect } from "react-redux";
+import PropTypes from "prop-types";
+import { addPoll } from "../actions.js";
+import Form from "../components/polls/Form";
+import PageTitle from "../components/PageTitle";
 
 class PollForm extends Component {
 
@@ -58,16 +58,16 @@ class PollForm extends Component {
 
 	render() {
 		if (this.state.redirect) {
-			return <Redirect to={{pathname: '/myPolls'}} />
+			return <Redirect to={{pathname: "/myPolls"}} />
 		}
 
 		if (!this.props.isUserAuthenticated) {
-      return <Redirect to={{pathname: '/'}} />
+      return <Redirect to={{pathname: "/"}} />
     }
 
 		return(
 			<div>
-				<PageTitle title={'Create Poll'} />
+				<PageTitle title={"Create Poll"} />
 				<Form handleSubmit={this.handleSubmit} handleOptionsChange={this.handleOptionsChange}
 					handleQuestionChange={this.handleQuestionChange}
 				 />

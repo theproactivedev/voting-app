@@ -1,8 +1,8 @@
-'use strict';
+"use strict";
 
-var mongoose = require('mongoose');
+var mongoose = require("mongoose");
 var Schema = mongoose.Schema;
-var bcrypt   = require('bcrypt-nodejs');
+var bcrypt   = require("bcrypt-nodejs");
 
 var UserSchema = new Schema({
   twitter: {
@@ -53,4 +53,4 @@ UserSchema.methods.isValidPassword = function(password) {
   return bcrypt.compareSync(password, this.local.password);
 };
 
-module.exports = mongoose.model('Users', UserSchema);
+module.exports = mongoose.model("Users", UserSchema);

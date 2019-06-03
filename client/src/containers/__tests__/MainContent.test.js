@@ -1,7 +1,7 @@
-import React from 'react';
-import { renderWithReduxAndRouter } from '../../utils/utils';
-import MainContent from '../MainContent';
-import { render, cleanup, fireEvent } from 'react-testing-library';
+import React from "react";
+import { renderWithReduxAndRouter } from "../../utils/utils";
+import MainContent from "../MainContent";
+import { render, cleanup, fireEvent } from "react-testing-library";
 
 describe("Test each route", () => {
   afterEach(cleanup);

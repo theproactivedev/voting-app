@@ -1,6 +1,6 @@
-import React, { Component } from 'react';
-import ListGroup from 'react-bootstrap/ListGroup';
-import { Link } from 'react-router-dom';
+import React, { Component } from "react";
+import ListGroup from "react-bootstrap/ListGroup";
+import { Link } from "react-router-dom";
 
 class PollListItem extends Component {
   render() {

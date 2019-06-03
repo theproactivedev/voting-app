@@ -1,9 +1,9 @@
-import React from 'react';
-import { Modal } from 'react-bootstrap';
-import { connect } from 'react-redux';
-import PropTypes from 'prop-types';
-import { toggleLoginModal } from '../actions';
-import UserForm from './UserForm';
+import React from "react";
+import { Modal } from "react-bootstrap";
+import { connect } from "react-redux";
+import PropTypes from "prop-types";
+import { toggleLoginModal } from "../actions";
+import UserForm from "./UserForm";
 
 class UserFormModal extends React.Component {
   render() {
@@ -31,6 +31,7 @@ class UserFormModal extends React.Component {
           </Modal.Body>
           </div>
         </div>
+        <div className="slanted-div"></div>
       </Modal>
     );
   }

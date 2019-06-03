@@ -1,11 +1,11 @@
-import React, { Component } from 'react';
-import { Image } from 'react-bootstrap';
-import '../assets/css/homestyle.css';
-import react from '../assets/images/react.png';
-import redux from '../assets/images/redux.png';
-import express from '../assets/images/express.jpg';
-import mongoose from '../assets/images/mongoose.png';
-import Slide from 'react-reveal/Slide';
+import React, { Component } from "react";
+import { Image } from "react-bootstrap";
+import "../assets/css/homestyle.css";
+import react from "../assets/images/react.png";
+import redux from "../assets/images/redux.png";
+import express from "../assets/images/express.jpg";
+import mongoose from "../assets/images/mongoose.png";
+import Slide from "react-reveal/Slide";
 
 class Tools extends Component {
   render() {

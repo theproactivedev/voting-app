@@ -1,7 +1,7 @@
-import React from 'react';
-import Navigation from '../Navigation';
-import { renderWithReduxAndRouter } from '../../utils/utils';
-import { cleanup, fireEvent, wait } from 'react-testing-library';
+import React from "react";
+import Navigation from "../Navigation";
+import { renderWithReduxAndRouter } from "../../utils/utils";
+import { cleanup, fireEvent, wait } from "react-testing-library";
 
 
 describe("it should render Navigation", () => {

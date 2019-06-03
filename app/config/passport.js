@@ -1,9 +1,9 @@
-'use strict';
+"use strict";
 
-var TwitterTokenStrategy = require('passport-twitter-token');
-var LocalStrategy    = require('passport-local').Strategy;
-var Users = require('../models/Users');
-var configAuth = require('./auth');
+var TwitterTokenStrategy = require("passport-twitter-token");
+var LocalStrategy    = require("passport-local").Strategy;
+var Users = require("../models/Users");
+var configAuth = require("./auth");
 
 module.exports = function (passport) {
 
@@ -27,17 +27,17 @@ module.exports = function (passport) {
 		});
 	}));
 
-	passport.use('local-signup', new LocalStrategy({
-		usernameField : 'email',
-		passwordField : 'password',
+	passport.use("local-signup", new LocalStrategy({
+		usernameField : "email",
+		passwordField : "password",
 		passReqToCallback : true // allows us to pass in the req from our route (lets us check if a user is logged in or not)
 	},
 	function(req, email, password, done) {
 		process.nextTick(function() {
-			Users.findOne({'local.email': email}, function(err, existingUser) {
+			Users.findOne({"local.email": email}, function(err, existingUser) {
 				if (err) return done(err);
 
-				if (existingUser) return done(null, false, { message: 'That email is already taken.'});
+				if (existingUser) return done(null, false, { message: "That email is already taken."});
 
 				if(req.user) {
 					var user            = req.user;
@@ -60,18 +60,18 @@ module.exports = function (passport) {
 		});
 	}));
 
-	passport.use('login', new LocalStrategy({
-			usernameField : 'email',
-			passwordField : 'password'
+	passport.use("login", new LocalStrategy({
+			usernameField : "email",
+			passwordField : "password"
 	}, async (email, password, done) => {
 	try {
 			const user = await Users.findOne({ "local.email" : email });
-			if( !user ) return done(null, false, { message : 'User not found. Please create an account first.'});
+			if( !user ) return done(null, false, { message : "User not found. Please create an account first."});
 
 			const validate = await user.isValidPassword(password);
-			if( !validate ) return done(null, false, { message : 'Email address and/or password combination is invalid. Please try again.'});
+			if( !validate ) return done(null, false, { message : "Email address and/or password combination is invalid. Please try again."});
 			
-			return done(null, user, { message : 'Logged in Successfully'});
+			return done(null, user, { message : "Logged in Successfully"});
 	} catch (error) {
 			return done(error);
 	}

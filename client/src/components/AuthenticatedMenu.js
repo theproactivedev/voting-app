@@ -1,6 +1,6 @@
-import React, { Component } from 'react';
-import { LinkContainer } from 'react-router-bootstrap';
-import { Nav } from 'react-bootstrap';
+import React, { Component } from "react";
+import { LinkContainer } from "react-router-bootstrap";
+import { Nav } from "react-bootstrap";
 
 class AuthenticatedMenu extends Component {
   render() {

@@ -1,10 +1,10 @@
-import React from 'react';
-import checkPropTypes from 'check-prop-types';
-import { createMemoryHistory } from 'history'
-import { render } from 'react-testing-library';
-import { Router } from 'react-router-dom';
-import { Provider } from 'react-redux';
-import { configureStore } from '../configureStore';
+import React from "react";
+import checkPropTypes from "check-prop-types";
+import { createMemoryHistory } from "history"
+import { render } from "react-testing-library";
+import { Router } from "react-router-dom";
+import { Provider } from "react-redux";
+import { configureStore } from "../configureStore";
 
 export const checkComponentPropTypes = (component, expectedProps) => {
   const propsErr = checkPropTypes(component.propTypes, expectedProps, "props", component.name);
@@ -14,7 +14,7 @@ export const checkComponentPropTypes = (component, expectedProps) => {
 export const renderWithRouter = (
   ui,
   {
-    route = '/',
+    route = "/",
     history = createMemoryHistory({ initialEntries: [route] }),
   } = {}
 ) => {
@@ -36,7 +36,7 @@ export const renderWithRedux = (
 
 export const renderWithReduxAndRouter = (
   ui,
-  { route = '/', history = createMemoryHistory({ initialEntries: [route] })} = {},
+  { route = "/", history = createMemoryHistory({ initialEntries: [route] })} = {},
   { store = configureStore() } = {}
 ) => {
   return {

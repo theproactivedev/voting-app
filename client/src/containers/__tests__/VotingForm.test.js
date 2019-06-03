@@ -1,7 +1,7 @@
-import React from 'react';
-import VotingForm from '../VotingForm';
-import { cleanup, fireEvent } from 'react-testing-library';
-import { renderWithRedux } from '../../utils/utils';
+import React from "react";
+import VotingForm from "../VotingForm";
+import { cleanup, fireEvent } from "react-testing-library";
+import { renderWithRedux } from "../../utils/utils";
 
 describe("it should render voting form", () => {
   afterEach(cleanup);

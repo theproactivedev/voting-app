@@ -1,6 +1,6 @@
-import React, { Component } from 'react';
-import { Doughnut } from 'react-chartjs-2';
-import PropTypes from 'prop-types';
+import React, { Component } from "react";
+import { Doughnut } from "react-chartjs-2";
+import PropTypes from "prop-types";
 
 class PollChart extends Component {
   constructor() {
@@ -11,8 +11,8 @@ class PollChart extends Component {
   }
 
   getColor() {
-    var letters = '0123456789ABCDEF';
-    var color = '#';
+    var letters = "0123456789ABCDEF";
+    var color = "#";
     for (var i = 0; i < 6; i++) {
       color += letters[Math.floor(Math.random() * 16)];
     }
@@ -31,7 +31,6 @@ class PollChart extends Component {
   loadChart() {
     var values = [];
     var answers = [];
-    // var bgColors = ['#cc0600', '#a32e00', '#c16400', "blue", "green"];
     var bgColors = [];
 
     var item = this.props.options;
@@ -49,7 +48,7 @@ class PollChart extends Component {
       datasets: [{
         label: "Choices",
         backgroundColor: bgColors,
-        borderColor: 'white',
+        borderColor: "white",
         data: values
       }],
       labels: answers

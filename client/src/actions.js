@@ -1,12 +1,13 @@
-export const FETCH_RESULTS_PENDING = 'FETCH_RESULTS_PENDING';
-export const FETCH_RESULTS_RECEIVED = 'FETCH_RESULTS_RECEIVED';
-export const FETCH_RESULTS_REJECTED = 'FETCH_RESULTS_REJECTED';
-export const SET_USER_TWITTER_DETAILS = 'SET_USER_TWITTER_DETAILS';
-export const SET_USER_LOCAL_DETAILS = 'SET_USER_LOCAL_DETAILS';
-export const REMOVE_USER = 'REMOVE_USER';
-export const SET_SPECIFIC_POLL = 'SET_SPECIFIC_POLL';
+export const FETCH_RESULTS_PENDING = "FETCH_RESULTS_PENDING";
+export const FETCH_RESULTS_RECEIVED = "FETCH_RESULTS_RECEIVED";
+export const FETCH_RESULTS_REJECTED = "FETCH_RESULTS_REJECTED";
+export const SET_USER_TWITTER_DETAILS = "SET_USER_TWITTER_DETAILS";
+export const SET_USER_LOCAL_DETAILS = "SET_USER_LOCAL_DETAILS";
+export const REMOVE_USER = "REMOVE_USER";
+export const SET_SPECIFIC_POLL = "SET_SPECIFIC_POLL";
 export const TOGGLE_LOGIN_MODAL = "TOGGLE_LOGIN_MODAL";
 export const SET_ERROR_MSG = "SET_ERROR_MSG";
+const apiPrefix = "/api/v1";
 
 export const setUserTwitterDetails = (user) => {
   return {
@@ -22,13 +23,13 @@ const setUserLocalDetails = (user) => {
   }
 }
 
-export const submitUserLocalDetails = (user, path) => {
+export const submitUserLocalDetails = (user, dest) => {
   return dispatch => {
-    fetch(path, {
+    fetch(apiPrefix + dest, {
       method: "POST",
       headers: new Headers({
-        'Accept': 'application/json',
-        'Content-type' : 'application/json'
+        "Accept": "application/json",
+        "Content-type" : "application/json"
       }),
       body: JSON.stringify(user)
     })
@@ -59,7 +60,7 @@ export const submitUserLocalDetails = (user, path) => {
 
 export const receiveUserLocalDetails = () => {
   return dispatch => {
-    fetch("/profile", {
+    fetch(apiPrefix + "/profile", {
       method: "GET",
       headers: new Headers({
         "Content-type":"application/json"
@@ -110,10 +111,10 @@ export const toggleLoginModal = (userFormPath) => {
 export const getPublicPolls = () => {
   return (dispatch) => {
     dispatch(requestResults());
-    return fetch("/polls", {
+    return fetch(apiPrefix + "/polls", {
         method: "GET",
         headers: new Headers({
-          'Content-type' : 'application/json'
+          "Content-type" : "application/json"
         })
       })
       .then(response => {
@@ -129,10 +130,10 @@ export const getPublicPolls = () => {
 export const getPolls = (username="") => {
   return (dispatch) => {
     dispatch(requestResults());
-    return fetch("/myPolls", {
+    return fetch(apiPrefix + "/myPolls", {
         method: "POST",
         headers: new Headers({
-          'Content-type' : 'application/json'
+          "Content-type" : "application/json"
         }),
         body: JSON.stringify({ username })
       })
@@ -149,7 +150,8 @@ export const getPolls = (username="") => {
 export const getSpecificPoll = (dest) => {
   return (dispatch) => {
     dispatch(requestResults());
-    return fetch(dest)
+    console.log(apiPrefix + dest);
+    return fetch(apiPrefix + dest)
     .then(response => {
       if (!response.ok) {
         return response.text().then(text => { dispatch(rejectResults(text)); })
@@ -170,10 +172,10 @@ const setSpecificPoll = (poll) => {
 
 export const voteOnPoll = (dest, obj) => {
   return (dispatch) => {
-    return fetch(dest, {
+    return fetch(apiPrefix + dest, {
         method: "POST",
         headers: new Headers({
-          'Content-type' : 'application/json'
+          "Content-type" : "application/json"
         }),
         body: JSON.stringify(obj)
       })
@@ -183,7 +185,7 @@ export const voteOnPoll = (dest, obj) => {
 
 export const deletePoll = (dest) => {
   return (dispatch) => {
-    return fetch(dest, {
+    return fetch(apiPrefix + dest, {
         method: "DELETE"
       })
       .catch(error => dispatch(rejectResults(error)));
@@ -192,10 +194,10 @@ export const deletePoll = (dest) => {
 
 export const addPoll = (dest, obj) => {
   return (dispatch) => {
-    return fetch(dest, {
+    return fetch(apiPrefix + dest, {
       method: "POST",
       headers: {
-        'Content-Type': 'application/json'
+        "Content-Type": "application/json"
       },
       body: JSON.stringify(obj)
     })

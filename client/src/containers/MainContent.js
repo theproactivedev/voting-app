@@ -1,11 +1,11 @@
-import React, {Component} from 'react';
-import { Route, Switch, withRouter } from 'react-router-dom';
-import { connect } from 'react-redux';
-import PropTypes from 'prop-types';
-import Polls from '../components/polls/Polls';
-import Home from '../components/Home';
-import PollForm from './PollForm';
-import NotFound from '../components/NotFound';
+import React, {Component} from "react";
+import { Route, Switch, withRouter } from "react-router-dom";
+import { connect } from "react-redux";
+import PropTypes from "prop-types";
+import Polls from "../components/polls/Polls";
+import Home from "../components/Home";
+import PollForm from "./PollForm";
+import NotFound from "../components/NotFound";
 
 class MainContent extends Component {
 	render() {
@@ -18,7 +18,7 @@ class MainContent extends Component {
 				<Route path="/newPoll" render={(props) => (
 				  <PollForm {...props} isUserAuthenticated={isUserAuthenticated} user={user}  />
 				)} />
-				<Route path='*' exact={true} component={NotFound} />
+				<Route path="*" exact={true} component={NotFound} />
 			</Switch>
 		);
 	}

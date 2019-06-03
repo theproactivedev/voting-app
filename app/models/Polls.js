@@ -1,6 +1,6 @@
-'use strict';
+"use strict";
 
-var mongoose = require('mongoose');
+var mongoose = require("mongoose");
 var Schema = mongoose.Schema;
 
 var OptionsSchema = new Schema({
@@ -17,4 +17,4 @@ var PollSchema = new Schema({
 });
 
 // database name, name of schema
-module.exports = mongoose.model('Polls', PollSchema);
+module.exports = mongoose.model("Polls", PollSchema);

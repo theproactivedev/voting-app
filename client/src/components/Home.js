@@ -1,8 +1,8 @@
-import React from 'react';
-import '../assets/css/homestyle.css';
-import Tools from './Tools';
-import ProjectDescription from './ProjectDescription';
-import Slide from 'react-reveal/Slide';
+import React from "react";
+import "../assets/css/homestyle.css";
+import Tools from "./Tools";
+import ProjectDescription from "./ProjectDescription";
+import Slide from "react-reveal/Slide";
 
 const Home = () => (
 	<div>

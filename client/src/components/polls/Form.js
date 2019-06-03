@@ -1,5 +1,5 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import React from "react";
+import PropTypes from "prop-types";
 
 const Form = ({
   handleSubmit, handleOptionsChange, handleQuestionChange
@@ -13,6 +13,7 @@ const Form = ({
           <form id="newPollForm" method="post" onSubmit={(e) => {handleSubmit(e)} }>
             <div className="form-group">
               <label htmlFor="question">Question: </label>
+              <p>Add a question mark (?) at the end of your question.</p>
               <input type="text" id="question" name="question" className="form-control" onChange={(e) => {handleQuestionChange(e)}} required />
             </div>
             <div className="form-group">
