@@ -135,6 +135,11 @@ h2 {
   margin-left: -40%;
 }
 
+.alert-danger {
+  position: relative;
+  z-index: 10;
+}
+
 .poll-items .react-reveal {
   width: 100%;
 }
