@@ -13,7 +13,7 @@ class MainContent extends Component {
 		return(
 			<Switch>
 				<Route exact path="/" component={Home} />
-				<Route exact path="/polls" component={Polls} />
+				<Route path="/polls" component={Polls} />
 				<Route exact path="/myPolls" component={Polls} />
 				<Route exact path="/newPoll" render={(props) => (
 				  <PollForm {...props} isUserAuthenticated={isUserAuthenticated} user={user}  />
