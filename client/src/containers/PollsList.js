@@ -56,7 +56,10 @@ class PollsList extends Component {
               <p>Vote your answer and share it on Twitter. And you can also create your own answer if you&#39;re signed in. So make sure to sign in!</p>
             </div>
           }
-          {polls.length === 0 && !isFetching &&
+          {polls.length === 0 && !isFetching && isUserAuthenticated && 
+            <p>No questions. Create your own poll.</p>
+          }
+          {polls.length === 0 && !isFetching && !isUserAuthenticated && 
             <p>No questions. Sign in and create your own poll.</p>
           }
           {!isFetching && polls.length > 0 &&

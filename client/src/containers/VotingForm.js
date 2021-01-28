@@ -57,7 +57,7 @@ class VotingForm extends Component {
         {!this.state.hasVoted &&
           <DangerError msg={"Please select your answer."} />
         }
-        <Fade left>
+        <Fade>
         <form action="" method="POST" onSubmit={(e) => this.handleSubmit(e)}>
           <div className="form-group">
             <label className="question" htmlFor="options">{query}
