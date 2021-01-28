@@ -80,8 +80,8 @@ module.exports = function(app, passport) {
         url: "https://api.twitter.com/oauth/request_token",
         oauth: {
           oauth_callback: "https://eg-fcc-votingapp.herokuapp.com/twitter-callback",
-          consumerKey: configAuth.twitterAuth.consumerKey,
-          consumerSecret: configAuth.twitterAuth.consumerSecret
+          consumer_key: configAuth.twitterAuth.consumerKey,
+          consumer_secret: configAuth.twitterAuth.consumerSecret
         }
       }, function (err, r, body) {
         if (err) {
@@ -99,8 +99,8 @@ module.exports = function(app, passport) {
       request.post({
         url: "https://api.twitter.com/oauth/access_token?oauth_verifier",
         oauth: {
-          consumerKey: configAuth.twitterAuth.consumerKey,
-          consumerSecret: configAuth.twitterAuth.consumerSecret,
+          consumer_key: configAuth.twitterAuth.consumerKey,
+          consumer_secret: configAuth.twitterAuth.consumerSecret,
           token: req.query.oauth_token
         },
         form: { oauth_verifier: req.query.oauth_verifier }
