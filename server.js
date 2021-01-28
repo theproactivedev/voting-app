@@ -11,7 +11,10 @@ const helmet = require("helmet");
 
 require("dotenv").config();
 mongoose.Promise = global.Promise;
-mongoose.connect(process.env.MONGO_URI, {useMongoClient: true});
+mongoose.connect(process.env.MONGO_URI, { 
+  useNewUrlParser: true,
+  useUnifiedTopology: true
+});
 
 var routes = require("./app/routes/app.js");
 require("./app/config/passport.js")(passport);
